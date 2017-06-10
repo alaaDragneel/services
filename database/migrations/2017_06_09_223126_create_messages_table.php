@@ -17,8 +17,13 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('message');
-            $table->integer('user_notify_you')->unsigned();
+
+            $table->integer('user_message_you')->unsigned();
+            $table->foreign('user_message_you')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+
             $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+
             $table->boolean('seen');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

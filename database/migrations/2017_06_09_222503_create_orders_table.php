@@ -15,7 +15,9 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             DB::statement('SET FOREIGN_KEY_CHECKS=0'); // to avoid error during migration
             $table->increments('id');
-            $table->integer('user_order');
+            // user_order Relations
+            $table->integer('user_order')->unsigned();
+            $table->foreign('user_order')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             // Services Relations
             $table->integer('service_id')->unsigned();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');

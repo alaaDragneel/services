@@ -16,9 +16,9 @@ class CreateCommentsTable extends Migration
             DB::statement('SET FOREIGN_KEY_CHECKS=0'); // to avoid error during migration
             $table->increments('id');
             $table->text('comment');
-            // Services Relations
-            $table->integer('service_id')->unsigned();
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');
+            // Orders Relations
+            $table->integer('order_id')->unsigned();
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
             // User Relations
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

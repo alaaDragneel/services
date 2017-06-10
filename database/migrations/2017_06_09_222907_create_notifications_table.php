@@ -17,8 +17,13 @@ class CreateNotificationsTable extends Migration
             $table->increments('id');
             $table->integer('notify_id')->unsigned();
             $table->boolean('type');
+
             $table->integer('user_notify_you')->unsigned();
+            $table->foreign('user_notify_you')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+
             $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            
             $table->boolean('seen');
             $table->string('url');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
