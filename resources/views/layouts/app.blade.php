@@ -7,10 +7,8 @@
 
     <title>Laravel</title>
 
-    <!-- Fonts -->
-    {{ Html::style('src/css/font-awesome.min.css') }}
     <!-- Styles -->
-    {{ Html::style('src/css/bootstrap.min.css') }}
+    {{ Html::style('src/css/style.css') }}
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
@@ -62,7 +60,6 @@
     @yield('content')
 
     <!-- JavaScripts -->
-   {{ Html::script('src/js/jquery-1.12.4.min.js') }}
-   {{ Html::script('src/js/bootstrap.min.js') }}
+   {{ Html::script('src/js/main.js') }}
 </body>
 </html>
