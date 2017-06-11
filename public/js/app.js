@@ -14710,6 +14710,26 @@ setTimeout(function () {
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":1}],6:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var Vue = require('vue');
@@ -14770,7 +14790,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/orders/incomingOrders.vue":7,"./components/orders/purchaseOrders.vue":8,"./components/services/addServices.vue":9,"./components/services/myServices.vue":10,"vue":5,"vue-resource":3,"vue-router":4}],7:[function(require,module,exports){
+},{"./components/orders/incomingOrders.vue":8,"./components/orders/purchaseOrders.vue":9,"./components/services/addServices.vue":10,"./components/services/myServices.vue":11,"vue":5,"vue-resource":3,"vue-router":4}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14789,7 +14809,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ae94e32", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14808,7 +14828,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5fdf7566", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],9:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -14865,25 +14885,54 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c09fbebe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],10:[function(require,module,exports){
-"use strict";
+},{"vue":5,"vue-hot-reload-api":2}],11:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n")
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.default = {};
+exports.default = {
+    data: function data() {
+        return {
+            services: []
+        };
+    },
+    ready: function ready() {
+        this.getMyServices();
+    },
+    methods: {
+        getMyServices: function getMyServices() {
+            this.$http.get('Services').then(function (res) {
+                this.services = res.body;
+            }, function (res) {
+                alert('unKnown Error Please Contact With The Adminstrators');
+            });
+        }
+    },
+    filters: {
+        limit: function limit(string, value) {
+            return string.substring(0, value) + '...';
+        }
+    }
+};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\nMy Service Component\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"alert alert-info\">\n    <span>Welcome you have {{ services.length }} services on the site</span>\n</div>\n<div class=\"col-sm-6 col-md-4\" v-for=\"service in services\">\n    <div class=\"thumbnail\">\n        <h4 class=\"text-center\"><span class=\"label label-info\">{{ service.name }}</span></h4>\n        <img v-bind:src=\"service.image\" class=\"img-responsive\">\n        <div class=\"caption\">\n            <div class=\"row\">\n                <div class=\"col-md-6 col-xs-6\">\n                    <h3>{{ service.user.name }}</h3>\n                </div>\n                <div class=\"col-md-6 col-xs-6 price text-right\">\n                    <h3>\n                        <label>${{ service.price }}</label></h3>\n                    </div>\n                </div>\n                <p>{{ service.description | limit 100 }}</p>\n                <div class=\"row\">\n\n                    <div class=\"col-md-6\">\n\n                        <span v-if=\"service.status == 0\">\n\n                            <span class=\"btn btn-warning btn-product\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                        </span>\n\n                        <span v-if=\"service.status == 1\">\n\n                            <span class=\"btn btn-info btn-product\"><i class=\"fa fa-check\"></i> Approved</span>\n                        </span>\n\n                        <span v-if=\"service.status == 2\">\n\n                            <span class=\"btn btn-danger btn-product\"><i class=\"fa fa-close\"></i> Rejected</span>\n                        </span>\n                    </div>\n\n                    <div class=\"col-md-6\">\n                        <a href=\"#\" class=\"btn btn-success btn-product\"><span class=\"glyphicon glyphicon-shopping-cart\"></span> Buy</a></div>\n                    </div>\n\n                    <p> </p>\n                </div>\n            </div>\n        </div>\n    "
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.btn-product{\n    width: 100%;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-7362f518", module.exports)
   } else {
     hotAPI.update("_v-7362f518", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}]},{},[6]);
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}]},{},[7]);
 
 //# sourceMappingURL=app.js.map

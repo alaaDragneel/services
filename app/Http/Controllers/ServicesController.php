@@ -26,7 +26,9 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        return Service::where('user_id', $user->id)->with('user')->get();
     }
 
     /**
