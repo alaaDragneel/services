@@ -14,14 +14,20 @@ require('laravel-elixir-vueify');
  */
 
 elixir(function(mix) {
+
     mix.styles([
-        'bootstrap.min.css',
-        'font-awesome.min.css'
-    ], 'public/src/css/style.css');
+        'main/font-awesome.min.css',
+        'main/bootstrap.min.css',
+        'custome.css'
+    ], 'public/css/style.css');
 
     mix.scripts([
-        'jquery-1.12.4.min.js',
-        'bootstrap.min.js'
-    ], 'public/src/js/main.js');
+        'main/jquery-1.12.4.min.js',
+        'main/bootstrap.min.js'
+    ], 'public/js/main.js');
+
+    mix.browserify([
+        'app.js'
+    ], 'public/js/app.js');
 
 });

@@ -1,0 +1,9 @@
+body {
+    font-family: Lato;
+}
+
+/* Add Service Seciotn */
+textarea#description {
+    resize: none;
+}
+/* Add Service Seciotn */
