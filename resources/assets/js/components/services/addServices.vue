@@ -1,4 +1,15 @@
 <template>
+    <span v-if="messages.length > 0">
+        <div class="alert alert-danger">
+            <a href="#" class="close" data-dismiss="alert" aria-hidden="true">&times;</a>
+            <b>Error: </b>
+            <ul>
+                <li v-for="message in messages[0]">
+                    {{ message }}
+                </li>
+            </ul>
+        </div>
+    </span>
     <div class="form-group">
       <label for="name">Service Name</label>
       <input type="text" class="form-control" id="name" name="name" v-model="name" placeholder="Enter the Service Name">
@@ -28,7 +39,8 @@
 
     <div class="form-group">
       <label for="image">Service image</label>
-      <input type="file" v-el:image>
+      <input type="file" class="form-control" v-el:image>
+      <p class="help-block">The Image Must Be More Than 300px x 300px and less than 1000px x 1000px</p>
     </div>
 
     <div class="form-group">
@@ -46,35 +58,34 @@
                 name: '',
                 description: '',
                 category_id: '',
-                price: ''
+                price: '',
+                messages: []
             }
         },
         methods: {
             AddThisService: function() {
                 var formData = new FormData();
                 formData.append('name', this.name);
-                formData.append('desc', this.description);
+                formData.append('description', this.description);
                 formData.append('cat_id', this.category_id);
                 formData.append('price', this.price);
                 formData.append('image', this.$els.image.files[0]);
 
-                console.log(this.$els.image.files[0]);
-                return false;
                 this.sendData(formData);
             },
             sendData: function (formData) {
                 this.$http.post('/Services', formData).then(function(successResponse) {
+                    this.name = '';
+                    this.description = '';
+                    this.category_id = '';
+                    this.price = '';
+
                     if(successResponse.body == 'done') {
                         alert('your service has been added Please wait until admin approved');
-                        this.name = '';
-                        this.description = '';
-                        this.category_id = '';
-                        this.price = '';
-                    } else {
-
                     }
                 }, function (errorResponse) {
-
+                    this.messages = [];
+                    this.messages.push(errorResponse.body);
                 });
             }
         }

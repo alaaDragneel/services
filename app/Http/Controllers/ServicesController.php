@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
+use App\http\Requests\AddServicesRequest;
+
 use Auth;
 
 use Image;
+
+use Response;
 
 use App\Service;
 
@@ -40,23 +45,20 @@ class ServicesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddServicesRequest $request)
     {
         $user = Auth::user();
-        // $array = [5, 10, 15, 20];
-        // if (in_array($request->price, $array)) {
-        //     # code...
-        // }
 
         $image = $this->uploadImage($request->file('image'));
 
         $services = new Service();
         $services->name = $request->name;
-        $services->description = $request->desc;
+        $services->description = $request->description;
         $services->cat_id = $request->cat_id;
         $services->price = $request->price;
         $services->image = $image;
         $services->user_id = $user->id;
+
         if($services->save()) {
             return 'done';
         } else {
@@ -119,7 +121,7 @@ class ServicesController extends Controller
         $fileName = date("y-m-d-h-i-s") . "_" . $sha1 . "." . $extension;
         $path = public_path('images/services/');
 
-        Image::make($file)->resize(300, 200)->save($path . $fileName, 100);
+        Image::make($file)->resize(800, 800)->save($path . $fileName, 100);
         return 'images/services/' . $fileName;
     }
 }

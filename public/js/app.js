@@ -14820,7 +14820,8 @@ exports.default = {
             name: '',
             description: '',
             category_id: '',
-            price: ''
+            price: '',
+            messages: []
         };
     },
 
@@ -14828,30 +14829,32 @@ exports.default = {
         AddThisService: function AddThisService() {
             var formData = new FormData();
             formData.append('name', this.name);
-            formData.append('desc', this.description);
+            formData.append('description', this.description);
             formData.append('cat_id', this.category_id);
             formData.append('price', this.price);
             formData.append('image', this.$els.image.files[0]);
 
-            console.log(this.$els.image.files[0]);
-            return false;
             this.sendData(formData);
         },
         sendData: function sendData(formData) {
             this.$http.post('/Services', formData).then(function (successResponse) {
+                this.name = '';
+                this.description = '';
+                this.category_id = '';
+                this.price = '';
+
                 if (successResponse.body == 'done') {
                     alert('your service has been added Please wait until admin approved');
-                    this.name = '';
-                    this.description = '';
-                    this.category_id = '';
-                    this.price = '';
-                } else {}
-            }, function (errorResponse) {});
+                }
+            }, function (errorResponse) {
+                this.messages = [];
+                this.messages.push(errorResponse.body);
+            });
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group\">\n  <label for=\"name\">Service Name</label>\n  <input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" v-model=\"name\" placeholder=\"Enter the Service Name\">\n</div>\n\n<div class=\"form-group\">\n  <label for=\"description\">Service Description</label>\n  <textarea class=\"form-control\" id=\"description\" name=\"description\" v-model=\"description\" rows=\"10\" placeholder=\"Enter the Service description\"></textarea>\n</div>\n\n<div class=\"form-group\">\n    <label for=\"category_id\">Service Category</label>\n    <select class=\"form-control\" id=\"category_id\" name=\"category_id\" v-model=\"category_id\">\n        <option value=\"1\">Category 1</option>\n    </select>\n</div>\n\n<div class=\"form-group\">\n    <label for=\"price\">Service Price</label>\n    <select class=\"form-control\" id=\"price\" name=\"price\" v-model=\"price\">\n        <option value=\"5\">5</option>\n        <option value=\"10\">10</option>\n        <option value=\"15\">15</option>\n        <option value=\"20\">20</option>\n    </select>\n</div>\n\n<div class=\"form-group\">\n  <label for=\"image\">Service image</label>\n  <input type=\"file\" v-el:image=\"\">\n</div>\n\n<div class=\"form-group\">\n  <button type=\"submit\" class=\"btn btn-primary\" @click=\"AddThisService\">\n      <i class=\"fa fa-plus\"></i> Add Service\n  </button>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"messages.length > 0\">\n    <div class=\"alert alert-danger\">\n        <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">×</a>\n        <b>Error: </b>\n        <ul>\n            <li v-for=\"message in messages[0]\">\n                {{ message }}\n            </li>\n        </ul>\n    </div>\n</span>\n<div class=\"form-group\">\n  <label for=\"name\">Service Name</label>\n  <input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" v-model=\"name\" placeholder=\"Enter the Service Name\">\n</div>\n\n<div class=\"form-group\">\n  <label for=\"description\">Service Description</label>\n  <textarea class=\"form-control\" id=\"description\" name=\"description\" v-model=\"description\" rows=\"10\" placeholder=\"Enter the Service description\"></textarea>\n</div>\n\n<div class=\"form-group\">\n    <label for=\"category_id\">Service Category</label>\n    <select class=\"form-control\" id=\"category_id\" name=\"category_id\" v-model=\"category_id\">\n        <option value=\"1\">Category 1</option>\n    </select>\n</div>\n\n<div class=\"form-group\">\n    <label for=\"price\">Service Price</label>\n    <select class=\"form-control\" id=\"price\" name=\"price\" v-model=\"price\">\n        <option value=\"5\">5</option>\n        <option value=\"10\">10</option>\n        <option value=\"15\">15</option>\n        <option value=\"20\">20</option>\n    </select>\n</div>\n\n<div class=\"form-group\">\n  <label for=\"image\">Service image</label>\n  <input type=\"file\" class=\"form-control\" v-el:image=\"\">\n  <p class=\"help-block\">The Image Must Be More Than 300px x 300px and less than 1000px x 1000px</p>\n</div>\n\n<div class=\"form-group\">\n  <button type=\"submit\" class=\"btn btn-primary\" @click=\"AddThisService\">\n      <i class=\"fa fa-plus\"></i> Add Service\n  </button>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
