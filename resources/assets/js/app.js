@@ -5,6 +5,10 @@ Vue.use(VueResource);
 // Vue Router
 var VueRouter = require('vue-router');
 Vue.use(VueRouter)
+// Vue Mement
+var VueMoment = require('vue-moment');
+Vue.use(VueMoment);
+
 
 // Vue Recource init Headers With laravel csrf_token
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementById('_token').getAttribute('value');
@@ -19,6 +23,7 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementById('_token').getA
 // Define some Components.
 var AddServices = require('./components/services/addServices.vue');
 var MyServices = require('./components/services/myServices.vue');
+var ServicesDetails = require('./components/services/service_details.vue');
 var IncomingOrders = require('./components/orders/incomingOrders.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
 
@@ -54,6 +59,10 @@ route.map({
     },
     '/PurchaseOrders': {
         component: PurchaseOrders
+    },
+    '/ServicesDetails/:serviceId/:serviceName': {
+        name: 'ServicesDetails',
+        component: ServicesDetails
     },
 });
 

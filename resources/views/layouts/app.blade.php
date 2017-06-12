@@ -14,7 +14,7 @@
 
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
 
@@ -41,7 +41,7 @@
                      <div class="form-group">
                           <input type="text" class="form-control" placeholder="Search">
                      </div>
-                     <button type="submit" class="btn btn-info">
+                     <button type="submit" class="btn btn-primary">
                          <i class="fa fa-search"></i> Submit
                      </button>
                 </form>

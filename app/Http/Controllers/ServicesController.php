@@ -28,7 +28,12 @@ class ServicesController extends Controller
     {
         $user = Auth::user();
 
-        return Service::where('user_id', $user->id)->with('user')->get();
+        $services = Service::where('user_id', $user->id)->with('user')->orderBy('id', 'DESC')->get();
+
+        return Response::json([
+            'user' => $user,
+            'services' => $services
+        ], 200);
     }
 
     /**
@@ -50,22 +55,23 @@ class ServicesController extends Controller
     public function store(AddServicesRequest $request)
     {
         $user = Auth::user();
+        $prices = [5, 10, 15, 20, 25, 30, 40, 50];
+        if (in_array($request->price, $prices)) {
 
-        $image = $this->uploadImage($request->file('image'));
-
-        $services = new Service();
-        $services->name = $request->name;
-        $services->description = $request->description;
-        $services->cat_id = $request->cat_id;
-        $services->price = $request->price;
-        $services->image = $image;
-        $services->user_id = $user->id;
-
-        if($services->save()) {
-            return 'done';
-        } else {
-            return 'error';
+            $services = new Service();
+            $services->name = $request->name;
+            $services->description = $request->description;
+            $services->cat_id = $request->cat_id;
+            $services->price = $request->price;
+            $services->image = $this->uploadImage($request->file('image'));
+            $services->user_id = $user->id;
+            $addService = $services->save();
+            if (!$addService) {
+                return 'error';
+            }
+            return 'success';
         }
+        return 'priceError';
 
     }
 
@@ -77,7 +83,24 @@ class ServicesController extends Controller
      */
     public function show($id)
     {
-        //
+         $service = Service::where('id', $id)->with('user')->first();
+
+         $myOwnServicesInSameCat = Service::where(function ($q) use($service) {
+             $q->where('cat_id', $service->cat_id);
+             $q->where('user_id', $service->user_id);
+             $q->where('id', '!=', $service->id);
+         })->with('user')->orderBy(\DB::raw('RAND()'))->take(4)->get();
+
+         $otherServicesInSameCat = Service::where(function ($q) use($service) {
+             $q->where('cat_id', $service->cat_id);
+             $q->where('user_id', '!=', $service->user_id);
+         })->with('user')->orderBy(\DB::raw('RAND()'))->take(4)->get();
+
+         return Response::json([
+             'service' => $service,
+             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
+             'otherServicesInSameCat' => $otherServicesInSameCat
+         ], 200);
     }
 
     /**
@@ -111,8 +134,8 @@ class ServicesController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
+        //
 
     // uploadImage
     protected function uploadImage($file){
@@ -123,7 +146,7 @@ class ServicesController extends Controller
         $fileName = date("y-m-d-h-i-s") . "_" . $sha1 . "." . $extension;
         $path = public_path('images/services/');
 
-        Image::make($file)->resize(800, 800)->save($path . $fileName, 100);
+        Image::make($file)->resize(800, 400)->save($path . $fileName, 80);
         return 'images/services/' . $fileName;
     }
 }
