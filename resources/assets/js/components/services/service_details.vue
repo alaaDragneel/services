@@ -84,18 +84,23 @@
 
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" ></div>
     </span>
-
+    <span v-else>
+        <p class="text-center">
+            <b>Loading...</b>
+        </p>
+    </span>
 
 </template>
 
 <script>
 
-    import ServicesInSameCat from './SingleServices.vue';
+    import myOwnServicesInSameCat from './SingleServices.vue';
+    import otherServicesInSameCat from '../users/SingleServices.vue';
 
     export default {
         components: {
-            my_own_services_in_same_cat: ServicesInSameCat,
-            other_services_in_same_cat: ServicesInSameCat
+            my_own_services_in_same_cat: myOwnServicesInSameCat,
+            other_services_in_same_cat: otherServicesInSameCat
         },
         data(){
             return {
@@ -119,6 +124,9 @@
                     this.otherServicesInSameCat = res.body['otherServicesInSameCat'];
                 }, function (res) {
                     alertify.error('There are Some Erros Try Again later');
+                    this.$router.go({
+                        path: '/'
+                    });
                 });
             }
         },

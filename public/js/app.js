@@ -19360,6 +19360,7 @@ var MyServices = require('./components/services/myServices.vue');
 var ServicesDetails = require('./components/services/service_details.vue');
 var IncomingOrders = require('./components/orders/incomingOrders.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
+var UserServices = require('./components/users/UserServices.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -19394,8 +19395,12 @@ route.map({
         component: PurchaseOrders
     },
     '/ServicesDetails/:serviceId/:serviceName': {
-        name: 'ServicesDetails',
+        name: '/ServicesDetails',
         component: ServicesDetails
+    },
+    '/User/:userId/:userName': {
+        name: '/User',
+        component: UserServices
     }
 });
 
@@ -19404,7 +19409,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/orders/incomingOrders.vue":10,"./components/orders/purchaseOrders.vue":11,"./components/services/addServices.vue":13,"./components/services/myServices.vue":14,"./components/services/service_details.vue":15,"vue":7,"vue-moment":4,"vue-resource":5,"vue-router":6}],10:[function(require,module,exports){
+},{"./components/orders/incomingOrders.vue":10,"./components/orders/purchaseOrders.vue":11,"./components/services/addServices.vue":13,"./components/services/myServices.vue":14,"./components/services/service_details.vue":15,"./components/users/UserServices.vue":17,"vue":7,"vue-moment":4,"vue-resource":5,"vue-router":6}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19444,7 +19449,7 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"vue":7,"vue-hot-reload-api":3}],12:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19459,13 +19464,13 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: 'ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <h3>{{ service.user.name }}</h3>\n            </div>\n            <div class=\"col-md-6 col-xs-6 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <p class=\"desc\">{{ service.description | limit 100 }}</p>\n        <div class=\"row\">\n\n            <div class=\"col-md-6\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n\n            <div class=\"col-md-6\">\n                <a href=\"#\" class=\"btn btn-success btn-product\">\n                    <span class=\"glyphicon glyphicon-shopping-cart\"></span> Buy\n                </a>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h3>{{ service.user.name }}</h3>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <p class=\"desc\">{{ service.description | limit 100 }}</p>\n        <p><i class=\"fa fa-eye\"></i> {{ service.view_count }}</p>\n        <div class=\"row\">\n\n            <div class=\"col-md-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\n"] = false
+    __vueify_insert__.cache["\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
@@ -19565,7 +19570,8 @@ exports.default = {
             services: [],
             user: '',
             sortKey: '',
-            reverse: 1
+            reverse: 1,
+            isLoading: false
         };
     },
     ready: function ready() {
@@ -19574,10 +19580,11 @@ exports.default = {
     methods: {
         getMyServices: function getMyServices() {
             this.$http.get('Services').then(function (res) {
+                this.isLoading = true;
                 this.services = res.body['services'];
                 this.user = res.body['user'];
             }, function (res) {
-                alert('unKnown Error Please Contact With The Adminstrators');
+                alertify.error('There are Some Erros Try Again later');
             });
         },
         sort: function sort(_sort) {
@@ -19588,7 +19595,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n    <br>\n    <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n</h2>\n<hr>\n<div class=\"row\">\n    <div class=\"col-lg-6 col-md-6 col-sm-6 col-xs-12\">\n        <div class=\"div-counter\">\n            <p class=\"counter-count\">{{ services.length }}</p>\n            <p class=\"employee-p\">Services</p>\n        </div>\n    </div>\n\n    <div class=\"col-lg-6 col-md-6 col-sm-6 col-xs-12\">\n        <div class=\"div-counter\">\n            <p class=\"counter-count\">652</p>\n            <p class=\"order-p\">Orders</p>\n        </div>\n    </div>\n</div>\n<hr>\n<div class=\"row\">\n    <div class=\"col-md-6\">\n        <div class=\"col-md-11\">\n            <form class=\"form-horizontal\">\n                <div class=\"form-group\">\n                    <label for=\"serviceName\"></label>\n                    <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"service name\" v-model=\"serviceName\">\n                </div>\n            </form>\n        </div>\n    </div>\n    <div class=\"col-md-6 text-right \">\n        <div class=\"btn-group\">\n            <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n            <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n            <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n            <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n        </div>\n    </div>\n\n</div>\n<hr>\n<div class=\"row\">\n    <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name'\" track-by=\"$index\">\n        <single_services :service=\"service\"></single_services>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-lg-6 col-md-6 col-sm-6 col-xs-12\">\n            <div class=\"div-counter\">\n                <p class=\"counter-count\">{{ services.length }}</p>\n                <p class=\"employee-p\">Services</p>\n            </div>\n        </div>\n\n        <div class=\"col-lg-6 col-md-6 col-sm-6 col-xs-12\">\n            <div class=\"div-counter\">\n                <p class=\"counter-count\">652</p>\n                <p class=\"order-p\">Orders</p>\n            </div>\n        </div>\n    </div>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n    <span v-if=\"services.length > 0\">\n        <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n            <single_services :service=\"service\"></single_services>\n        </div>\n    </span>\n    <span v-else=\"\">\n        <div class=\"alert alert-warning\">\n            You Do'nt Have Any Services Current Now Please Add One\n            <a v-link=\"{path: '/AddServices'}\">\n                <i class=\"fa fa-plus\"></i>\n                Add Service\n            </a>\n        </div>\n    </span>\n</div>\n</span>\n<span v-else=\"\">\n    <p class=\"text-center\">\n        <b>Loading...</b>\n    </p>\n</span>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -19616,12 +19623,16 @@ var _SingleServices = require('./SingleServices.vue');
 
 var _SingleServices2 = _interopRequireDefault(_SingleServices);
 
+var _SingleServices3 = require('../users/SingleServices.vue');
+
+var _SingleServices4 = _interopRequireDefault(_SingleServices3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     components: {
         my_own_services_in_same_cat: _SingleServices2.default,
-        other_services_in_same_cat: _SingleServices2.default
+        other_services_in_same_cat: _SingleServices4.default
     },
     data: function data() {
         return {
@@ -19646,6 +19657,9 @@ exports.default = {
                 this.otherServicesInSameCat = res.body['otherServicesInSameCat'];
             }, function (res) {
                 alertify.error('There are Some Erros Try Again later');
+                this.$router.go({
+                    path: '/'
+                });
             });
         }
     },
@@ -19654,7 +19668,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-8 col-md-8 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <div class=\"product-title\">{{ service.name }} <span class=\"small\"><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</span> </div>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\" text-center\">\n\n                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                            </div>\n\n                        </div>\n\n                        <div class=\"col-md-7\">\n                            <p class=\"product-desc\">\n                                {{ service.description }}\n                            </p>\n                            <div class=\"product-price\">$ {{ service.price }}</div>\n                            <div class=\"product-stock\">Orders Number</div>\n                            <hr>\n                            <div class=\"btn-group cart\">\n                                <button type=\"button\" class=\"btn btn-success\">\n                                    Order This Service\n                                </button>\n                            </div>\n                            <div class=\"btn-group wishlist\">\n                                <button type=\"button\" class=\"btn btn-danger\">\n                                    Add to Favorites\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                        <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                        <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-4 col-md-4 col-sm-12 col-xs-12\"></div>\n</span>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-8 col-md-8 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <div class=\"product-title\">{{ service.name }} <span class=\"small\"><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</span> </div>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\" text-center\">\n\n                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                            </div>\n\n                        </div>\n\n                        <div class=\"col-md-7\">\n                            <p class=\"product-desc\">\n                                {{ service.description }}\n                            </p>\n                            <div class=\"product-price\">$ {{ service.price }}</div>\n                            <div class=\"product-stock\">Orders Number</div>\n                            <hr>\n                            <div class=\"btn-group cart\">\n                                <button type=\"button\" class=\"btn btn-success\">\n                                    Order This Service\n                                </button>\n                            </div>\n                            <div class=\"btn-group wishlist\">\n                                <button type=\"button\" class=\"btn btn-danger\">\n                                    Add to Favorites\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                        <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                        <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-4 col-md-4 col-sm-12 col-xs-12\"></div>\n</span>\n<span v-else=\"\">\n    <p class=\"text-center\">\n        <b>Loading...</b>\n    </p>\n</span>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -19669,6 +19683,106 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a36f48c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":12,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}]},{},[9]);
+},{"../users/SingleServices.vue":16,"./SingleServices.vue":12,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],16:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['service'],
+    filters: {
+        limit: function limit(string, value) {
+            return string.substring(0, value) + '...';
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h3>{{ service.user.name }}</h3>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <a href=\"#\" class=\"btn btn-success btn-product btn-block\">\n                    <span class=\"glyphicon glyphicon-shopping-cart\"></span> Buy\n                </a>\n            </div>\n        </div>\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-07d7dbba", module.exports)
+  } else {
+    hotAPI.update("_v-07d7dbba", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],17:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.counter\n{\n    background-color: #eaecf0;\n    text-align: center;\n}\n.div-counter\n{\n    margin-left: 42%;\n}\n.counter-count\n{\n    font-size: 18px;\n    background-color: #286090;\n    border-radius: 50%;\n    position: relative;\n    color: #ffffff;\n    text-align: center;\n    line-height: 92px;\n    width: 92px;\n    height: 92px;\n    -webkit-border-radius: 50%;\n    -moz-border-radius: 50%;\n    -ms-border-radius: 50%;\n    -o-border-radius: 50%;\n    display: inline-block;\n}\n.employee-p,.customer-p,.order-p,.design-p\n{\n    font-size: 24px;\n    color: #000000;\n    line-height: 34px;\n}\n.btn-group {\n    margin-top: 15px;\n}\n\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _SingleServices = require('./SingleServices.vue');
+
+var _SingleServices2 = _interopRequireDefault(_SingleServices);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    components: {
+        single_services: _SingleServices2.default
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            user: '',
+            services: [],
+            sortKey: '',
+            reverse: 1,
+            serviceName: ''
+        };
+    },
+    ready: function ready() {
+        this.getUserServices();
+    },
+    methods: {
+        getUserServices: function getUserServices() {
+            this.$http.get('/getUserServices/' + this.$route.params.userId).then(function (res) {
+                this.isLoading = true;
+                this.services = res.body['services'];
+                this.user = res.body['user'];
+            }, function (res) {
+
+                alertify.error('There are Some Erros Try Again later');
+            });
+        },
+        sort: function sort(_sort) {
+            this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
+            this.sortKey = _sort;
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section</h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-lg-6 col-md-6 col-sm-6 col-xs-12 col-lg-offset-3 col-md-offset-3 col-sm-offset-3\">\n            <div class=\"div-counter\">\n                <p class=\"counter-count\">{{ services.length }}</p>\n                <p class=\"employee-p\">Services</p>\n            </div>\n        </div>\n    </div>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n        <span v-if=\"services.length > 0\">\n            <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                <single_services :service=\"service\"></single_services>\n            </div>\n        </span>\n        <span v-else>\n            <div class=\"alert alert-warning\">\n                {{ user.name }} Don't have Any Servicess Currently \n            </div>\n        </span>\n    </div>\n</span>\n<span v-else>\n    <p class=\"text-center\">\n        <b>Loading...</b>\n    </p>\n</span>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.counter\n{\n    background-color: #eaecf0;\n    text-align: center;\n}\n.div-counter\n{\n    margin-left: 42%;\n}\n.counter-count\n{\n    font-size: 18px;\n    background-color: #286090;\n    border-radius: 50%;\n    position: relative;\n    color: #ffffff;\n    text-align: center;\n    line-height: 92px;\n    width: 92px;\n    height: 92px;\n    -webkit-border-radius: 50%;\n    -moz-border-radius: 50%;\n    -ms-border-radius: 50%;\n    -o-border-radius: 50%;\n    display: inline-block;\n}\n.employee-p,.customer-p,.order-p,.design-p\n{\n    font-size: 24px;\n    color: #000000;\n    line-height: 34px;\n}\n.btn-group {\n    margin-top: 15px;\n}\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1b198486", module.exports)
+  } else {
+    hotAPI.update("_v-1b198486", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./SingleServices.vue":16,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}]},{},[9]);
 
 //# sourceMappingURL=app.js.map

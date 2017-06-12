@@ -26,6 +26,7 @@ var MyServices = require('./components/services/myServices.vue');
 var ServicesDetails = require('./components/services/service_details.vue');
 var IncomingOrders = require('./components/orders/incomingOrders.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
+var UserServices = require('./components/users/UserServices.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -61,8 +62,12 @@ route.map({
         component: PurchaseOrders
     },
     '/ServicesDetails/:serviceId/:serviceName': {
-        name: 'ServicesDetails',
+        name: '/ServicesDetails',
         component: ServicesDetails
+    },
+    '/User/:userId/:userName': {
+        name: '/User',
+        component: UserServices
     },
 });
 

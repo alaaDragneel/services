@@ -28,4 +28,9 @@ class Service extends Model
     {
         return $this->hasMany('App\Vote');
     }
+    // View Relation
+    public function view()
+    {
+        return $this->hasMany('App\View');
+    }
 }

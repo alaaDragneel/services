@@ -20,3 +20,5 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 
 Route::resource('Services', 'ServicesController');
+
+Route::get('/getUserServices/{userId}', 'ServicesController@getUserServices');

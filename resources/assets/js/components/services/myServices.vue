@@ -1,52 +1,70 @@
 <template>
-    <h2 class="text-center"><i class="fa fa-user"></i> {{ user.name }} Services Section
-        <br>
-        <small><i class="fa fa-clock-o"></i> {{ user.created_at | moment "calendar" }}</small>
-    </h2>
-    <hr>
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="div-counter">
-                <p class="counter-count">{{ services.length }}</p>
-                <p class="employee-p">Services</p>
+    <span v-if="isLoading">
+        <h2 class="text-center"><i class="fa fa-user"></i> {{ user.name }} Services Section
+            <br>
+            <small><i class="fa fa-clock-o"></i> {{ user.created_at | moment "calendar" }}</small>
+        </h2>
+        <hr>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="div-counter">
+                    <p class="counter-count">{{ services.length }}</p>
+                    <p class="employee-p">Services</p>
+                </div>
             </div>
-        </div>
 
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <div class="div-counter">
-                <p class="counter-count">652</p>
-                <p class="order-p">Orders</p>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="div-counter">
+                    <p class="counter-count">652</p>
+                    <p class="order-p">Orders</p>
+                </div>
             </div>
         </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="col-md-11">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="serviceName"></label>
-                        <input type="text" class="form-control" id="serviceName" placeholder="service name" v-model="serviceName">
-                    </div>
-                </form>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-11">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="serviceName"></label>
+                            <input type="text" class="form-control" id="serviceName" placeholder="Search By  Service name or Service Price" v-model="serviceName">
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6 text-right ">
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary" @click="sort('price')"><i class="fa fa-dollar"></i>  By Price</button>
-                <button type="button" class="btn btn-success" @click="sort('name')"><i class="fa fa-sort-alpha-asc"></i> By Name</button>
-                <button type="button" class="btn btn-info" @click="sort('status')"><i class="fa fa-clock-o"></i>  waiting</button>
-                <button type="button" class="btn btn-danger" @click="sort('id')"><i class="fa fa-sort-numeric-desc"></i>  By Add Order</button>
+            <div class="col-md-6 text-right ">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" @click="sort('price')"><i class="fa fa-dollar"></i>  By Price</button>
+                    <button type="button" class="btn btn-success" @click="sort('name')"><i class="fa fa-sort-alpha-asc"></i> By Name</button>
+                    <button type="button" class="btn btn-info" @click="sort('status')"><i class="fa fa-clock-o"></i>  waiting</button>
+                    <button type="button" class="btn btn-danger" @click="sort('id')"><i class="fa fa-sort-numeric-desc"></i>  By Add Order</button>
+                </div>
             </div>
-        </div>
 
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col-sm-4 col-md-3" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name'" track-by="$index">
-            <single_services :service="service"></single_services>
         </div>
+        <hr>
+        <div class="row">
+        <span v-if="services.length > 0">
+            <div class="col-sm-4 col-md-3" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
+                <single_services :service="service"></single_services>
+            </div>
+        </span>
+        <span v-else>
+            <div class="alert alert-warning">
+                You Do'nt Have Any Services Current Now Please Add One
+                <a v-link="{path: '/AddServices'}">
+                    <i class="fa fa-plus"></i>
+                    Add Service
+                </a>
+            </div>
+        </span>
     </div>
+    </span>
+    <span v-else>
+        <p class="text-center">
+            <b>Loading...</b>
+        </p>
+    </span>
 </template>
 
 <script>
@@ -62,7 +80,8 @@ export default {
             services: [],
             user: '',
             sortKey: '',
-            reverse: 1
+            reverse: 1,
+            isLoading: false
         }
     },
     ready: function () {
@@ -71,10 +90,11 @@ export default {
     methods: {
         getMyServices: function () {
             this.$http.get('Services').then(function (res) {
+                this.isLoading = true;
                 this.services = res.body['services'];
                 this.user = res.body['user'];
             }, function (res) {
-                alert('unKnown Error Please Contact With The Adminstrators');
+                alertify.error('There are Some Erros Try Again later');
             });
         },
         sort: function(sort) {
@@ -86,7 +106,7 @@ export default {
 }
 </script>
 
-<style media="screen">
+<style>
 .btn-product{
     width: 100%;
 }

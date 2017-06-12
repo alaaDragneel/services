@@ -20,28 +20,12 @@
                     </h3>
                 </div>
             </div>
-            <p class="desc">{{ service.description | limit 100 }}</p>
-            <p><i class="fa fa-eye"></i> {{ service.view_count }}</p>
             <div class="row">
-
                 <div class="col-md-12">
-
-                    <span v-if="service.status == 0">
-
-                        <span class="btn btn-warning btn-product btn-block"><i class="fa fa-clock-o"></i> Waiting</span>
-                    </span>
-
-                    <span v-if="service.status == 1">
-
-                        <span class="btn btn-info btn-product btn-block"><i class="fa fa-check"></i> Approved</span>
-                    </span>
-
-                    <span v-if="service.status == 2">
-
-                        <span class="btn btn-danger btn-product btn-block"><i class="fa fa-close"></i> Rejected</span>
-                    </span>
+                    <a href="#" class="btn btn-success btn-product btn-block">
+                        <span class="glyphicon glyphicon-shopping-cart"></span> Buy
+                    </a>
                 </div>
-
             </div>
         </div>
     </div>
@@ -66,6 +50,6 @@ export default {
         limit: function (string, value) {
             return string.substring(0, value) + '...';
         }
-    }
+    },
 }
 </script>

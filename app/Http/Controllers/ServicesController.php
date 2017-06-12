@@ -14,8 +14,11 @@ use Image;
 
 use Response;
 
+use App\User;
+
 use App\Service;
 
+use App\View;
 
 class ServicesController extends Controller
 {
@@ -28,7 +31,7 @@ class ServicesController extends Controller
     {
         $user = Auth::user();
 
-        $services = Service::where('user_id', $user->id)->with('user')->orderBy('id', 'DESC')->get();
+        $services = Service::where('user_id', $user->id)->with('user')->withCount('view')->orderBy('id', 'DESC')->get();
 
         return Response::json([
             'user' => $user,
@@ -83,24 +86,48 @@ class ServicesController extends Controller
      */
     public function show($id)
     {
-         $service = Service::where('id', $id)->with('user')->first();
+        /*Add New view*/
+        $ip = $_SERVER['REMOTE_ADDR'];
+        if (View::where('ip', $ip)->count() == 0) {
+            $guest = Auth::guest();
+            $view = new View();
+            $view->service_id = $id; // id prefer to service id
+            if ($guest) {
+                $view->user_id = 0;
+            } else {
+                $view->user_id = Auth::user()->id;
+            }
+            $view->ip = $ip;
+            $view->save();
+        }
 
-         $myOwnServicesInSameCat = Service::where(function ($q) use($service) {
-             $q->where('cat_id', $service->cat_id);
-             $q->where('user_id', $service->user_id);
-             $q->where('id', '!=', $service->id);
-         })->with('user')->orderBy(\DB::raw('RAND()'))->take(4)->get();
+        /*Get Data*/
+        $service = Service::where('id', $id)->with('user')->first();
+        if ($service->status != 1) {
+            if (Auth::guest()) {
+                orbet(403);
+            } else {
+                if (Auth::user()->id != $service->user_id) {
+                    orbet(403);
+                }
+            }
+        }
+        $myOwnServicesInSameCat = Service::where(function ($q) use($service) {
+            $q->where('cat_id', $service->cat_id);
+            $q->where('user_id', $service->user_id);
+            $q->where('id', '!=', $service->id);
+        })->with('user')->withCount('view')->orderBy(\DB::raw('RAND()'))->take(4)->get();
+        $otherServicesInSameCat = Service::where(function ($q) use($service) {
+            $q->where('cat_id', $service->cat_id);
+            $q->where('user_id', '!=', $service->user_id);
+            $q->where('status', 1);
+        })->with('user')->orderBy(\DB::raw('RAND()'))->take(4)->get();
 
-         $otherServicesInSameCat = Service::where(function ($q) use($service) {
-             $q->where('cat_id', $service->cat_id);
-             $q->where('user_id', '!=', $service->user_id);
-         })->with('user')->orderBy(\DB::raw('RAND()'))->take(4)->get();
-
-         return Response::json([
-             'service' => $service,
-             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
-             'otherServicesInSameCat' => $otherServicesInSameCat
-         ], 200);
+        return Response::json([
+            'service' => $service,
+            'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
+            'otherServicesInSameCat' => $otherServicesInSameCat
+        ], 200);
     }
 
     /**
@@ -136,6 +163,23 @@ class ServicesController extends Controller
     {
     }
         //
+
+
+    public function getUserServices($userId)
+    {
+        $user_id = intval($userId);
+
+        $user = User::findOrFail($userId);
+        if ($user) {
+            $services = Service::where(function ($q) use ($user_id) {
+                $q->where('user_id', $user_id);
+                $q->where('status', 1);
+            })->with('user')->get();
+
+            return Response::json(['user' => $user, 'services' => $services], 200);
+        }
+
+    }
 
     // uploadImage
     protected function uploadImage($file){
