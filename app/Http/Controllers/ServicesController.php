@@ -105,10 +105,10 @@ class ServicesController extends Controller
         $service = Service::where('id', $id)->with('user')->first();
         if ($service->status != 1) {
             if (Auth::guest()) {
-                orbet(403);
+                abort(403);
             } else {
                 if (Auth::user()->id != $service->user_id) {
-                    orbet(403);
+                    abort(403);
                 }
             }
         }

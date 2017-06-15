@@ -19409,7 +19409,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/orders/incomingOrders.vue":10,"./components/orders/purchaseOrders.vue":11,"./components/services/addServices.vue":13,"./components/services/myServices.vue":14,"./components/services/service_details.vue":15,"./components/users/UserServices.vue":17,"vue":7,"vue-moment":4,"vue-resource":5,"vue-router":6}],10:[function(require,module,exports){
+},{"./components/orders/incomingOrders.vue":10,"./components/orders/purchaseOrders.vue":11,"./components/services/addServices.vue":13,"./components/services/myServices.vue":14,"./components/services/service_details.vue":15,"./components/users/UserServices.vue":18,"vue":7,"vue-moment":4,"vue-resource":5,"vue-router":6}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19623,6 +19623,10 @@ var _SingleServices = require('./SingleServices.vue');
 
 var _SingleServices2 = _interopRequireDefault(_SingleServices);
 
+var _sidebar = require('./sidebar.vue');
+
+var _sidebar2 = _interopRequireDefault(_sidebar);
+
 var _SingleServices3 = require('../users/SingleServices.vue');
 
 var _SingleServices4 = _interopRequireDefault(_SingleServices3);
@@ -19632,7 +19636,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = {
     components: {
         my_own_services_in_same_cat: _SingleServices2.default,
-        other_services_in_same_cat: _SingleServices4.default
+        other_services_in_same_cat: _SingleServices4.default,
+        sidebar: _sidebar2.default
     },
     data: function data() {
         return {
@@ -19668,7 +19673,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-8 col-md-8 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <div class=\"product-title\">{{ service.name }} <span class=\"small\"><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</span> </div>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\" text-center\">\n\n                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                            </div>\n\n                        </div>\n\n                        <div class=\"col-md-7\">\n                            <p class=\"product-desc\">\n                                {{ service.description }}\n                            </p>\n                            <div class=\"product-price\">$ {{ service.price }}</div>\n                            <div class=\"product-stock\">Orders Number</div>\n                            <hr>\n                            <div class=\"btn-group cart\">\n                                <button type=\"button\" class=\"btn btn-success\">\n                                    Order This Service\n                                </button>\n                            </div>\n                            <div class=\"btn-group wishlist\">\n                                <button type=\"button\" class=\"btn btn-danger\">\n                                    Add to Favorites\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                        <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                        <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-4 col-md-4 col-sm-12 col-xs-12\"></div>\n</span>\n<span v-else=\"\">\n    <p class=\"text-center\">\n        <b>Loading...</b>\n    </p>\n</span>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <div class=\"product-title\">{{ service.name }} <span class=\"small\"><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</span> </div>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\" text-center\">\n\n                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                            </div>\n\n                        </div>\n\n                        <div class=\"col-md-7\">\n                            <p class=\"product-desc\">\n                                {{ service.description }}\n                            </p>\n                            <div class=\"product-price\">$ {{ service.price }}</div>\n                            <div class=\"product-stock\">Orders Number</div>\n                            <hr>\n                            <div class=\"btn-group cart\">\n                                <button type=\"button\" class=\"btn btn-success\">\n                                    Order This Service\n                                </button>\n                            </div>\n                            <div class=\"btn-group wishlist\">\n                                <button type=\"button\" class=\"btn btn-danger\">\n                                    Add to Favorites\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                        <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n\n                                <br>\n                                <div class=\"row\">\n                                    <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                        <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\"></sidebar>\n    </div>\n</span>\n<span v-else=\"\">\n    <p class=\"text-center\">\n        <b>Loading...</b>\n    </p>\n</span>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -19683,7 +19688,34 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a36f48c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../users/SingleServices.vue":16,"./SingleServices.vue":12,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],16:[function(require,module,exports){
+},{"../users/SingleServices.vue":17,"./SingleServices.vue":12,"./sidebar.vue":16,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],16:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['service']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a v-link=\"{name: '/User', params:{ userId:service.user.id, userName: service.user.name}}\">\n    <i class=\"fa fa-user\"></i> {{ service.user.name }}\n</a>\n<br>\n<button type=\"button\" class=\"btn btn-primary\">\n    <i class=\"fa fa-send\"></i> Send Message\n</button>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-24dcce5e", module.exports)
+  } else {
+    hotAPI.update("_v-24dcce5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],17:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -19693,14 +19725,32 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
     props: ['service'],
+    data: function data() {
+        return {
+            resons: ''
+        };
+    },
     filters: {
         limit: function limit(string, value) {
             return string.substring(0, value) + '...';
         }
+    },
+    methods: {
+        addOrder: function addOrder() {
+            this.$http.get('Orders/' + this.service.id).then(function (res) {
+                this.resons = 'Waiting For The Approved';
+                swal('Success', this.resons, 'success');
+            }, function (res) {
+                this.resons = '1 - This Service Added By You \n';
+                this.resons += '1 - This Service You Order It Before \n';
+                this.resons += '1 - This Service not Found \n';
+                swal('Something Goes Wrong \n You can\'t order this Service For The Next Resons', this.resons, 'error');
+            });
+        }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h3>{{ service.user.name }}</h3>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <a href=\"#\" class=\"btn btn-success btn-product btn-block\">\n                    <span class=\"glyphicon glyphicon-shopping-cart\"></span> Buy\n                </a>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h3>{{ service.user.name }}</h3>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <a @click=\"addOrder()\" class=\"btn btn-success btn-product btn-block\">\n                    <span class=\"glyphicon glyphicon-shopping-cart\"></span> Buy\n                </a>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -19715,7 +19765,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-07d7dbba", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],17:[function(require,module,exports){
+},{"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}],18:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.counter\n{\n    background-color: #eaecf0;\n    text-align: center;\n}\n.div-counter\n{\n    margin-left: 42%;\n}\n.counter-count\n{\n    font-size: 18px;\n    background-color: #286090;\n    border-radius: 50%;\n    position: relative;\n    color: #ffffff;\n    text-align: center;\n    line-height: 92px;\n    width: 92px;\n    height: 92px;\n    -webkit-border-radius: 50%;\n    -moz-border-radius: 50%;\n    -ms-border-radius: 50%;\n    -o-border-radius: 50%;\n    display: inline-block;\n}\n.employee-p,.customer-p,.order-p,.design-p\n{\n    font-size: 24px;\n    color: #000000;\n    line-height: 34px;\n}\n.btn-group {\n    margin-top: 15px;\n}\n\n")
 'use strict';
@@ -19783,6 +19833,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1b198486", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":16,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}]},{},[9]);
+},{"./SingleServices.vue":17,"vue":7,"vue-hot-reload-api":3,"vueify/lib/insert-css":8}]},{},[9]);
 
 //# sourceMappingURL=app.js.map
