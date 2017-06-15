@@ -34,9 +34,7 @@
                                 <div class="product-stock">Orders Number</div>
                                 <hr>
                                 <div class="btn-group cart">
-                                    <button type="button" class="btn btn-success">
-                                        Order This Service
-                                    </button>
+                                    <buy_btn :service="service"></buy_btn>
                                 </div>
                                 <div class="btn-group wishlist">
                                     <button type="button" class="btn btn-danger">
@@ -86,25 +84,28 @@
             <sidebar :service="service"></sidebar>
         </div>
     </span>
-    <span v-else>
-        <p class="text-center">
-            <b>Loading...</b>
-        </p>
-    </span>
+    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 
 </template>
 
 <script>
 
+
+
     import myOwnServicesInSameCat from './SingleServices.vue';
-    import sidebar from './sidebar.vue';
     import otherServicesInSameCat from '../users/SingleServices.vue';
+    import sidebar from './sidebar.vue';
+    import buyBtn from '../btns/buy.vue';
+    var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 
     export default {
+
         components: {
             my_own_services_in_same_cat: myOwnServicesInSameCat,
             other_services_in_same_cat: otherServicesInSameCat,
-            sidebar: sidebar
+            sidebar: sidebar,
+            buy_btn: buyBtn,
+            spinner: Spinner
         },
         data(){
             return {
@@ -117,15 +118,17 @@
             }
         },
         ready: function () {
+            this.$refs.spinner.show();
             this.GetServicesById();
         },
         methods: {
             GetServicesById: function () {
                 this.$http.get('Services/' + this.$route.params.serviceId).then(function (res) {
-                    this.isLoading = true;
                     this.service = res.body['service'];
                     this.myOwnServicesInSameCat = res.body['myOwnServicesInSameCat'];
                     this.otherServicesInSameCat = res.body['otherServicesInSameCat'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
                 }, function (res) {
                     alertify.error('There are Some Erros Try Again later');
                     this.$router.go({

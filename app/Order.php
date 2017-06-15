@@ -15,7 +15,7 @@ class Order extends Model
     // Services Relation
     public function services()
     {
-        return $this->belongsTo('App\Service');
+        return $this->belongsTo('App\Service', 'service_id');
     }
 
     // User Relations
@@ -26,6 +26,6 @@ class Order extends Model
 
     public function getUserAddService()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
 }

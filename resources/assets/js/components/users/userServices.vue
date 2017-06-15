@@ -1,15 +1,10 @@
 <template lang="html">
     <span v-if="isLoading">
-        <h2 class="text-center"><i class="fa fa-user"></i> {{ user.name }} Services Section</h2>
-        <hr>
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-lg-offset-3 col-md-offset-3 col-sm-offset-3">
-                <div class="div-counter">
-                    <p class="counter-count">{{ services.length }}</p>
-                    <p class="employee-p">Services</p>
-                </div>
-            </div>
-        </div>
+        <h2 class="text-center">
+            <i class="fa fa-user"></i> {{ user.name }} Services Section
+            <br>
+            <small><strong><i class="fa fa-cart-plus"></i> {{ services.length }} Service/s</strong></small>
+        </h2>
         <hr>
         <div class="row">
             <div class="col-md-6">
@@ -41,24 +36,22 @@
             </span>
             <span v-else>
                 <div class="alert alert-warning">
-                    {{ user.name }} Don't have Any Servicess Currently 
+                    {{ user.name }} Don't have Any Servicess Currently
                 </div>
             </span>
         </div>
     </span>
-    <span v-else>
-        <p class="text-center">
-            <b>Loading...</b>
-        </p>
-    </span>
+    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 
 <script>
     import SingleServices from './SingleServices.vue';
+    var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 
     export default {
         components: {
-            single_services: SingleServices
+            single_services: SingleServices,
+            spinner: Spinner
         },
         data: function () {
             return {
@@ -71,14 +64,16 @@
             }
         },
         ready: function () {
+            this.$refs.spinner.show();
             this.getUserServices();
         },
         methods: {
             getUserServices: function () {
                 this.$http.get('/getUserServices/' + this.$route.params.userId).then(function (res) {
-                    this.isLoading = true;
                     this.services = res.body['services'];
                     this.user = res.body['user'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
 
                 }, function (res) {
 

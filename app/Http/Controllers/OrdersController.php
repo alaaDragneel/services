@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Response;
+
+use App;
+
+use App\User;
+
 use App\Service;
 
 use App\Order;
@@ -122,5 +128,45 @@ class OrdersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getMyPurchaseOrders()
+    {
+        $user = Auth::user();
+        $orders = Order::where('user_order', $user->id)
+            ->with('services', 'getUserAddService')->orderBy('id', 'DESC')->get();
+
+        return Response::json(['user' => $user, 'orders' => $orders], 200);
+    }
+
+    public function getMyIncomingOrders()
+    {
+        $user = Auth::user();
+        $orders = Order::where('user_id', $user->id)
+            ->with('services', 'getMyOrders')->orderBy('id', 'DESC')->get();
+
+        return Response::json(['user' => $user, 'orders' => $orders], 200);
+    }
+
+    public function getOrderById($orderId)
+    {
+        $order = Order::findOrFail($orderId);
+        if ($order) {
+            // who add the services
+            $user_id = User::where('id', $order->user_id)->with('services')->take(3)->get();
+            // who request the services
+            $order_user = User::where('id', $order->user_order)->with('services')->take(3)->get();
+            
+            if ($user_id->id != $order_user->id) {
+                $order = Order::where('id', $orderId)->with('services')->first();
+                return Response::json([
+                    'user_id' => $user_id,
+                    'order_user' => $order_user,
+                    'order' => $order
+                ], 200);
+            }
+            App::abort(403);
+        }
+        App::abort(403);
     }
 }

@@ -21,9 +21,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <a @click="addOrder()" class="btn btn-success btn-product btn-block">
-                        <span class="glyphicon glyphicon-shopping-cart"></span> Buy
-                    </a>
+                    <buy_btn :service="service"></buy_btn>
                 </div>
             </div>
         </div>
@@ -43,11 +41,16 @@ h4.text-center {
 </style>
 <script>
 
+import buyBtn from '../btns/buy.vue';
+
 export default {
     props: ['service'],
+    components: {
+        buy_btn: buyBtn
+    },
     data: function () {
         return {
-            resons: ''
+
         }
     },
     filters: {
@@ -55,18 +58,5 @@ export default {
             return string.substring(0, value) + '...';
         }
     },
-    methods: {
-        addOrder: function () {
-            this.$http.get('Orders/' + this.service.id).then(function (res) {
-                this.resons = 'Waiting For The Approved';
-                swal('Success', this.resons, 'success');
-            }, function (res) {
-                this.resons = '1 - This Service Added By You \n';
-                this.resons += '1 - This Service You Order It Before \n';
-                this.resons += '1 - This Service not Found \n';
-                swal('Something Goes Wrong \n You can\'t order this Service For The Next Resons', this.resons, 'error');
-            });
-        }
-    }
 }
 </script>

@@ -21,7 +21,7 @@ class Service extends Model
     // Order Relation
     public function order()
     {
-        return $this->hasMany('App\Order');
+        return $this->hasMany('App\Order', 'service_id');
     }
     // Vote Relation
     public function votes()

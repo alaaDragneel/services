@@ -3,23 +3,9 @@
         <h2 class="text-center"><i class="fa fa-user"></i> {{ user.name }} Services Section
             <br>
             <small><i class="fa fa-clock-o"></i> {{ user.created_at | moment "calendar" }}</small>
+            <br>
+            <small><strong><i class="fa fa-cart-plus"></i> {{ services.length }} Service/s</strong></small>
         </h2>
-        <hr>
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="div-counter">
-                    <p class="counter-count">{{ services.length }}</p>
-                    <p class="employee-p">Services</p>
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <div class="div-counter">
-                    <p class="counter-count">652</p>
-                    <p class="order-p">Orders</p>
-                </div>
-            </div>
-        </div>
         <hr>
         <div class="row">
             <div class="col-md-6">
@@ -60,20 +46,18 @@
         </span>
     </div>
     </span>
-    <span v-else>
-        <p class="text-center">
-            <b>Loading...</b>
-        </p>
-    </span>
+    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 
 <script>
 
 import SingleServices from './SingleServices.vue';
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 
 export default {
     components: {
-        single_services: SingleServices
+        single_services: SingleServices,
+        spinner: Spinner
     },
     data: function () {
         return {
@@ -85,14 +69,16 @@ export default {
         }
     },
     ready: function () {
+        this.$refs.spinner.show();
         this.getMyServices();
     },
     methods: {
         getMyServices: function () {
             this.$http.get('Services').then(function (res) {
-                this.isLoading = true;
                 this.services = res.body['services'];
                 this.user = res.body['user'];
+                this.$refs.spinner.hide();
+                this.isLoading = true;
             }, function (res) {
                 alertify.error('There are Some Erros Try Again later');
             });
@@ -116,38 +102,6 @@ export default {
 .img-container img {
     height: 100%;
     width: 100%;
-}
-.counter
-{
-    background-color: #eaecf0;
-    text-align: center;
-}
-.div-counter
-{
-    margin-left: 42%;
-}
-.counter-count
-{
-    font-size: 18px;
-    background-color: #286090;
-    border-radius: 50%;
-    position: relative;
-    color: #ffffff;
-    text-align: center;
-    line-height: 92px;
-    width: 92px;
-    height: 92px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%;
-    display: inline-block;
-}
-.employee-p,.customer-p,.order-p,.design-p
-{
-    font-size: 24px;
-    color: #000000;
-    line-height: 34px;
 }
 .btn-group {
     margin-top: 15px;

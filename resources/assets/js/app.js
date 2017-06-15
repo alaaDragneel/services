@@ -25,6 +25,7 @@ var AddServices = require('./components/services/addServices.vue');
 var MyServices = require('./components/services/myServices.vue');
 var ServicesDetails = require('./components/services/service_details.vue');
 var IncomingOrders = require('./components/orders/incomingOrders.vue');
+var singleOrder = require('./components/orders/singleOrder.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
 var UserServices = require('./components/users/UserServices.vue');
 
@@ -68,6 +69,10 @@ route.map({
     '/User/:userId/:userName': {
         name: '/User',
         component: UserServices
+    },
+    '/Order/:orderId': {
+        name: '/Order',
+        component: singleOrder
     },
 });
 
