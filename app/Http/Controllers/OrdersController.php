@@ -168,8 +168,10 @@ class OrdersController extends Controller
 
             if ($user_id->id != $order_user->id) {
                 if ($authUser->id == $user_id->id) {
-                    $order->status = 1;
-                    $order->save();
+                    if ($order->status == 0) {                        
+                        $order->status = 1;
+                        $order->update();
+                    }
                 }
                 $order = Order::where('id', $orderId)->with('services')->first();
                 $orderCount = Order::where(function ($q) use ($order){
@@ -197,7 +199,7 @@ class OrdersController extends Controller
             if (in_array($status, $statusCheck)) {
                 if ($status != $order->status) {
                     $order->status = intval($status);
-                    if ($order->save()) {
+                    if ($order->update()) {
                         return 'success';
                     }
                     App::abort(403);

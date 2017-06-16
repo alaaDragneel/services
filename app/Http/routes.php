@@ -32,3 +32,5 @@ Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
 Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
 // Comments
 Route::resource('Comments', 'CommentsController');
+// Message
+Route::resource('Messages', 'MessagesController');

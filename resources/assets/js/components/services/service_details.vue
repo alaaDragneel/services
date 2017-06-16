@@ -57,9 +57,12 @@
                                 <div class="tab-pane fade in active" id="service-one">
                                     <br>
                                     <div class="row">
-                                        <div class="col-md-5 col-sm-4" v-for="service in myOwnServicesInSameCat" track-by="$index">
-                                            <my_own_services_in_same_cat :service="service"></my_own_services_in_same_cat>
+                                        <div v-id="myOwnServicesInSameCat.length > 0">
+                                            <div class="col-md-5 col-sm-4" v-for="service in myOwnServicesInSameCat" track-by="$index">
+                                                <my_own_services_in_same_cat :service="service"></my_own_services_in_same_cat>
+                                            </div>
                                         </div>
+
                                     </div>
 
                                 </div>
@@ -67,8 +70,10 @@
 
                                     <br>
                                     <div class="row">
-                                        <div class="col-md-5 col-sm-4" v-for="service in otherServicesInSameCat" track-by="$index">
-                                            <other_services_in_same_cat :service="service"></other_services_in_same_cat>
+                                        <div v-id="otherServicesInSameCat.length > 0">
+                                            <div class="col-md-5 col-sm-4" v-for="service in otherServicesInSameCat" track-by="$index">
+                                                <other_services_in_same_cat :service="service"></other_services_in_same_cat>
+                                            </div>
                                         </div>
                                     </div>
 

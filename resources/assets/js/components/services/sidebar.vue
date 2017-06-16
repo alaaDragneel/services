@@ -3,9 +3,9 @@
         <i class="fa fa-user"></i> {{ service.user.name }}
     </a>
     <br>
-    <button type="button" class="btn btn-primary">
+    <a v-link="{name: '/SendMessage', params: {userId: service.user.id}}" class="btn btn-primary">
         <i class="fa fa-send"></i> Send Message
-    </button>
+    </a>
 </template>
 
 <script>

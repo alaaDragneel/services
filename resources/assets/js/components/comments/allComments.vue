@@ -1,6 +1,7 @@
 <template lang="html">
-
-    <add_comment :order="order"></add_comment>
+    <span v-if="showCommentSection">
+        <add_comment :order="order"></add_comment>
+    </span>
 
     <div class="container">
         <div class="row">
@@ -91,7 +92,8 @@ import AddComment from '../comments/addComment.vue';
                 comments: [],
                 sortKey: '',
                 reverse: 1,
-                userName: ''
+                userName: '',
+                showCommentSection: true
             }
         },
         ready: function () {
@@ -114,6 +116,12 @@ import AddComment from '../comments/addComment.vue';
         events: {
             AddNewComment: function (val) {
                 this.comments.unshift(val);
+            },
+            DisabledAdCommentSection: function (val) {
+                alert('here');
+                if (val == 'true') {
+                    this.showCommentSection = false;
+                }
             }
         }
     }

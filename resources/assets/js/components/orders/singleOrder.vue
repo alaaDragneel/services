@@ -16,20 +16,22 @@
                                                 <strong>
                                                     <status :status="order.status"></status>
                                                 </strong>
-                                                <!--
-                                                authUser => User who Login
-                                                user_order => User Who Order the Service
-                                                user_id => User Who Add the Service
-                                                -->
-                                                <strong v-if="authUser.id == user_id.id">
-                                                    <!-- 2 => accept -->
-                                                    <button @click="changeStatus(2)" type="button" class="label btn btn-success">
-                                                        <i class="fa fa-check"></i> Accept
-                                                    </button>
-                                                    <!-- 3 => desline -->
-                                                    <button @click="changeStatus(3)" type="button" class="label btn btn-danger ">
-                                                        <i class="fa fa-close"></i> Decline
-                                                    </button>
+                                                <strong v-if="showControll">
+                                                    <!--
+                                                    authUser => User who Login
+                                                    user_order => User Who Order the Service
+                                                    user_id => User Who Add the Service
+                                                    -->
+                                                    <span v-if="authUser.id == user_id.id">
+                                                        <!-- 2 => accept -->
+                                                        <button @click="changeStatus(2)" type="button" class="label btn btn-success">
+                                                            <i class="fa fa-check"></i> Accept
+                                                        </button>
+                                                        <!-- 3 => desline -->
+                                                        <button @click="changeStatus(3)" type="button" class="label btn btn-danger ">
+                                                            <i class="fa fa-close"></i> Decline
+                                                        </button>
+                                                    </span>
                                                 </strong>
                                             </span>
                                             <div class="product-rating">
@@ -96,7 +98,8 @@
                 user_order: '',
                 isLoading: false,
                 ordersCount: '',
-                authUser: []
+                authUser: [],
+                showControll: false
 
             }
         },
@@ -112,6 +115,12 @@
                     this.user_order = res.body['order_user'];
                     this.ordersCount = res.body['ordersCount'];
                     this.authUser = res.body['authUser'];
+                    if (this.order.status != 2 && this.order.status != 3) {
+                        this.showControll = true;
+                    }
+                    if (this.order.status == 3) {
+                        this.$dispatch('DisabledAdCommentSection', 'true');
+                    }
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {
@@ -124,8 +133,12 @@
             changeStatus: function (status) {
                 this.$refs.spinner.show();
                 this.$http.get('changeStatus/' + this.$route.params.orderId +'/'+ status).then(function (res) {
+                    if (status == 3) {
+                        this.$dispatch('DisabledAdCommentSection', 'true');
+                    }
+                    this.showControll = false;
                     this.$refs.spinner.hide();
-                    alertify.error('You Accepted the Order Good luke');
+                    alertify.success('Order Status Has been Changed Successfully');
                 }, function (res) {
                     this.$refs.spinner.hide();
                     alertify.error('There are Some Erros Try Again later');

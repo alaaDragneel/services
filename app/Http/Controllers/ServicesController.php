@@ -114,22 +114,28 @@ class ServicesController extends Controller
                 }
             }
         }
-        $myOwnServicesInSameCat = Service::where(function ($q) use($service) {
-            $q->where('cat_id', $service->cat_id);
-            $q->where('user_id', $service->user_id);
-            $q->where('id', '!=', $service->id);
-        })->with('user')->withCount('view')->orderBy(\DB::raw('RAND()'))->take(4)->get();
-
-        $otherServicesInSameCat = Service::where(function ($q) use($service) {
-            $q->where('cat_id', $service->cat_id);
-            $q->where('user_id', '!=', $service->user_id);
-            $q->where('status', 1);
-        })->with('user')->orderBy(\DB::raw('RAND()'))->take(4)->get();
-
         $ordersCount = Order::where(function ($q) use ($service){
             $q->where('service_id', $service->id);
             $q->whereIn('status', [0, 1, 2, 4]); // status => 0 => New, 1 => Old, 2 => inprogress, 4 => finished
         })->count();
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $myOwnServicesInSameCat = Service::where(function ($q) use($service, $user) {
+                $q->where('cat_id', $service->cat_id);
+                $q->where('user_id', $user->id);
+                $q->where('id', '!=', $service->id);
+            })->with('user')->withCount('view')->orderBy('id', 'DESC')->take(4)->get();
+
+            $otherServicesInSameCat = Service::where(function ($q) use($service, $user) {
+                $q->where('cat_id', $service->cat_id);
+                $q->where('user_id', '!=', $user->id);
+                $q->where('status', 1);
+            })->with('user')->orderBy('id', 'DESC')->take(4)->get();
+        } else {
+            $myOwnServicesInSameCat = [];
+            $otherServicesInSameCat = [];
+        }
         return Response::json([
             'service' => $service,
             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,

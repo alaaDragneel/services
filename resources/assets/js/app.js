@@ -26,6 +26,7 @@ var IncomingOrders = require('./components/orders/incomingOrders.vue');
 var singleOrder = require('./components/orders/singleOrder.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
 var UserServices = require('./components/users/UserServices.vue');
+var SendMessage = require('./components/messages/send.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -71,6 +72,10 @@ route.map({
     '/Order/:orderId': {
         name: '/Order',
         component: singleOrder
+    },
+    '/SendMessage/:userId': {
+        name: '/SendMessage',
+        component: SendMessage
     },
 });
 
