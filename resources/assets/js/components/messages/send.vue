@@ -84,22 +84,22 @@ export default {
     },
     methods: {
         sendMessage: function () {
+            
+            var formData = new FormData();
+            formData.append('userId', this.$route.params.userId);
+            formData.append('title', this.title);
+            formData.append('message', this.message);
 
-                var formData = new FormData();
-                formData.append('userId', this.$route.params.userId);
-                formData.append('title', this.title);
-                formData.append('message', this.message);
-
-                this.$http.post('Messages', formData).then(function (res) {
-                    alertify.success('Success: your Message has been Send');
-                    this.title = '';
-                    this.message = '';
-                },function (res) {
-                    for (var key in res.body) {
-                        alertify.error(res.body[key][0]);
-                    }
-                    alertify.error('Try Again Later');
-                });
+            this.$http.post('Messages', formData).then(function (res) {
+                alertify.success('Success: your Message has been Send');
+                this.title = '';
+                this.message = '';
+            },function (res) {
+                for (var key in res.body) {
+                    alertify.error(res.body[key][0]);
+                }
+                alertify.error('Try Again Later');
+            });
         }
     }
 
