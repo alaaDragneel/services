@@ -57,7 +57,7 @@ class OrdersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id) // NOTE For Save new Order Not Recommended Here by alaaDragneel
     {
         /**
         *  NOTE 0 Status => Waiting Order
@@ -148,8 +148,9 @@ class OrdersController extends Controller
         return Response::json(['user' => $user, 'orders' => $orders], 200);
     }
 
-    public function getOrderById($orderId)
+    public function getOrderById($orderId) // NOTE to Get The Single Order by alaaDragneel
     {
+        $authUser = Auth::user();
         $order = Order::findOrFail($orderId);
         if ($order) {
             // who add the services
@@ -166,6 +167,10 @@ class OrdersController extends Controller
             ->first();
 
             if ($user_id->id != $order_user->id) {
+                if ($authUser->id == $user_id->id) {
+                    $order->status = 1;
+                    $order->save();
+                }
                 $order = Order::where('id', $orderId)->with('services')->first();
                 $orderCount = Order::where(function ($q) use ($order){
                     $q->where('service_id', $order->service_id);
@@ -175,8 +180,29 @@ class OrdersController extends Controller
                     'user_id' => $user_id,
                     'order_user' => $order_user,
                     'order' => $order,
-                    'ordersCount' => $orderCount
+                    'ordersCount' => $orderCount,
+                    'authUser' => $authUser
                 ], 200);
+            }
+            App::abort(403);
+        }
+        App::abort(403);
+    }
+
+    public function changeStatus($order_id, $status)
+    {
+        $order = Order::findOrFail(intval($order_id));
+        if ($order) {
+            $statusCheck = [2, 3];
+            if (in_array($status, $statusCheck)) {
+                if ($status != $order->status) {
+                    $order->status = intval($status);
+                    if ($order->save()) {
+                        return 'success';
+                    }
+                    App::abort(403);
+                }
+                App::abort(403);
             }
             App::abort(403);
         }

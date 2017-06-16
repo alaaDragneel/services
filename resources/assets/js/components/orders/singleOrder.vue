@@ -16,6 +16,21 @@
                                                 <strong>
                                                     <status :status="order.status"></status>
                                                 </strong>
+                                                <!--
+                                                authUser => User who Login
+                                                user_order => User Who Order the Service
+                                                user_id => User Who Add the Service
+                                                -->
+                                                <strong v-if="authUser.id == user_id.id">
+                                                    <!-- 2 => accept -->
+                                                    <button @click="changeStatus(2)" type="button" class="label btn btn-success">
+                                                        <i class="fa fa-check"></i> Accept
+                                                    </button>
+                                                    <!-- 3 => desline -->
+                                                    <button @click="changeStatus(3)" type="button" class="label btn btn-danger ">
+                                                        <i class="fa fa-close"></i> Decline
+                                                    </button>
+                                                </strong>
                                             </span>
                                             <div class="product-rating">
                                                 <i class="fa fa-star gold"></i>
@@ -24,15 +39,13 @@
                                                 <i class="fa fa-star gold"></i>
                                                 <i class="fa fa-star-o"></i>
                                             </div>
-                                            <hr>
-
                                         </div>
+                                        <hr>
                                         <div class="col-md-12">
                                             <div class=" text-center">
 
                                                 <img class="img-responsive" id="item-display" v-bind:src="order.services.image" alt="{{order.services.name}}">
                                             </div>
-
                                         </div>
 
                                         <div class="col-md-12">
@@ -82,7 +95,8 @@
                 user_id: '',
                 user_order: '',
                 isLoading: false,
-                ordersCount: ''
+                ordersCount: '',
+                authUser: []
 
             }
         },
@@ -97,6 +111,7 @@
                     this.user_id = res.body['user_id'];
                     this.user_order = res.body['order_user'];
                     this.ordersCount = res.body['ordersCount'];
+                    this.authUser = res.body['authUser'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {
@@ -104,6 +119,16 @@
                     this.$router.go({
                         path: '/'
                     });
+                });
+            },
+            changeStatus: function (status) {
+                this.$refs.spinner.show();
+                this.$http.get('changeStatus/' + this.$route.params.orderId +'/'+ status).then(function (res) {
+                    this.$refs.spinner.hide();
+                    alertify.error('You Accepted the Order Good luke');
+                }, function (res) {
+                    this.$refs.spinner.hide();
+                    alertify.error('There are Some Erros Try Again later');
                 });
             }
         },

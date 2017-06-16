@@ -27,7 +27,8 @@ Route::get('/getUserServices/{userId}', 'ServicesController@getUserServices');
 // Orders
 Route::resource('Orders', 'OrdersController');
 Route::get('purchaseOrders', 'OrdersController@getMyPurchaseOrders');
-Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
 Route::get('incomingOrders', 'OrdersController@getMyIncomingOrders');
+Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
+Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
 // Comments
 Route::resource('Comments', 'CommentsController');
