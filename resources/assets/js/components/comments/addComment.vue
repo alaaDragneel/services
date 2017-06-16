@@ -2,10 +2,10 @@
     <validator name="validation1">
         <form novalidate>
             <div class="form-group">
-              <textarea class="form-control" rows="3" placeholder="Write Your Comment" v-model="message" @valid="valid" @invalid="invalid" v-validate:message="{ required: true, minlength: 20, maxlength: 1000 }"></textarea>
+              <textarea class="form-control" rows="3" placeholder="Write Your Comment" v-model="comment" @valid="valid" @invalid="invalid" v-validate:message="{ required: true, minlength: 20, maxlength: 1000 }"></textarea>
             </div>
             <div class="form-group">
-                <button type="button" class="btn btn-primary btn-block" v-bind:disabled="disabled">
+                <button type="button" class="btn btn-success btn-block" v-bind:disabled="disabled" @click.prevent="addComment">
                     <i class="fa fa-comment"></i> Add Comment
                 </button>
             </div>
@@ -24,8 +24,9 @@ export default {
     props: ['order'],
     data () {
         return {
-            message: '',
-            disabled: true
+            comment: '',
+            disabled: true,
+
         }
     },
     methods: {
@@ -34,6 +35,25 @@ export default {
         },
         invalid: function () {
             this.disabled = true;
+        },
+        addComment: function () {
+
+            var formData = new FormData();
+            formData.append('orderId', this.order.id);
+            formData.append('comment', this.comment);
+
+            this.$http.post('Comments', formData).then(function (res) {
+                alertify.success('Success: your Comment has been added');                
+                this.comment = '';
+                this.$dispatch('AddNewComment', res.body);
+
+            },function (res) {
+                this.comment = '';
+                for (var key in res.body) {
+                    alertify.error(res.body[key][0]);
+                }
+                alertify.error('Try Again Later');
+            });
         }
     }
 

@@ -16,11 +16,6 @@ Vue.use(VueValidator)
 // Vue Recource init Headers With laravel csrf_token
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementById('_token').getAttribute('value');
 
-
-
-
-
-
 // Vue Router init
 
 // Define some Components.

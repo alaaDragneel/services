@@ -24480,8 +24480,9 @@ exports.default = {
     props: ['order'],
     data: function data() {
         return {
-            message: '',
+            comment: '',
             disabled: true
+
         };
     },
 
@@ -24491,12 +24492,30 @@ exports.default = {
         },
         invalid: function invalid() {
             this.disabled = true;
+        },
+        addComment: function addComment() {
+
+            var formData = new FormData();
+            formData.append('orderId', this.order.id);
+            formData.append('comment', this.comment);
+
+            this.$http.post('Comments', formData).then(function (res) {
+                alertify.success('Success: your Comment has been added');
+                this.comment = '';
+                this.$dispatch('AddNewComment', res.body);
+            }, function (res) {
+                this.comment = '';
+                for (var key in res.body) {
+                    alertify.error(res.body[key][0]);
+                }
+                alertify.error('Try Again Later');
+            });
         }
     }
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<validator name=\"validation1\">\n    <form novalidate>\n        <div class=\"form-group\">\n          <textarea class=\"form-control\" rows=\"3\" placeholder=\"Write Your Comment\" v-model=\"message\" @valid=\"valid\" @invalid=\"invalid\" v-validate:message=\"{ required: true, minlength: 20, maxlength: 1000 }\"></textarea>\n        </div>\n        <div class=\"form-group\">\n            <button type=\"button\" class=\"btn btn-primary btn-block\" v-bind:disabled=\"disabled\">\n                <i class=\"fa fa-comment\"></i> Add Comment\n            </button>\n        </div>\n        <div class=\"form-group alert alert-danger text-center\" v-if=\"disabled\">\n            <p v-if=\"$validation1.message.required\">This Viled Is Requires</p>\n            <p v-if=\"$validation1.message.minlength\">Your Comment Must Be More Than 20 Charachters</p>\n            <p v-if=\"$validation1.message.maxlength\">Your Comment Must Be Less Than 1000 Charachters</p>\n        </div>\n    </form>\n</validator>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<validator name=\"validation1\">\n    <form novalidate>\n        <div class=\"form-group\">\n          <textarea class=\"form-control\" rows=\"3\" placeholder=\"Write Your Comment\" v-model=\"comment\" @valid=\"valid\" @invalid=\"invalid\" v-validate:message=\"{ required: true, minlength: 20, maxlength: 1000 }\"></textarea>\n        </div>\n        <div class=\"form-group\">\n            <button type=\"button\" class=\"btn btn-success btn-block\" v-bind:disabled=\"disabled\" @click.prevent=\"addComment\">\n                <i class=\"fa fa-comment\"></i> Add Comment\n            </button>\n        </div>\n        <div class=\"form-group alert alert-danger text-center\" v-if=\"disabled\">\n            <p v-if=\"$validation1.message.required\">This Viled Is Requires</p>\n            <p v-if=\"$validation1.message.minlength\">Your Comment Must Be More Than 20 Charachters</p>\n            <p v-if=\"$validation1.message.maxlength\">Your Comment Must Be Less Than 1000 Charachters</p>\n        </div>\n    </form>\n</validator>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24513,21 +24532,64 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],15:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n")
-"use strict";
+var __vueify_style__ = __vueify_insert__.insert("\n/*Comment List styles*/\n.comment-list .row {\n    margin-bottom: 0px;\n}\n.comment-list .panel .panel-heading {\n    padding: 4px 15px;\n    position: absolute;\n    border:none;\n    /*Panel-heading border radius*/\n    border-top-right-radius:0px;\n    top: 1px;\n}\n.comment-list .panel .panel-heading.right {\n    border-right-width: 0px;\n    /*Panel-heading border radius*/\n    border-top-left-radius:0px;\n    right: 16px;\n}\n.comment-list .panel .panel-heading .panel-body {\n    padding-top: 6px;\n}\n.comment-list figcaption {\n    /*For wrapping text in thumbnail*/\n    word-wrap: break-word;\n}\n/* Portrait tablets and medium desktops */\n@media (min-width: 768px) {\n    .comment-list .arrow:after, .comment-list .arrow:before {\n        content: \"\";\n        position: absolute;\n        width: 0;\n        height: 0;\n        border-style: solid;\n        border-color: transparent;\n    }\n    .comment-list .panel.arrow.left:after, .comment-list .panel.arrow.left:before {\n        border-left: 0;\n    }\n    /*****Left Arrow*****/\n    /*Outline effect style*/\n    .comment-list .panel.arrow.left:before {\n        left: 0px;\n        top: 30px;\n        /*Use boarder color of panel*/\n        border-right-color: inherit;\n        border-width: 16px;\n    }\n    /*Background color effect*/\n    .comment-list .panel.arrow.left:after {\n        left: 1px;\n        top: 31px;\n        /*Change for different outline color*/\n        border-right-color: #FFFFFF;\n        border-width: 15px;\n    }\n    /*****Right Arrow*****/\n    /*Outline effect style*/\n    .comment-list .panel.arrow.right:before {\n        right: -16px;\n        top: 30px;\n        /*Use boarder color of panel*/\n        border-left-color: inherit;\n        border-width: 16px;\n    }\n    /*Background color effect*/\n    .comment-list .panel.arrow.right:after {\n        right: -14px;\n        top: 31px;\n        /*Change for different outline color*/\n        border-left-color: #FFFFFF;\n        border-width: 15px;\n    }\n}\n.comment-list .comment-post {\n    margin-top: 6px;\n}\n")
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.default = {};
+
+var _addComment = require('../comments/addComment.vue');
+
+var _addComment2 = _interopRequireDefault(_addComment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    props: ['order'],
+    components: {
+        add_comment: _addComment2.default
+    },
+    data: function data() {
+        return {
+            comments: [],
+            sortKey: '',
+            reverse: 1,
+            userName: ''
+        };
+    },
+
+    ready: function ready() {
+        this.getAllComments();
+    },
+    methods: {
+        getAllComments: function getAllComments() {
+            this.$http.get('Comments/' + this.order.id).then(function (res) {
+                this.comments = res.body;
+            }, function (res) {
+
+                alertify.error('Try Again Later');
+            });
+        },
+        sort: function sort(_sort) {
+            this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
+            this.sortKey = _sort;
+        }
+    },
+    events: {
+        AddNewComment: function AddNewComment(val) {
+            this.comments.unshift(val);
+        }
+    }
+};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\nall Comments\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<add_comment :order=\"order\"></add_comment>\n\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <h2 class=\"page-header\">\n                <span class=\"pull-left\">Comments</span>\n                <small class=\"pull-right\"><strong><i class=\"fa fa-comments\"></i> {{ comments.length }} comment/s</strong></small>\n                <div class=\"clearfix\"></div>\n            </h2>\n            <div class=\"row\">\n                <div class=\"col-md-6\">\n                    <div class=\"col-md-11\">\n                        <form class=\"form-horizontal\">\n                            <div class=\"form-group\">\n                                <label for=\"serviceName\"></label>\n                                <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Member name\" v-model=\"userName\">\n                            </div>\n                        </form>\n                    </div>\n                </div>\n                <div class=\"col-md-6 text-right \">\n                    <div class=\"btn-group\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('id')\">\n                            <i class=\"fa fa-sort-numeric-desc\"></i>  By Order\n                        </button>\n                        <button type=\"button\" class=\"btn btn-success\" @click=\"sort('created_at')\">\n                            <i class=\"fa fa-calendar\"></i> By Date\n                        </button>\n\n                    </div>\n                </div>\n\n            </div>\n            <hr>\n            <div v-if=\"comments.length > 0\">\n                <section v-for=\"comment in comments | orderBy sortKey reverse | | filterBy userName in 'user.name'\" track-by=\"$index\" class=\"comment-list\">\n                    <article class=\"row\">\n                        <div class=\"col-md-2 col-sm-2 col-xs-2\">\n                            <figure>\n                                <img class=\"img-responsive img-circle\" src=\"http://www.keita-gaming.com/assets/profile/default-avatar-c5d8ec086224cb6fc4e395f4ba3018c2.jpg\" />\n                            </figure>\n                        </div>\n                        <div class=\"col-md-10 col-sm-10 col-xs-10\">\n                            <div class=\"panel panel-default arrow left\">\n                                <div class=\"panel-body\">\n                                    <header class=\"text-left\">\n                                        <div class=\"comment-user pull-left\">\n                                            <a v-link=\"{name: '/User', params: {userId: comment.user.id, userName: comment.user.name}}\">\n                                                <i class=\"fa fa-user\"></i>\n                                                {{ comment.user.name }}\n                                            </a>\n                                        </div>\n                                        <time class=\"comment-date pull-right\" datetime=\"{{ comment.created_at }}\">\n                                            <i class=\"fa fa-clock-o\"></i>\n                                            {{ comment.created_at | moment 'calendar' }}\n                                        </time>\n                                        <div class=\"clearfix\"></div>\n                                    </header>\n                                    <div class=\"comment-post\">\n                                        <p>\n                                            {{ comment.comment }}\n                                        </p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </article>\n                </section>\n            </div>\n            <div v-else>\n                <div class=\"alert alert-info text-center\">No Comments On This Service Yet!</div>\n            </div>\n        </div>\n    </div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n"] = false
+    __vueify_insert__.cache["\n/*Comment List styles*/\n.comment-list .row {\n    margin-bottom: 0px;\n}\n.comment-list .panel .panel-heading {\n    padding: 4px 15px;\n    position: absolute;\n    border:none;\n    /*Panel-heading border radius*/\n    border-top-right-radius:0px;\n    top: 1px;\n}\n.comment-list .panel .panel-heading.right {\n    border-right-width: 0px;\n    /*Panel-heading border radius*/\n    border-top-left-radius:0px;\n    right: 16px;\n}\n.comment-list .panel .panel-heading .panel-body {\n    padding-top: 6px;\n}\n.comment-list figcaption {\n    /*For wrapping text in thumbnail*/\n    word-wrap: break-word;\n}\n/* Portrait tablets and medium desktops */\n@media (min-width: 768px) {\n    .comment-list .arrow:after, .comment-list .arrow:before {\n        content: \"\";\n        position: absolute;\n        width: 0;\n        height: 0;\n        border-style: solid;\n        border-color: transparent;\n    }\n    .comment-list .panel.arrow.left:after, .comment-list .panel.arrow.left:before {\n        border-left: 0;\n    }\n    /*****Left Arrow*****/\n    /*Outline effect style*/\n    .comment-list .panel.arrow.left:before {\n        left: 0px;\n        top: 30px;\n        /*Use boarder color of panel*/\n        border-right-color: inherit;\n        border-width: 16px;\n    }\n    /*Background color effect*/\n    .comment-list .panel.arrow.left:after {\n        left: 1px;\n        top: 31px;\n        /*Change for different outline color*/\n        border-right-color: #FFFFFF;\n        border-width: 15px;\n    }\n    /*****Right Arrow*****/\n    /*Outline effect style*/\n    .comment-list .panel.arrow.right:before {\n        right: -16px;\n        top: 30px;\n        /*Use boarder color of panel*/\n        border-left-color: inherit;\n        border-width: 16px;\n    }\n    /*Background color effect*/\n    .comment-list .panel.arrow.right:after {\n        right: -14px;\n        top: 31px;\n        /*Change for different outline color*/\n        border-left-color: #FFFFFF;\n        border-width: 15px;\n    }\n}\n.comment-list .comment-post {\n    margin-top: 6px;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
@@ -24536,7 +24598,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0cdd95cd", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],16:[function(require,module,exports){
+},{"../comments/addComment.vue":14,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -24726,10 +24788,6 @@ var _allComments = require('../comments/allComments.vue');
 
 var _allComments2 = _interopRequireDefault(_allComments);
 
-var _addComment = require('../comments/addComment.vue');
-
-var _addComment2 = _interopRequireDefault(_addComment);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
@@ -24738,8 +24796,7 @@ exports.default = {
         spinner: Spinner,
         user_id: _usersidebar2.default,
         status: _status2.default,
-        all_comments: _allComments2.default,
-        add_comment: _addComment2.default
+        all_comments: _allComments2.default
     },
     data: function data() {
         return {
@@ -24778,7 +24835,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n            <div class=\"col-md-9\">\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n\n                    <div class=\"container-fluid\">\n                        <div class=\"content-wrapper\">\n                            <div class=\"item-container\">\n                                <div class=\"container\">\n                                    <div class=\"col-md-12\">\n                                        <h3 class=\"product-title\">{{ order.services.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ order.services.created_at | moment \"calendar\" }}</strong></span> </h3>\n                                        <span class=\"small\">\n                                            <strong>\n                                                <status :status=\"order.status\"></status>\n                                            </strong>\n                                        </span>\n                                        <div class=\"product-rating\">\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star-o\"></i>\n                                        </div>\n                                        <hr>\n\n                                    </div>\n                                    <div class=\"col-md-12\">\n                                        <div class=\" text-center\">\n\n                                            <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"order.services.image\" alt=\"{{order.services.name}}\">\n                                        </div>\n\n                                    </div>\n\n                                    <div class=\"col-md-12\">\n                                        <p class=\"product-desc\">\n                                            {{ order.services.description }}\n                                        </p>\n                                        <div class=\"product-price pull-left\">$ {{ order.services.price }}</div>\n                                        <div class=\"product-stock pull-right\">{{ ordersCount }} Order/s</div>\n                                        <div class=\"clearfix\"></div>\n                                        <hr>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <all_comments></all_comments>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <add_comment :order=\"order\"></add_comment>\n                </div>\n            </div>\n            <div class=\"col-md-3\">\n                <user_id :user=\"user_id\"></user_id>\n                <user_id :user=\"user_order\"></user_id>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n            <div class=\"col-md-9\">\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n\n                    <div class=\"container-fluid\">\n                        <div class=\"content-wrapper\">\n                            <div class=\"item-container\">\n                                <div class=\"container\">\n                                    <div class=\"col-md-12\">\n                                        <h3 class=\"product-title\">{{ order.services.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ order.services.created_at | moment \"calendar\" }}</strong></span> </h3>\n                                        <span class=\"small\">\n                                            <strong>\n                                                <status :status=\"order.status\"></status>\n                                            </strong>\n                                        </span>\n                                        <div class=\"product-rating\">\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star-o\"></i>\n                                        </div>\n                                        <hr>\n\n                                    </div>\n                                    <div class=\"col-md-12\">\n                                        <div class=\" text-center\">\n\n                                            <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"order.services.image\" alt=\"{{order.services.name}}\">\n                                        </div>\n\n                                    </div>\n\n                                    <div class=\"col-md-12\">\n                                        <p class=\"product-desc\">\n                                            {{ order.services.description }}\n                                        </p>\n                                        <div class=\"product-price pull-left\">$ {{ order.services.price }}</div>\n                                        <div class=\"product-stock pull-right\">{{ ordersCount }} Order/s</div>\n                                        <div class=\"clearfix\"></div>\n                                        <hr>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <all_comments :order=\"order\"></all_comments>\n                </div>\n            </div>\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <user_id :user=\"user_id\"></user_id>\n                <user_id :user=\"user_order\"></user_id>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24793,7 +24850,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6245276f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"../comments/addComment.vue":14,"../comments/allComments.vue":15,"./usersidebar.vue":20,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],20:[function(require,module,exports){
+},{"../btns/status.vue":13,"../comments/allComments.vue":15,"./usersidebar.vue":20,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],20:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';

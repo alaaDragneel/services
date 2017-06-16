@@ -1914,6 +1914,11 @@ body.stop-scrolling {
 
 body {
     font-family: Lato;
+    word-break: break-word !important;
+}
+
+.navbar {
+    border-radius: 0;
 }
 
 /* Add Service Seciotn */

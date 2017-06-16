@@ -50,13 +50,10 @@
                         </div>
                     </div>
                     <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
-                        <all_comments></all_comments>
-                    </div>
-                    <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
-                        <add_comment :order="order"></add_comment>
+                        <all_comments :order="order"></all_comments>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <user_id :user="user_id"></user_id>
                     <user_id :user="user_order"></user_id>
                 </div>
@@ -72,14 +69,12 @@
     import UserSideBar from './usersidebar.vue';
     import Status from '../btns/status.vue';
     import AllComments from '../comments/allComments.vue';
-    import AddComment from '../comments/addComment.vue';
     export default {
         components: {
             spinner: Spinner,
             user_id: UserSideBar,
             status: Status,
             all_comments: AllComments,
-            add_comment: AddComment
         },
         data(){
             return {

@@ -155,13 +155,13 @@ class OrdersController extends Controller
             // who add the services
             $user_id = User::where('id', $order->user_id)
             ->with(['services' => function ($q) {
-                return $q->take(3)->orderBy('id', 'DESC');
+                return $q->where('status', 1)->take(3)->orderBy('id', 'DESC');
             }])
             ->first();
             // who request the services
             $order_user = User::where('id', $order->user_order)
             ->with(['services' => function ($q) {
-                return $q->take(3)->orderBy('id', 'DESC');
+                return $q->where('status', 1)->take(3)->orderBy('id', 'DESC');
             }])
             ->first();
 
