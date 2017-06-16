@@ -8,6 +8,9 @@ Vue.use(VueRouter)
 // Vue Mement
 var VueMoment = require('vue-moment');
 Vue.use(VueMoment);
+// Vue validator
+var VueValidator = require('vue-validator')
+Vue.use(VueValidator)
 
 
 // Vue Recource init Headers With laravel csrf_token

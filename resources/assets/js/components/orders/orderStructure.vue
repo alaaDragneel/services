@@ -13,28 +13,18 @@
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">{{ order.created_at | moment "calendar"}}</div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-        <span v-if="order.status == 0">
-            <span class="label label-info">New Order</span>
-        </span>
-        <span v-if="order.status == 1">
-            <span class="label label-warning">Old Order</span>
-        </span>
-        <span v-if="order.status == 2">
-            <span class="label label-primary">In Prograss Order</span>
-        </span>
-        <span v-if="order.status == 3">
-            <span class="label label-danger">Cancelled</span>
-        </span>
-        <span v-if="order.status == 4">
-            <span class="label label-success">Finished</span>
-        </span>
+        <status :status="order.status"></status>
     </div>
 </div>
 <hr>
 </template>
 <script>
+import Status from '../btns/status.vue';
 export default {
-    props: ['order', 'user_to_show']
+    props: ['order', 'user_to_show'],
+    components: {
+        status: Status
+    }
 }
 </script>
 <style>

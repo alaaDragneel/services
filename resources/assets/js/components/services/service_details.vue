@@ -7,7 +7,7 @@
                     <div class="item-container">
                         <div class="container">
                             <div class="col-md-12">
-                                <div class="product-title">{{ service.name }} <span class="small"><i class="fa fa-clock-o"></i> {{ service.created_at | moment "calendar" }}</span> </div>
+                                <h3 class="product-title">{{ service.name }} <span class="small"><strong><i class="fa fa-clock-o"></i> {{ service.created_at | moment "calendar" }}</strong></span> </h3>
                                 <div class="product-rating">
                                     <i class="fa fa-star gold"></i>
                                     <i class="fa fa-star gold"></i>
@@ -26,12 +26,13 @@
 
                             </div>
 
-                            <div class="col-md-7">
+                            <div class="col-md-12">
                                 <p class="product-desc">
                                     {{ service.description }}
                                 </p>
-                                <div class="product-price">$ {{ service.price }}</div>
-                                <div class="product-stock">Orders Number</div>
+                                <div class="product-price pull-left">$ {{ service.price }}</div>
+                                <div class="product-stock pull-right">{{ ordersCount }} Order/s</div>
+                                <div class="clearfix"></div>
                                 <hr>
                                 <div class="btn-group cart">
                                     <buy_btn :service="service"></buy_btn>
@@ -113,7 +114,8 @@
                 service: '',
                 isLoading: false,
                 myOwnServicesInSameCat: [],
-                otherServicesInSameCat: []
+                otherServicesInSameCat: [],
+                ordersCount: ''
 
             }
         },
@@ -127,6 +129,7 @@
                     this.service = res.body['service'];
                     this.myOwnServicesInSameCat = res.body['myOwnServicesInSameCat'];
                     this.otherServicesInSameCat = res.body['otherServicesInSameCat'];
+                    this.ordersCount = res.body['ordersCount'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {

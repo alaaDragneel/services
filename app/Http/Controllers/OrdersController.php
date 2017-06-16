@@ -153,16 +153,29 @@ class OrdersController extends Controller
         $order = Order::findOrFail($orderId);
         if ($order) {
             // who add the services
-            $user_id = User::where('id', $order->user_id)->with('services')->take(3)->get();
+            $user_id = User::where('id', $order->user_id)
+            ->with(['services' => function ($q) {
+                return $q->take(3)->orderBy('id', 'DESC');
+            }])
+            ->first();
             // who request the services
-            $order_user = User::where('id', $order->user_order)->with('services')->take(3)->get();
-            
+            $order_user = User::where('id', $order->user_order)
+            ->with(['services' => function ($q) {
+                return $q->take(3)->orderBy('id', 'DESC');
+            }])
+            ->first();
+
             if ($user_id->id != $order_user->id) {
                 $order = Order::where('id', $orderId)->with('services')->first();
+                $orderCount = Order::where(function ($q) use ($order){
+                    $q->where('service_id', $order->service_id);
+                    $q->whereIn('status', [0, 1, 2, 4]); // status => 0 => New, 1 => Old, 2 => inprogress, 4 => finished
+                })->count();
                 return Response::json([
                     'user_id' => $user_id,
                     'order_user' => $order_user,
-                    'order' => $order
+                    'order' => $order,
+                    'ordersCount' => $orderCount
                 ], 200);
             }
             App::abort(403);

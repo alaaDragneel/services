@@ -14,102 +14,95 @@
 
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-inverse navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Services Site
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-                </ul>
-                <form class="navbar-form navbar-left">
-                     <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Search">
-                     </div>
-                     <button type="submit" class="btn btn-primary">
-                         <i class="fa fa-search"></i> Submit
-                     </button>
-                </form>
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
-                    @else
-                         {{-- Orders Section --}}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Orders <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                     <a v-link="{path: '/IncomingOrders'}">
-                                          <i class="fa fa-truck"></i>
-                                          Incoming Orders
-                                     </a>
-                                </li>
-                                <li>
-                                     <a v-link="{path: '/PurchaseOrders'}">
-                                          <i class="fa fa-cart-plus"></i>
-                                          Purchase Orders
-                                     </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- Services Section --}}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Services <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                 <li>
-                                     <a v-link="{path: '/AddServices'}">
-                                          <i class="fa fa-plus"></i>
-                                          Add Service
-                                     </a>
-                                </li>
-                                 <li>
-                                     <a v-link="{path: '/MyServices'}">
-                                          <i class="fa fa-user"></i>
-                                          My Services
-                                     </a>
-                                </li>
-                            </ul>
-                        </li>
-                        {{-- User Section --}}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-edit"></i> My Information</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-money"></i> My account</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
-            </div>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <!-- Branding Image -->
+          <a class="navbar-brand" href="{{ url('/') }}">
+              Services Site
+          </a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+             <!-- Left Side Of Navbar -->
+             <ul class="nav navbar-nav">
+                 <li><a href="{{ url('/home') }}">Home</a></li>
+             </ul>
+             <ul class="nav navbar-nav navbar-right">
+                 <!-- Authentication Links -->
+                 @if (Auth::guest())
+                     <li><a href="{{ url('/login') }}">Login</a></li>
+                     <li><a href="{{ url('/register') }}">Register</a></li>
+                 @else
+                      {{-- Orders Section --}}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             Orders <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                             <li>
+                                  <a v-link="{path: '/IncomingOrders'}">
+                                       <i class="fa fa-truck"></i>
+                                       Incoming Orders
+                                  </a>
+                             </li>
+                             <li>
+                                  <a v-link="{path: '/PurchaseOrders'}">
+                                       <i class="fa fa-cart-plus"></i>
+                                       Purchase Orders
+                                  </a>
+                             </li>
+                        </ul>
+                     </li>
+                     {{-- Services Section --}}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             Services <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                             <li>
+                                  <a v-link="{path: '/AddServices'}">
+                                       <i class="fa fa-plus"></i>
+                                       Add Service
+                                  </a>
+                             </li>
+                             <li>
+                                  <a v-link="{path: '/MyServices'}">
+                                       <i class="fa fa-user"></i>
+                                       My Services
+                                  </a>
+                             </li>
+                        </ul>
+                     </li>
+                     {{-- User Section --}}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             {{ Auth::user()->name }} <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                             <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-edit"></i> My Information</a></li>
+                             <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-money"></i> My account</a></li>
+                             <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
+                        </ul>
+                     </li>
+                 @endif
+             </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+            <button type="button" class="btn btn-primary">
+                 <i class="fa fa-search"></i> Search
+            </button>
+          </form>
+        </div>
+      </div>
     </nav>
 
     @yield('content')

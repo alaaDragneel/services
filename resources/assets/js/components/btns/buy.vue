@@ -2,7 +2,10 @@
     <success_message :show.sync="done" placement="top-right" duration="3000" type="success" width="400px" dismissable>
         <span class="icon-ok-circled alert-icon-float-left"></span>
         <strong>Success!</strong>
-        <p>Waiting For Approved.</p>
+        <p>
+            Waiting For Approved.
+            <a v-link="{path: '/PurchaseOrders'}"> See It Here.</a>
+        </p>
     </success_message>
 
     <error_message :show.sync="error" placement="top-right" duration="3000" type="danger" width="400px" dismissable>

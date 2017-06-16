@@ -1,17 +1,22 @@
 <template>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9">
-                <span v-if="isLoading">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <span v-if="isLoading">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
 
                         <div class="container-fluid">
                             <div class="content-wrapper">
                                 <div class="item-container">
                                     <div class="container">
                                         <div class="col-md-12">
-                                            <div class="product-title">{{ order.services.name }} <span class="small"><i class="fa fa-clock-o"></i> {{ order.services.created_at | moment "calendar" }}</span> </div>
+                                            <h3 class="product-title">{{ order.services.name }} <span class="small"><strong><i class="fa fa-clock-o"></i> {{ order.services.created_at | moment "calendar" }}</strong></span> </h3>
+                                            <span class="small">
+                                                <strong>
+                                                    <status :status="order.status"></status>
+                                                </strong>
+                                            </span>
                                             <div class="product-rating">
                                                 <i class="fa fa-star gold"></i>
                                                 <i class="fa fa-star gold"></i>
@@ -30,42 +35,51 @@
 
                                         </div>
 
-                                        <div class="col-md-7">
+                                        <div class="col-md-12">
                                             <p class="product-desc">
                                                 {{ order.services.description }}
                                             </p>
-                                            <div class="product-price">$ {{ order.services.price }}</div>
-                                            <div class="product-stock">Orders Number</div>
+                                            <div class="product-price pull-left">$ {{ order.services.price }}</div>
+                                            <div class="product-stock pull-right">{{ ordersCount }} Order/s</div>
+                                            <div class="clearfix"></div>
+                                            <hr>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </span>
-                <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
-            </div>
-            <div class="col-lg-3">
-                <div>
-                    <user_id :user="user_id"></user_id>
+                    <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
+                        <all_comments></all_comments>
+                    </div>
+                    <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
+                        <add_comment :order="order"></add_comment>
+                    </div>
                 </div>
-                <div>
+                <div class="col-md-3">
+                    <user_id :user="user_id"></user_id>
                     <user_id :user="user_order"></user_id>
                 </div>
             </div>
         </div>
-    </div>
+    </span>
+    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 
 </template>
 
 <script>
     var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
     import UserSideBar from './usersidebar.vue';
+    import Status from '../btns/status.vue';
+    import AllComments from '../comments/allComments.vue';
+    import AddComment from '../comments/addComment.vue';
     export default {
-
         components: {
             spinner: Spinner,
-            user_id: UserSideBar
+            user_id: UserSideBar,
+            status: Status,
+            all_comments: AllComments,
+            add_comment: AddComment
         },
         data(){
             return {
@@ -73,6 +87,7 @@
                 user_id: '',
                 user_order: '',
                 isLoading: false,
+                ordersCount: ''
 
             }
         },
@@ -86,6 +101,7 @@
                     this.order = res.body['order'];
                     this.user_id = res.body['user_id'];
                     this.user_order = res.body['order_user'];
+                    this.ordersCount = res.body['ordersCount'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {
@@ -238,4 +254,11 @@
         max-height: 155px;
     }
 
+    .sidebar {
+        top: 34px;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
+        border-radius: 10px;
+    }
 </style>
