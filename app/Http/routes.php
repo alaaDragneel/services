@@ -34,4 +34,7 @@ Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus')
 Route::resource('Comments', 'CommentsController');
 // Message
 Route::resource('Messages', 'MessagesController');
+Route::get('getMessagesCount', 'MessagesController@getMessagesCount');
 Route::get('GetRecivedMessages', 'MessagesController@GetRecivedMessages');
+Route::get('GetUnReadMessages', 'MessagesController@GetUnReadMessages');
+Route::get('GetReadMessages', 'MessagesController@GetReadMessages');

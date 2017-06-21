@@ -24340,6 +24340,8 @@ var SendMessage = require('./components/messages/send.vue');
 var MySendMessages = require('./components/messages/sendMessage.vue');
 var MyRecivedMessages = require('./components/messages/incomingMessage.vue');
 var messageDetails = require('./components/messages/messageDetails.vue');
+var unReadMessages = require('./components/messages/newMessage.vue');
+var ReadMessages = require('./components/messages/oldMessage.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -24395,6 +24397,12 @@ route.map({
     '/GetMyRecivedMessages': {
         component: MyRecivedMessages
     },
+    '/GetUnReadMessages': {
+        component: unReadMessages
+    },
+    '/GetReadMessages': {
+        component: ReadMessages
+    },
     '/messageDetails/:message_id/:viewType': {
         name: '/messageDetails',
         component: messageDetails
@@ -24406,7 +24414,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/messages/incomingMessage.vue":16,"./components/messages/messageDetails.vue":17,"./components/messages/send.vue":20,"./components/messages/sendMessage.vue":21,"./components/orders/incomingOrders.vue":22,"./components/orders/purchaseOrders.vue":24,"./components/orders/singleOrder.vue":25,"./components/services/addServices.vue":28,"./components/services/myServices.vue":29,"./components/services/service_details.vue":30,"./components/users/UserServices.vue":33,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],12:[function(require,module,exports){
+},{"./components/messages/incomingMessage.vue":16,"./components/messages/messageDetails.vue":17,"./components/messages/newMessage.vue":20,"./components/messages/oldMessage.vue":21,"./components/messages/send.vue":22,"./components/messages/sendMessage.vue":23,"./components/orders/incomingOrders.vue":24,"./components/orders/purchaseOrders.vue":26,"./components/orders/singleOrder.vue":27,"./components/services/addServices.vue":30,"./components/services/myServices.vue":31,"./components/services/service_details.vue":32,"./components/users/UserServices.vue":35,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],12:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -24624,8 +24632,6 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"../comments/addComment.vue":14,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],16:[function(require,module,exports){
-var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24671,28 +24677,25 @@ exports.default = {
                 alertify.error('Error Happend Try Again Later');
             });
         }
+    },
+    route: {
+        canReuse: false // Force reload data
     }
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <ol class=\"breadcrumb\">\n                  <li class=\"active\">\n                      <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n                  </li>\n                </ol>\n\n            </div>\n            <hr />\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"income\"></message_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"income\"></message_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-7a52551e", module.exports)
   } else {
     hotAPI.update("_v-7a52551e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],17:[function(require,module,exports){
-var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24743,32 +24746,56 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <ol class=\"breadcrumb\">\n                  <li v-if=\"viewType == 'income'\">\n                      <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n                  </li>\n                  <li v-else><a v-link=\"{path: '/GetMySendMessages'}\">Send  Messages</a></li>\n                  <li class=\"active\">{{ message.title }}</li>\n              </ol>\n            </div>\n            <hr />\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <h2>Message Details</h2>\n                    <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Message Title</th>\n                                <th>Message Description</th>\n                                <th>Send On</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>{{ message.title }}</td>\n                                <td>{{ message.message }}</td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    <hr>\n                    <div v-if=\"viewType == 'send'\">\n                        <h2>Sender Information</h2>\n\n                        <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>Send On</th>\n                                <th>Replay</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>\n                                    <a v-link=\"{name: '/User', params: {userId: message.get_received_user.id, userName: message.get_received_user.name}}\">\n                                        {{ message.get_received_user.name }}\n                                    </a>\n\n                                </td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                                <td>\n                                    <a v-link=\"{name: '/SendMessage', params: {userId: message.get_received_user.id}}\" class=\"btn btn-primary btn-block\">\n                                        <i class=\"fa fa-reply\"></i> Reply\n                                    </a>\n                                </td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    </div>\n                    <div v-else>\n                        <h2>Recived Information</h2>\n\n                        <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>Recived On</th>\n                                <th>Replay</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>\n                                    <a v-link=\"{name: '/User', params: {userId: message.get_send_user.id, userName: message.get_send_user.name}}\">\n                                        {{ message.get_send_user.name }}\n                                    </a>\n                                </td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                                <td>\n                                    <a v-link=\"{name: '/SendMessage', params: {userId: message.get_send_user.id}}\" class=\"btn btn-primary btn-block\">\n                                        <i class=\"fa fa-reply\"></i> Reply\n                                    </a>\n                                </td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <ol class=\"breadcrumb\">\n                      <li v-if=\"viewType == 'income'\">\n                          <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n                      </li>\n                      <li v-else><a v-link=\"{path: '/GetMySendMessages'}\">Send  Messages</a></li>\n                      <li class=\"active\">{{ message.title }}</li>\n                  </ol>\n                    <h2>Message Details</h2>\n                    <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Message Title</th>\n                                <th>Message Description</th>\n                                <th>Send On</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>{{ message.title }}</td>\n                                <td>{{ message.message }}</td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    <hr>\n                    <div v-if=\"viewType == 'send'\">\n                        <h2>Sender Information</h2>\n\n                        <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>Send On</th>\n                                <th>Replay</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>\n                                    <a v-link=\"{name: '/User', params: {userId: message.get_received_user.id, userName: message.get_received_user.name}}\">\n                                        {{ message.get_received_user.name }}\n                                    </a>\n\n                                </td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                                <td>\n                                    <a v-link=\"{name: '/SendMessage', params: {userId: message.get_received_user.id}}\" class=\"btn btn-primary btn-block\">\n                                        <i class=\"fa fa-reply\"></i> Reply\n                                    </a>\n                                </td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    </div>\n                    <div v-else>\n                        <h2>Recived Information</h2>\n\n                        <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>Recived On</th>\n                                <th>Replay</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>\n                                    <a v-link=\"{name: '/User', params: {userId: message.get_send_user.id, userName: message.get_send_user.name}}\">\n                                        {{ message.get_send_user.name }}\n                                    </a>\n                                </td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                                <td>\n                                    <a v-link=\"{name: '/SendMessage', params: {userId: message.get_send_user.id}}\" class=\"btn btn-primary btn-block\">\n                                        <i class=\"fa fa-reply\"></i> Reply\n                                    </a>\n                                </td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-aff0180a", module.exports)
   } else {
     hotAPI.update("_v-aff0180a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],18:[function(require,module,exports){
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],18:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
-exports.default = {};
+exports.default = {
+    data: function data() {
+        return {
+            incoming: '',
+            send: '',
+            unRead: '',
+            read: ''
+        };
+    },
+
+    ready: function ready() {
+        this.getMessagesCount();
+    },
+    methods: {
+        getMessagesCount: function getMessagesCount() {
+            this.$http.get('getMessagesCount').then(function (res) {
+                this.incoming = res.body['incoming'];
+                this.send = res.body['send'];
+                this.unRead = res.body['unRead'];
+                this.read = res.body['read'];
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        },
+        checkRoute: function checkRoute(value) {
+            return this.$route.path == value;
+        }
+    }
+};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ul class=\"nav nav-pills nav-stacked\">\n    <li><a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n    </li>\n    <li><a v-link=\"{path: '/GetMySendMessages'}\">Send Messages</a></li>\n    <li><a href=\"\">New Messages</a></li>\n</ul>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ul class=\"nav nav-pills nav-stacked\">\n    <li v-bind:class=\"{'active': checkRoute('/GetMyRecivedMessages')}\"><a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages <span class=\"badge\">{{ incoming }}</span></a>\n    </li>\n    <li v-bind:class=\"{'active': checkRoute('/GetMySendMessages')}\"><a v-link=\"{path: '/GetMySendMessages'}\">Send Messages <span class=\"badge\">{{ send }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetUnReadMessages')}\"><a  v-link=\"{path: '/GetUnReadMessages'}\">UnRead Messages <span class=\"badge\">{{ unRead }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetReadMessages')}\"><a  v-link=\"{path: '/GetReadMessages'}\">Read Messages <span class=\"badge\">{{ read }}</span></a></li>\n</ul>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24785,23 +24812,41 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],19:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.checkbox, .radio {\n    display: inline-block;\n    margin-top: 5px;\n    margin-bottom: 5px;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.badge-success {\n    background-color: #5cb85c;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['messages', 'type']
+    props: ['messages', 'type'],
+    data: function data() {
+        return {
+            pathUrl: '',
+            sortKey: '',
+            reverse: 1,
+            title: ''
+        };
+    },
+
+    ready: function ready() {
+        this.pathUrl = this.$route.path;
+    },
+    methods: {
+        sort: function sort(_sort) {
+            this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
+            this.sortKey = _sort;
+        }
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div v-for=\"message in messages\" class=\"list-group\">\n    <a class=\"list-group-item\" v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n        <div class=\"checkbox\">\n            <label><input type=\"checkbox\"></label>\n        </div>\n        <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n            <span v-if=\"message.get_received_user\">\n                {{ message.get_received_user.name }}\n            </span>\n            <span v-else>\n                {{ message.get_send_user.name }}\n            </span>\n\n        </span>\n        <span class=\"\">{{ message.title }}</span>\n        <span class=\"badge\">{{ message.created_at | moment 'calendar' }}</span>\n    </a>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li v-if=\"pathUrl == '/GetMyRecivedMessages'\">\n          <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetMySendMessages'\">\n          <a v-link=\"{path: '/GetMySendMessages'}\">Send Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetUnReadMessages'\">\n          <a v-link=\"{path: '/GetUnReadMessages'}\">UnRead Messages</a>\n      </li>\n      <li v-if=\"pathUrl == '/GetReadMessages'\">\n          <a v-link=\"{path: '/GetReadMessages'}\">Read Messages</a>\n      </li>\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Message title\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('seen')\"><i class=\"fa fa-eye\"></i>  Seen</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>\n        <span v-if=\"type == 'income'\">\n            Recived From\n        </span>\n        <span v-else>\n            Send To\n        </span>\n    </th>\n    <th>Title</th>\n    <th>Message</th>\n    <th>On</th>\n    <th>Status</th>\n    <th>See</th>\n    <th>Reply</th>\n</thead>\n<tbody v-if=\"messages.length > 0\">\n    <tr v-for=\"message in messages | orderBy sortKey reverse | filterBy title in 'title'\" track-by=\"$index\">\n        <td>\n            <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n                <span v-if=\"message.get_received_user\">\n                    <a v-link=\"{name: '/User', params:{userId:message.get_received_user.id, userName: message.get_received_user.name}}\">\n\n                        {{ message.get_received_user.name }}\n                    </a>\n                </span>\n                <span v-else>\n                    <a v-link=\"{name: '/User', params:{userId:message.get_send_user.id, userName: message.get_send_user.name}}\">\n\n                        {{ message.get_send_user.name }}\n                    </a>\n                </span>\n\n            </span>\n        </td>\n        <td style=\"width: 20%;\">\n            <a v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n                {{ message.title }}\n            </a>\n        </td>\n        <td style=\"width: 30%; word-break: break-word;\">{{ message.message }}</td>\n        <td>{{ message.created_at | moment 'calendar' }}</td>\n        <td>\n            <span v-if=\"message.seen == 1\">\n                <span class=\"badge badge-success\">seen</span>\n            </span>\n            <span v-else>\n                <span class=\"badge\">New</span>\n            </span>\n        </td>\n        <td>\n            <a class=\"btn btn-info\" v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n                <i class=\"fa fa-eye\"></i>\n            </a>\n        </td>\n        <td>\n            <span v-if=\"message.get_received_user\">\n                <a v-link=\"{name: '/SendMessage', params: {userId: message.get_received_user.id}}\" class=\"btn btn-primary btn-block\">\n                    <i class=\"fa fa-reply\"></i>\n                </a>\n            </span>\n            <span v-else>\n                <a v-link=\"{name: '/SendMessage', params: {userId: message.get_send_user.id}}\" class=\"btn btn-primary btn-block\">\n                    <i class=\"fa fa-reply\"></i>\n                </a>\n            </span>\n        </td>\n    </tr>\n</tbody>\n<tbody v-else>\n    <tr>\n        <td colspan=\"6\"><div class=\"alert alert-info text-center\">No Messages Right No!</div></td>\n    </tr>\n</tbody>\n</table>\n    <div  class=\"list-group\">\n\n    </div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.checkbox, .radio {\n    display: inline-block;\n    margin-top: 5px;\n    margin-bottom: 5px;\n}\n"] = false
+    __vueify_insert__.cache["\n.badge-success {\n    background-color: #5cb85c;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
@@ -24811,8 +24856,134 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],20:[function(require,module,exports){
-var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _messageMenu = require('./messageMenu.vue');
+
+var _messageMenu2 = _interopRequireDefault(_messageMenu);
+
+var _messagesList = require('./messagesList.vue');
+
+var _messagesList2 = _interopRequireDefault(_messagesList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    components: {
+        message_menu: _messageMenu2.default,
+        message_list: _messagesList2.default,
+        spinner: Spinner
+    },
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetMySendMessage();
+    },
+    data: function data() {
+        return {
+            messages: [],
+            isLoading: false,
+            income: 'income'
+        };
+    },
+
+    methods: {
+        GetMySendMessage: function GetMySendMessage() {
+            this.$http.get('GetUnReadMessages').then(function (res) {
+                this.messages = res.body;
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"income\"></message_list>\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-d9ae8ff2", module.exports)
+  } else {
+    hotAPI.update("_v-d9ae8ff2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],21:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _messageMenu = require('./messageMenu.vue');
+
+var _messageMenu2 = _interopRequireDefault(_messageMenu);
+
+var _messagesList = require('./messagesList.vue');
+
+var _messagesList2 = _interopRequireDefault(_messagesList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    components: {
+        message_menu: _messageMenu2.default,
+        message_list: _messagesList2.default,
+        spinner: Spinner
+    },
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetMySendMessage();
+    },
+    data: function data() {
+        return {
+            messages: [],
+            isLoading: false,
+            income: 'income'
+        };
+    },
+
+    methods: {
+        GetMySendMessage: function GetMySendMessage() {
+            this.$http.get('GetReadMessages').then(function (res) {
+                this.messages = res.body;
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"income\"></message_list>\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-686c6920", module.exports)
+  } else {
+    hotAPI.update("_v-686c6920", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],22:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24881,19 +25052,13 @@ if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-261e42c8", module.exports)
   } else {
     hotAPI.update("_v-261e42c8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],21:[function(require,module,exports){
-var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
+},{"./messageMenu.vue":18,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24939,26 +25104,25 @@ exports.default = {
                 alertify.error('Error Happend Try Again Later');
             });
         }
+    },
+    route: {
+        canReuse: false // Force reload data
     }
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <ol class=\"breadcrumb\">\n                  <li class=\"active\">\n                          <a v-link=\"{path: '/GetMySendMessages'}\">Send  Messages</a>\n                  </li>\n                </ol>\n            </div>\n            <hr />\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"send\"></message_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"send\"></message_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
-  module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-b2464e62", module.exports)
   } else {
     hotAPI.update("_v-b2464e62", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],22:[function(require,module,exports){
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],24:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -25024,7 +25188,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ae94e32", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],23:[function(require,module,exports){
+},{"./orderStructure.vue":25,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],25:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#items div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -25061,7 +25225,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-34a13c4c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],24:[function(require,module,exports){
+},{"../btns/status.vue":13,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],26:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -25127,7 +25291,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5fdf7566", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],25:[function(require,module,exports){
+},{"./orderStructure.vue":25,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],27:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n/*********************************************\nTheme Elements\n*********************************************/\n\n.gold{\n    color: #FFBF00;\n}\n\n/*********************************************\nPRODUCTS\n*********************************************/\n\n.product{\n    border: 1px solid #dddddd;\n    height: 321px;\n}\n\n.product>img{\n    max-width: 230px;\n}\n\n.product-rating{\n    font-size: 20px;\n    margin-bottom: 25px;\n}\n\n.product-title{\n    font-size: 20px;\n}\n\n.product-desc{\n    font-size: 14px;\n    word-break:break-all;\n}\n\n.product-price{\n    font-size: 22px;\n}\n\n.product-stock{\n    color: #74DF00;\n    font-size: 20px;\n    margin-top: 10px;\n}\n\n.product-info{\n    margin-top: 50px;\n}\n\n/*********************************************\nVIEW\n*********************************************/\n\n.content-wrapper {\n    max-width: 1140px;\n    background: #fff;\n    margin: 0 auto;\n    margin-top: 25px;\n    margin-bottom: 10px;\n    border: 0px;\n    border-radius: 0px;\n}\n\n.container-fluid{\n    max-width: 1140px;\n    margin: 0 auto;\n}\n\n.view-wrapper {\n    float: right;\n    max-width: 70%;\n    margin-top: 25px;\n}\n\n.container {\n    padding-left: 0px;\n    padding-right: 0px;\n    max-width: 100%;\n}\n\n/*********************************************\nITEM\n*********************************************/\n\n.service1-items {\n    padding: 0px 0 0px 0;\n    float: left;\n    position: relative;\n    overflow: hidden;\n    max-width: 100%;\n    height: 321px;\n    width: 130px;\n}\n\n.service1-item {\n    height: 107px;\n    width: 120px;\n    display: block;\n    float: left;\n    position: relative;\n    padding-right: 20px;\n    border-right: 1px solid #DDD;\n    border-top: 1px solid #DDD;\n    border-bottom: 1px solid #DDD;\n}\n\n.service1-item > img {\n    max-height: 110px;\n    max-width: 110px;\n    opacity: 0.6;\n    transition: all .2s ease-in;\n    -o-transition: all .2s ease-in;\n    -moz-transition: all .2s ease-in;\n    -webkit-transition: all .2s ease-in;\n}\n\n.service1-item > img:hover {\n    cursor: pointer;\n    opacity: 1;\n}\n\n.service-image-left {\n    padding-right: 50px;\n}\n\n.service-image-right {\n    padding-left: 50px;\n}\n\n.service-image-left > center > img,.service-image-right > center > img{\n    max-height: 155px;\n}\n\n.sidebar {\n    top: 34px;\n    padding: 20px;\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n    border-radius: 10px;\n}\n")
 'use strict';
@@ -25233,7 +25397,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6245276f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"../comments/allComments.vue":15,"./usersidebar.vue":26,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],26:[function(require,module,exports){
+},{"../btns/status.vue":13,"../comments/allComments.vue":15,"./usersidebar.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],28:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -25260,7 +25424,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-30a15f3a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],27:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],29:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -25292,7 +25456,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-596182d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],28:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25359,7 +25523,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c09fbebe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],29:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],31:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.btn-group {\n    margin-top: 15px;\n}\n")
 'use strict';
@@ -25428,7 +25592,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7362f518", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":27,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],30:[function(require,module,exports){
+},{"./SingleServices.vue":29,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],32:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n/*********************************************\nTheme Elements\n*********************************************/\n\n.gold{\n    color: #FFBF00;\n}\n\n/*********************************************\nPRODUCTS\n*********************************************/\n\n.product{\n    border: 1px solid #dddddd;\n    height: 321px;\n}\n\n.product>img{\n    max-width: 230px;\n}\n\n.product-rating{\n    font-size: 20px;\n    margin-bottom: 25px;\n}\n\n.product-title{\n    font-size: 20px;\n}\n\n.product-desc{\n    font-size: 14px;\n    word-break:break-all;\n}\n\n.product-price{\n    font-size: 22px;\n}\n\n.product-stock{\n    color: #74DF00;\n    font-size: 20px;\n    margin-top: 10px;\n}\n\n.product-info{\n    margin-top: 50px;\n}\n\n/*********************************************\nVIEW\n*********************************************/\n\n.content-wrapper {\n    max-width: 1140px;\n    background: #fff;\n    margin: 0 auto;\n    margin-top: 25px;\n    margin-bottom: 10px;\n    border: 0px;\n    border-radius: 0px;\n}\n\n.container-fluid{\n    max-width: 1140px;\n    margin: 0 auto;\n}\n\n.view-wrapper {\n    float: right;\n    max-width: 70%;\n    margin-top: 25px;\n}\n\n.container {\n    padding-left: 0px;\n    padding-right: 0px;\n    max-width: 100%;\n}\n\n/*********************************************\nITEM\n*********************************************/\n\n.service1-items {\n    padding: 0px 0 0px 0;\n    float: left;\n    position: relative;\n    overflow: hidden;\n    max-width: 100%;\n    height: 321px;\n    width: 130px;\n}\n\n.service1-item {\n    height: 107px;\n    width: 120px;\n    display: block;\n    float: left;\n    position: relative;\n    padding-right: 20px;\n    border-right: 1px solid #DDD;\n    border-top: 1px solid #DDD;\n    border-bottom: 1px solid #DDD;\n}\n\n.service1-item > img {\n    max-height: 110px;\n    max-width: 110px;\n    opacity: 0.6;\n    transition: all .2s ease-in;\n    -o-transition: all .2s ease-in;\n    -moz-transition: all .2s ease-in;\n    -webkit-transition: all .2s ease-in;\n}\n\n.service1-item > img:hover {\n    cursor: pointer;\n    opacity: 1;\n}\n\n.service-image-left {\n    padding-right: 50px;\n}\n\n.service-image-right {\n    padding-left: 50px;\n}\n\n.service-image-left > center > img,.service-image-right > center > img{\n    max-height: 155px;\n}\n\n")
 'use strict';
@@ -25518,7 +25682,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a36f48c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":12,"../users/SingleServices.vue":32,"./SingleServices.vue":27,"./sidebar.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],31:[function(require,module,exports){
+},{"../btns/buy.vue":12,"../users/SingleServices.vue":34,"./SingleServices.vue":29,"./sidebar.vue":33,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],33:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -25545,7 +25709,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-24dcce5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],32:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],34:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -25590,7 +25754,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-07d7dbba", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":12,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],33:[function(require,module,exports){
+},{"../btns/buy.vue":12,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],35:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.counter\n{\n    background-color: #eaecf0;\n    text-align: center;\n}\n.div-counter\n{\n    margin-left: 42%;\n}\n.counter-count\n{\n    font-size: 18px;\n    background-color: #286090;\n    border-radius: 50%;\n    position: relative;\n    color: #ffffff;\n    text-align: center;\n    line-height: 92px;\n    width: 92px;\n    height: 92px;\n    -webkit-border-radius: 50%;\n    -moz-border-radius: 50%;\n    -ms-border-radius: 50%;\n    -o-border-radius: 50%;\n    display: inline-block;\n}\n.employee-p,.customer-p,.order-p,.design-p\n{\n    font-size: 24px;\n    color: #000000;\n    line-height: 34px;\n}\n.btn-group {\n    margin-top: 15px;\n}\n\n")
 'use strict';
@@ -25663,6 +25827,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1b198486", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}]},{},[11]);
+},{"./SingleServices.vue":34,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}]},{},[11]);
 
 //# sourceMappingURL=app.js.map

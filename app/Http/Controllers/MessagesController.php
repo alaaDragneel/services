@@ -10,6 +10,8 @@ use App\Http\Requests\AddMessagesRequest;
 
 use Auth;
 
+use Response;
+
 use App;
 
 use App\User;
@@ -28,6 +30,32 @@ class MessagesController extends Controller
         $user = Auth::user();
         return Message::where('user_message_you', $user->id)->with('getReceivedUser')->orderBy('id', 'DESC')->get();
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getMessagesCount()
+    { // My Count Messages
+        $user = Auth::user();
+        $incoming = Message::where('user_id', $user->id)->count();
+        $send = Message::where('user_message_you', $user->id)->count();
+        $unRead = Message::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('seen', 0);
+        })->count();
+        $read = Message::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('seen', 1);
+        })->count();
+
+        return Response::json([
+            'incoming' =>  $incoming,
+            'send' =>  $send,
+            'unRead' =>  $unRead,
+            'read' =>  $read
+        ], 200);
+    }
 
     /**
      * Display a listing of the resource.
@@ -38,6 +66,33 @@ class MessagesController extends Controller
     { // My Recived Messages
         $user = Auth::user();
         return Message::where('user_id', $user->id)->with('getSendUser')->orderBy('id', 'DESC')->get();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function GetUnReadMessages()
+    { // My UnRead Messages
+        $user = Auth::user();
+        return Message::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('seen', 0);
+        })->with('getSendUser')->orderBy('id', 'DESC')->get();
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function GetReadMessages()
+    { // My Read Messages
+        $user = Auth::user();
+        return Message::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('seen', 1);
+        })->with('getSendUser')->orderBy('id', 'DESC')->get();
     }
 
     /**
@@ -89,6 +144,10 @@ class MessagesController extends Controller
         if ($message) {
             $user = Auth::user();
             if ($user->id == $message->user_id || $user->id == $message->user_message_you) {
+                if ($message->seen == 0 && $user->id == $message->user_id) {
+                    $message->seen = 1;
+                    $message->save();
+                }
                 return Message::where('id', $message_id)->with('getReceivedUser', 'getSendUser')->first();
             }
             App::abort(403);

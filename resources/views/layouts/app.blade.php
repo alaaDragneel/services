@@ -93,9 +93,30 @@
                              <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
                         </ul>
                      </li>
+                     {{-- Messages Section --}}
+                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             <i class="fa fa-envelope"></i> <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu" role="menu">
+                             <li>
+                                  <a v-link="{path: '/GetMyRecivedMessages'}">
+                                       <i class="fa fa-inbox"></i>
+                                       Incoming Messages
+                                  </a>
+                             </li>
+                             <li>
+                                  <a v-link="{path: '/GetMySendMessages'}">
+                                       <i class="fa fa-send"></i>
+                                       Send Messages
+                                  </a>
+                             </li>
+                        </ul>
+                     </li>
                  @endif
              </ul>
-          <form class="navbar-form navbar-right">
+          <form class="navbar-form navbar-left">
             <input type="text" class="form-control" placeholder="Search...">
             <button type="button" class="btn btn-primary">
                  <i class="fa fa-search"></i>
@@ -108,7 +129,7 @@
     @yield('content')
 
     <!-- JavaScripts -->
-    {{ Html::script('js/main.js') }}
     {{ Html::script('js/app.js') }}
+    {{ Html::script('js/main.js') }}
 </body>
 </html>

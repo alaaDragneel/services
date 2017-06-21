@@ -6,8 +6,7 @@
                     <message_menu></message_menu>
                 </div>
                 <div class="col-sm-9 col-md-10">
-                    <message_list :messages="messages" :type="send"></message_list>
-
+                    <message_list :messages="messages" :type="income"></message_list>
                 </div>
             </div>
         </div>
@@ -33,12 +32,12 @@ export default {
         return {
             messages: [],
             isLoading: false,
-            send: 'send'
+            income: 'income'
         }
     },
     methods: {
         GetMySendMessage: function () {
-            this.$http.get('Messages').then(function (res) {
+            this.$http.get('GetReadMessages').then(function (res) {
                 this.messages = res.body;
                 this.$refs.spinner.hide();
                 this.isLoading = true;

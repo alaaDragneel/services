@@ -30,6 +30,8 @@ var SendMessage = require('./components/messages/send.vue');
 var MySendMessages = require('./components/messages/sendMessage.vue');
 var MyRecivedMessages = require('./components/messages/incomingMessage.vue');
 var messageDetails = require('./components/messages/messageDetails.vue');
+var unReadMessages = require('./components/messages/newMessage.vue');
+var ReadMessages = require('./components/messages/oldMessage.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -85,6 +87,12 @@ route.map({
     },
     '/GetMyRecivedMessages': {
         component: MyRecivedMessages
+    },
+    '/GetUnReadMessages': {
+        component: unReadMessages
+    },
+    '/GetReadMessages': {
+        component: ReadMessages
     },
     '/messageDetails/:message_id/:viewType': {
         name: '/messageDetails',
