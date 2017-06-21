@@ -5,6 +5,7 @@
             <li v-bind:class="{'active': checkRoute('/GetMySendMessages')}"><a v-link="{path: '/GetMySendMessages'}">Send Messages <span class="badge">{{ send }}</span></a></li>
             <li v-bind:class="{'active': checkRoute('/GetUnReadMessages')}"><a  v-link="{path: '/GetUnReadMessages'}">UnRead Messages <span class="badge">{{ unRead }}</span></a></li>
             <li v-bind:class="{'active': checkRoute('/GetReadMessages')}"><a  v-link="{path: '/GetReadMessages'}">Read Messages <span class="badge">{{ read }}</span></a></li>
+            <li v-bind:class="{'active': checkRoute('/GetMyFavorites')}"><a  v-link="{path: '/GetMyFavorites'}">Favorites </a></li>
         </ul>
 </template>
 

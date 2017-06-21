@@ -39,7 +39,7 @@ export default {
         return {
             disabled: false,
             done: false,
-            error: false
+            error: false    
         }
     },
     methods: {

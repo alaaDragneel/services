@@ -24,20 +24,20 @@
                                         <div class="over">
                                             <div class="container">
                                                 <div class="row">
-                                                  <div class="col-md-12">
-                                                      <div class="col-md-6">
+                                                  <div class="col-md-12 col-sm-6 col-xs-6">
+                                                      <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 7px;">
                                                           <div class="label label-info">Price: $ {{ service.price }}</div>
                                                       </div>
-                                                      <div class="col-md-6">
+                                                      <div class="col-md-6 col-sm-6 col-xs-6">
                                                           <div class="product-stock">{{ ordersCount }} Order/s</div>
 
                                                       </div>
                                                   </div>
-                                                  <div class="col-md-12">
+                                                  <div class="col-md-12 col-sm-6 col-xs-6" style="margin-top: 8px;">
+                                                      <!-- buy Order -->
                                                       <buy_btn :service="service"></buy_btn>
-                                                      <button type="button" class="btn btn-danger btn-sm">
-                                                          <i class="fa fa-heart"></i> Add to Favorites
-                                                      </button>
+                                                      <!-- Favorite -->
+                                                      <fav_btn :service="service"></fav_btn>
                                                   </div>
                                                 </div>
                                             </div>
@@ -109,6 +109,7 @@
     import otherServicesInSameCat from '../users/SingleServices.vue';
     import sidebar from './sidebar.vue';
     import buyBtn from '../btns/buy.vue';
+    import favBtn from '../btns/fav.vue';
     var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 
     export default {
@@ -118,6 +119,7 @@
             other_services_in_same_cat: otherServicesInSameCat,
             sidebar: sidebar,
             buy_btn: buyBtn,
+            fav_btn: favBtn,
             spinner: Spinner
         },
         data(){

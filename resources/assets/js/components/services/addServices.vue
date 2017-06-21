@@ -82,7 +82,6 @@
                 formData.append('cat_id', this.category_id);
                 formData.append('price', this.price);
                 formData.append('image', this.$els.image.files[0]);
-
                 this.sendData(formData);
             },
             sendData: function (formData) {
@@ -92,7 +91,6 @@
                     this.category_id = '';
                     this.price = '';
                     $('input[type=file]').val(null);
-
                     if (successResponse.body == 'success') {
                         swal("Success", "your service has been added Please wait until admin approved!", "success");
                     } else if (successResponse.body == 'error') {
@@ -103,7 +101,6 @@
                             window.location.reload()
                         }, 1500);
                     }
-
                 }, function (errorResponse) {
                     for (var key in errorResponse.body) {
                         alertify.error(errorResponse.body[key][0]);

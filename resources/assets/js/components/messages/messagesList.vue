@@ -16,6 +16,22 @@
           <a v-link="{path: '/GetReadMessages'}">Read Messages</a>
       </li>
 
+      <li v-if="pathUrl == '/GetMyRecivedMessages'">
+          Inbox Messages ({{ messages.length }})
+      </li>
+
+      <li v-if="pathUrl == '/GetMySendMessages'">
+          Send Messages ({{ messages.length }})
+      </li>
+
+      <li v-if="pathUrl == '/GetUnReadMessages'">
+          UnRead Messages ({{ messages.length }})
+      </li>
+      <li v-if="pathUrl == '/GetReadMessages'">
+          Read Messages ({{ messages.length }})
+      </li>
+
+
     </ol>
     <div class="row">
         <div class="col-md-6">
@@ -108,7 +124,7 @@
 </tbody>
 <tbody v-else>
     <tr>
-        <td colspan="6"><div class="alert alert-info text-center">No Messages Right No!</div></td>
+        <td colspan="7"><div class="alert alert-info text-center">No Messages Right No!</div></td>
     </tr>
 </tbody>
 </table>

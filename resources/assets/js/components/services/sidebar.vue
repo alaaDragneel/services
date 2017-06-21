@@ -1,5 +1,5 @@
 <template lang="html">
-    <a v-link="{name: '/User', params:{ userId:service.user.id, userName: service.user.name}}">
+    <a v-link="{name: '/User', params:{ userId: service.user.id, userName: service.user.name}}">
         <i class="fa fa-user"></i> {{ service.user.name }}
     </a>
     <br>

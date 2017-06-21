@@ -32,6 +32,7 @@ var MyRecivedMessages = require('./components/messages/incomingMessage.vue');
 var messageDetails = require('./components/messages/messageDetails.vue');
 var unReadMessages = require('./components/messages/newMessage.vue');
 var ReadMessages = require('./components/messages/oldMessage.vue');
+var favorite = require('./components/favorite/favorite.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -97,6 +98,9 @@ route.map({
     '/messageDetails/:message_id/:viewType': {
         name: '/messageDetails',
         component: messageDetails
+    },
+    '/GetMyFavorites': {
+        component: favorite
     },
 });
 

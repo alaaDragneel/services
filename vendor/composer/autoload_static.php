@@ -290,6 +290,7 @@ class ComposerStaticInita99758efdd246a34333c4949e23d53c1
     public static $classMap = array (
         'CreateCategoriesTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_222440_create_categories_table.php',
         'CreateCommentsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_223232_create_comments_table.php',
+        'CreateFavoritesTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_21_111207_create_favorites_table.php',
         'CreateMessagesTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_223126_create_messages_table.php',
         'CreateNotificationsTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_222907_create_notifications_table.php',
         'CreateOrdersTable' => __DIR__ . '/../..' . '/database/migrations/2017_06_09_222503_create_orders_table.php',

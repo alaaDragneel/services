@@ -96,7 +96,9 @@
                      {{-- Messages Section --}}
                      <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                             <i class="fa fa-envelope"></i> <span class="caret"></span>
+                             <span class="fa fa-envelope"></span> <span class="hidden-lg hidden-md">Messages</span> <span class="caret"></span>
+
+
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
@@ -113,6 +115,13 @@
                                   </a>
                              </li>
                         </ul>
+                     </li>
+                     {{-- Favorite --}}
+                     <li class="dropdown">
+                        <a v-link="{path: '/GetMyFavorites'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                             <span class="fa fa-heart"></span>
+                             <span class="hidden-lg hidden-md">Favorite</span>
+                        </a>
                      </li>
                  @endif
              </ul>

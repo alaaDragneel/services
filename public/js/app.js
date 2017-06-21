@@ -24342,6 +24342,7 @@ var MyRecivedMessages = require('./components/messages/incomingMessage.vue');
 var messageDetails = require('./components/messages/messageDetails.vue');
 var unReadMessages = require('./components/messages/newMessage.vue');
 var ReadMessages = require('./components/messages/oldMessage.vue');
+var favorite = require('./components/favorite/favorite.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -24406,6 +24407,9 @@ route.map({
     '/messageDetails/:message_id/:viewType': {
         name: '/messageDetails',
         component: messageDetails
+    },
+    '/GetMyFavorites': {
+        component: favorite
     }
 });
 
@@ -24414,7 +24418,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/messages/incomingMessage.vue":16,"./components/messages/messageDetails.vue":17,"./components/messages/newMessage.vue":20,"./components/messages/oldMessage.vue":21,"./components/messages/send.vue":22,"./components/messages/sendMessage.vue":23,"./components/orders/incomingOrders.vue":24,"./components/orders/purchaseOrders.vue":26,"./components/orders/singleOrder.vue":27,"./components/services/addServices.vue":30,"./components/services/myServices.vue":31,"./components/services/service_details.vue":32,"./components/users/UserServices.vue":35,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],12:[function(require,module,exports){
+},{"./components/favorite/favorite.vue":18,"./components/messages/incomingMessage.vue":19,"./components/messages/messageDetails.vue":20,"./components/messages/newMessage.vue":23,"./components/messages/oldMessage.vue":24,"./components/messages/send.vue":25,"./components/messages/sendMessage.vue":26,"./components/orders/incomingOrders.vue":27,"./components/orders/purchaseOrders.vue":29,"./components/orders/singleOrder.vue":30,"./components/services/addServices.vue":33,"./components/services/myServices.vue":34,"./components/services/service_details.vue":35,"./components/users/UserServices.vue":38,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],12:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -24476,6 +24480,51 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
+    props: ['service'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        addFavorite: function addFavorite() {
+            this.$http.get('Addfavorite/' + this.service.id).then(function (res) {
+                swal('Success', 'The Service Added TO Fivorite Sucessfully', 'success');
+            }, function (res) {
+
+                alertify.error('Error: Some Problems occure Maybe because the Following Resons');
+                alertify.error('The Service Is Your Service');
+                alertify.error('The Service Already Favorited');
+                alertify.error('The Service Not Found');
+            });
+        }
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<button @click.prevent=\"addFavorite\" type=\"button\" class=\"btn btn-danger btn-sm\">\n    <i class=\"fa fa-heart\"></i> Add to Favorites\n</button>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-0ce9c3d6", module.exports)
+  } else {
+    hotAPI.update("_v-0ce9c3d6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],14:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
     props: ['status']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
@@ -24494,7 +24543,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0fdee707", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],14:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],15:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -24556,7 +24605,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3e226f16", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],15:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n/*Comment List styles*/\n.comment-list .row {\n    margin-bottom: 0px;\n}\n.comment-list .panel .panel-heading {\n    padding: 4px 15px;\n    position: absolute;\n    border:none;\n    /*Panel-heading border radius*/\n    border-top-right-radius:0px;\n    top: 1px;\n}\n.comment-list .panel .panel-heading.right {\n    border-right-width: 0px;\n    /*Panel-heading border radius*/\n    border-top-left-radius:0px;\n    right: 16px;\n}\n.comment-list .panel .panel-heading .panel-body {\n    padding-top: 6px;\n}\n.comment-list figcaption {\n    /*For wrapping text in thumbnail*/\n    word-wrap: break-word;\n}\n/* Portrait tablets and medium desktops */\n@media (min-width: 768px) {\n    .comment-list .arrow:after, .comment-list .arrow:before {\n        content: \"\";\n        position: absolute;\n        width: 0;\n        height: 0;\n        border-style: solid;\n        border-color: transparent;\n    }\n    .comment-list .panel.arrow.left:after, .comment-list .panel.arrow.left:before {\n        border-left: 0;\n    }\n    /*****Left Arrow*****/\n    /*Outline effect style*/\n    .comment-list .panel.arrow.left:before {\n        left: 0px;\n        top: 30px;\n        /*Use boarder color of panel*/\n        border-right-color: inherit;\n        border-width: 16px;\n    }\n    /*Background color effect*/\n    .comment-list .panel.arrow.left:after {\n        left: 1px;\n        top: 31px;\n        /*Change for different outline color*/\n        border-right-color: #FFFFFF;\n        border-width: 15px;\n    }\n    /*****Right Arrow*****/\n    /*Outline effect style*/\n    .comment-list .panel.arrow.right:before {\n        right: -16px;\n        top: 30px;\n        /*Use boarder color of panel*/\n        border-left-color: inherit;\n        border-width: 16px;\n    }\n    /*Background color effect*/\n    .comment-list .panel.arrow.right:after {\n        right: -14px;\n        top: 31px;\n        /*Change for different outline color*/\n        border-left-color: #FFFFFF;\n        border-width: 15px;\n    }\n}\n.comment-list .comment-post {\n    margin-top: 6px;\n}\n")
 'use strict';
@@ -24631,7 +24680,133 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0cdd95cd", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../comments/addComment.vue":14,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],16:[function(require,module,exports){
+},{"../comments/addComment.vue":15,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],17:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.badge-success {\n    background-color: #5cb85c;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    props: ['favorites'],
+    components: {
+
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            pathUrl: '',
+            sortKey: '',
+            reverse: 1,
+            title: ''
+        };
+    },
+
+    ready: function ready() {
+        this.pathUrl = this.$route.path;
+    },
+    methods: {
+        sort: function sort(_sort) {
+            this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
+            this.sortKey = _sort;
+        },
+        deleteFav: function deleteFav(id, index) {
+            this.$refs.spinner.show();
+            this.$http.delete('deleteFav/' + id).then(function (res) {
+                this.favorites.splice(index, 1);
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li>\n          <a v-link=\"{path: '/GetMyFavorites'}\">My Favorite</a>\n      </li>\n      <li>\n          Favorites ({{ favorites.length }})\n      </li>\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Service name And Price\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>\n        Service Provider\n    </th>\n    <th>Service Name</th>\n    <th>Service Price</th>\n    <th>On</th>\n    <th>Delete</th>\n\n</thead>\n<tbody v-if=\"favorites.length > 0\">\n    <tr v-for=\"favorite in favorites | orderBy sortKey reverse | filterBy title in 'service.name' 'service.price'\" track-by=\"$index\">\n        <td>\n\n                    <a v-link=\"{name: '/User', params:{userId:favorite.get_own_user_service.id, userName: favorite.get_own_user_service.name}}\">\n\n                        {{ favorite.get_own_user_service.name }}\n                    </a>\n\n        </td>\n        <td style=\"width: 20%;\">\n            <a v-link=\"{name: '/ServicesDetails', params: {serviceId: favorite.service.id, serviceName: favorite.service.name}}\">\n                {{ favorite.service.name }}\n            </a>\n        </td>\n        <td style=\"width: 20%;\">\n                {{ favorite.service.price }}\n        </td>\n        <td>{{ favorite.created_at | moment 'calendar' }}</td>\n\n        <td>\n            <a @click.prevent=\"deleteFav(favorite.id, $index)\" class=\"btn btn-danger btn-block\" v-link=\"\">\n                <i class=\"fa fa-trash\"></i>\n            </a>\n        </td>\n    </tr>\n</tbody>\n<tbody v-else>\n    <tr>\n        <td colspan=\"6\"><div class=\"alert alert-info text-center\">No Favorite Services!</div></td>\n    </tr>\n</tbody>\n</table>\n    <div  class=\"list-group\">\n\n    </div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.badge-success {\n    background-color: #5cb85c;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-2c7f19ce", module.exports)
+  } else {
+    hotAPI.update("_v-2c7f19ce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],18:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _messageMenu = require('../messages/messageMenu.vue');
+
+var _messageMenu2 = _interopRequireDefault(_messageMenu);
+
+var _favList = require('./favList.vue');
+
+var _favList2 = _interopRequireDefault(_favList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    components: {
+        message_menu: _messageMenu2.default,
+        fav_list: _favList2.default,
+        spinner: Spinner
+    },
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.userFavorites();
+    },
+    data: function data() {
+        return {
+            fav_list: [],
+            isLoading: false,
+            income: 'income'
+        };
+    },
+
+    methods: {
+        userFavorites: function userFavorites() {
+            this.$http.get('userFavorites').then(function (res) {
+                this.fav_list = res.body;
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <fav_list :favorites=\"fav_list\"></fav_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-2c7bb88c", module.exports)
+  } else {
+    hotAPI.update("_v-2c7bb88c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../messages/messageMenu.vue":21,"./favList.vue":17,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24695,7 +24870,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7a52551e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],17:[function(require,module,exports){
+},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24757,7 +24932,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-aff0180a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],18:[function(require,module,exports){
+},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],21:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -24795,7 +24970,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ul class=\"nav nav-pills nav-stacked\">\n    <li v-bind:class=\"{'active': checkRoute('/GetMyRecivedMessages')}\"><a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages <span class=\"badge\">{{ incoming }}</span></a>\n    </li>\n    <li v-bind:class=\"{'active': checkRoute('/GetMySendMessages')}\"><a v-link=\"{path: '/GetMySendMessages'}\">Send Messages <span class=\"badge\">{{ send }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetUnReadMessages')}\"><a  v-link=\"{path: '/GetUnReadMessages'}\">UnRead Messages <span class=\"badge\">{{ unRead }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetReadMessages')}\"><a  v-link=\"{path: '/GetReadMessages'}\">Read Messages <span class=\"badge\">{{ read }}</span></a></li>\n</ul>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ul class=\"nav nav-pills nav-stacked\">\n    <li v-bind:class=\"{'active': checkRoute('/GetMyRecivedMessages')}\"><a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages <span class=\"badge\">{{ incoming }}</span></a>\n    </li>\n    <li v-bind:class=\"{'active': checkRoute('/GetMySendMessages')}\"><a v-link=\"{path: '/GetMySendMessages'}\">Send Messages <span class=\"badge\">{{ send }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetUnReadMessages')}\"><a  v-link=\"{path: '/GetUnReadMessages'}\">UnRead Messages <span class=\"badge\">{{ unRead }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetReadMessages')}\"><a  v-link=\"{path: '/GetReadMessages'}\">Read Messages <span class=\"badge\">{{ read }}</span></a></li>\n    <li v-bind:class=\"{'active': checkRoute('/GetMyFavorites')}\"><a  v-link=\"{path: '/GetMyFavorites'}\">Favorites </a></li>\n</ul>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24810,7 +24985,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e93ac814", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],19:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],22:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.badge-success {\n    background-color: #5cb85c;\n}\n")
 'use strict';
@@ -24840,7 +25015,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li v-if=\"pathUrl == '/GetMyRecivedMessages'\">\n          <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetMySendMessages'\">\n          <a v-link=\"{path: '/GetMySendMessages'}\">Send Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetUnReadMessages'\">\n          <a v-link=\"{path: '/GetUnReadMessages'}\">UnRead Messages</a>\n      </li>\n      <li v-if=\"pathUrl == '/GetReadMessages'\">\n          <a v-link=\"{path: '/GetReadMessages'}\">Read Messages</a>\n      </li>\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Message title\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('seen')\"><i class=\"fa fa-eye\"></i>  Seen</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>\n        <span v-if=\"type == 'income'\">\n            Recived From\n        </span>\n        <span v-else>\n            Send To\n        </span>\n    </th>\n    <th>Title</th>\n    <th>Message</th>\n    <th>On</th>\n    <th>Status</th>\n    <th>See</th>\n    <th>Reply</th>\n</thead>\n<tbody v-if=\"messages.length > 0\">\n    <tr v-for=\"message in messages | orderBy sortKey reverse | filterBy title in 'title'\" track-by=\"$index\">\n        <td>\n            <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n                <span v-if=\"message.get_received_user\">\n                    <a v-link=\"{name: '/User', params:{userId:message.get_received_user.id, userName: message.get_received_user.name}}\">\n\n                        {{ message.get_received_user.name }}\n                    </a>\n                </span>\n                <span v-else>\n                    <a v-link=\"{name: '/User', params:{userId:message.get_send_user.id, userName: message.get_send_user.name}}\">\n\n                        {{ message.get_send_user.name }}\n                    </a>\n                </span>\n\n            </span>\n        </td>\n        <td style=\"width: 20%;\">\n            <a v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n                {{ message.title }}\n            </a>\n        </td>\n        <td style=\"width: 30%; word-break: break-word;\">{{ message.message }}</td>\n        <td>{{ message.created_at | moment 'calendar' }}</td>\n        <td>\n            <span v-if=\"message.seen == 1\">\n                <span class=\"badge badge-success\">seen</span>\n            </span>\n            <span v-else>\n                <span class=\"badge\">New</span>\n            </span>\n        </td>\n        <td>\n            <a class=\"btn btn-info\" v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n                <i class=\"fa fa-eye\"></i>\n            </a>\n        </td>\n        <td>\n            <span v-if=\"message.get_received_user\">\n                <a v-link=\"{name: '/SendMessage', params: {userId: message.get_received_user.id}}\" class=\"btn btn-primary btn-block\">\n                    <i class=\"fa fa-reply\"></i>\n                </a>\n            </span>\n            <span v-else>\n                <a v-link=\"{name: '/SendMessage', params: {userId: message.get_send_user.id}}\" class=\"btn btn-primary btn-block\">\n                    <i class=\"fa fa-reply\"></i>\n                </a>\n            </span>\n        </td>\n    </tr>\n</tbody>\n<tbody v-else>\n    <tr>\n        <td colspan=\"6\"><div class=\"alert alert-info text-center\">No Messages Right No!</div></td>\n    </tr>\n</tbody>\n</table>\n    <div  class=\"list-group\">\n\n    </div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li v-if=\"pathUrl == '/GetMyRecivedMessages'\">\n          <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetMySendMessages'\">\n          <a v-link=\"{path: '/GetMySendMessages'}\">Send Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetUnReadMessages'\">\n          <a v-link=\"{path: '/GetUnReadMessages'}\">UnRead Messages</a>\n      </li>\n      <li v-if=\"pathUrl == '/GetReadMessages'\">\n          <a v-link=\"{path: '/GetReadMessages'}\">Read Messages</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/GetMyRecivedMessages'\">\n          Inbox Messages ({{ messages.length }})\n      </li>\n\n      <li v-if=\"pathUrl == '/GetMySendMessages'\">\n          Send Messages ({{ messages.length }})\n      </li>\n\n      <li v-if=\"pathUrl == '/GetUnReadMessages'\">\n          UnRead Messages ({{ messages.length }})\n      </li>\n      <li v-if=\"pathUrl == '/GetReadMessages'\">\n          Read Messages ({{ messages.length }})\n      </li>\n\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Message title\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('seen')\"><i class=\"fa fa-eye\"></i>  Seen</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>\n        <span v-if=\"type == 'income'\">\n            Recived From\n        </span>\n        <span v-else>\n            Send To\n        </span>\n    </th>\n    <th>Title</th>\n    <th>Message</th>\n    <th>On</th>\n    <th>Status</th>\n    <th>See</th>\n    <th>Reply</th>\n</thead>\n<tbody v-if=\"messages.length > 0\">\n    <tr v-for=\"message in messages | orderBy sortKey reverse | filterBy title in 'title'\" track-by=\"$index\">\n        <td>\n            <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n                <span v-if=\"message.get_received_user\">\n                    <a v-link=\"{name: '/User', params:{userId:message.get_received_user.id, userName: message.get_received_user.name}}\">\n\n                        {{ message.get_received_user.name }}\n                    </a>\n                </span>\n                <span v-else>\n                    <a v-link=\"{name: '/User', params:{userId:message.get_send_user.id, userName: message.get_send_user.name}}\">\n\n                        {{ message.get_send_user.name }}\n                    </a>\n                </span>\n\n            </span>\n        </td>\n        <td style=\"width: 20%;\">\n            <a v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n                {{ message.title }}\n            </a>\n        </td>\n        <td style=\"width: 30%; word-break: break-word;\">{{ message.message }}</td>\n        <td>{{ message.created_at | moment 'calendar' }}</td>\n        <td>\n            <span v-if=\"message.seen == 1\">\n                <span class=\"badge badge-success\">seen</span>\n            </span>\n            <span v-else>\n                <span class=\"badge\">New</span>\n            </span>\n        </td>\n        <td>\n            <a class=\"btn btn-info\" v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n                <i class=\"fa fa-eye\"></i>\n            </a>\n        </td>\n        <td>\n            <span v-if=\"message.get_received_user\">\n                <a v-link=\"{name: '/SendMessage', params: {userId: message.get_received_user.id}}\" class=\"btn btn-primary btn-block\">\n                    <i class=\"fa fa-reply\"></i>\n                </a>\n            </span>\n            <span v-else>\n                <a v-link=\"{name: '/SendMessage', params: {userId: message.get_send_user.id}}\" class=\"btn btn-primary btn-block\">\n                    <i class=\"fa fa-reply\"></i>\n                </a>\n            </span>\n        </td>\n    </tr>\n</tbody>\n<tbody v-else>\n    <tr>\n        <td colspan=\"7\"><div class=\"alert alert-info text-center\">No Messages Right No!</div></td>\n    </tr>\n</tbody>\n</table>\n    <div  class=\"list-group\">\n\n    </div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24855,7 +25030,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-94264b6c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],20:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24919,7 +25094,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-d9ae8ff2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],21:[function(require,module,exports){
+},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],24:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24983,7 +25158,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-686c6920", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],22:[function(require,module,exports){
+},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25058,7 +25233,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-261e42c8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],23:[function(require,module,exports){
+},{"./messageMenu.vue":21,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],26:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25122,7 +25297,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-b2464e62", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],24:[function(require,module,exports){
+},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],27:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -25188,7 +25363,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ae94e32", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":25,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],25:[function(require,module,exports){
+},{"./orderStructure.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],28:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#items div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -25225,7 +25400,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-34a13c4c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],26:[function(require,module,exports){
+},{"../btns/status.vue":14,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],29:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -25291,7 +25466,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5fdf7566", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":25,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],27:[function(require,module,exports){
+},{"./orderStructure.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],30:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n/*********************************************\nTheme Elements\n*********************************************/\n\n.gold{\n    color: #FFBF00;\n}\n\n/*********************************************\nPRODUCTS\n*********************************************/\n\n.product{\n    border: 1px solid #dddddd;\n    height: 321px;\n}\n\n.product>img{\n    max-width: 230px;\n}\n\n.product-rating{\n    font-size: 20px;\n    margin-bottom: 25px;\n}\n\n.product-title{\n    font-size: 20px;\n}\n\n.product-desc{\n    font-size: 14px;\n    word-break:break-all;\n}\n\n.product-price{\n    font-size: 22px;\n}\n\n.product-stock{\n    color: #74DF00;\n    font-size: 20px;\n    margin-top: 10px;\n}\n\n.product-info{\n    margin-top: 50px;\n}\n\n/*********************************************\nVIEW\n*********************************************/\n\n.content-wrapper {\n    max-width: 1140px;\n    background: #fff;\n    margin: 0 auto;\n    margin-top: 25px;\n    margin-bottom: 10px;\n    border: 0px;\n    border-radius: 0px;\n}\n\n.container-fluid{\n    max-width: 1140px;\n    margin: 0 auto;\n}\n\n.view-wrapper {\n    float: right;\n    max-width: 70%;\n    margin-top: 25px;\n}\n\n.container {\n    padding-left: 0px;\n    padding-right: 0px;\n    max-width: 100%;\n}\n\n/*********************************************\nITEM\n*********************************************/\n\n.service1-items {\n    padding: 0px 0 0px 0;\n    float: left;\n    position: relative;\n    overflow: hidden;\n    max-width: 100%;\n    height: 321px;\n    width: 130px;\n}\n\n.service1-item {\n    height: 107px;\n    width: 120px;\n    display: block;\n    float: left;\n    position: relative;\n    padding-right: 20px;\n    border-right: 1px solid #DDD;\n    border-top: 1px solid #DDD;\n    border-bottom: 1px solid #DDD;\n}\n\n.service1-item > img {\n    max-height: 110px;\n    max-width: 110px;\n    opacity: 0.6;\n    transition: all .2s ease-in;\n    -o-transition: all .2s ease-in;\n    -moz-transition: all .2s ease-in;\n    -webkit-transition: all .2s ease-in;\n}\n\n.service1-item > img:hover {\n    cursor: pointer;\n    opacity: 1;\n}\n\n.service-image-left {\n    padding-right: 50px;\n}\n\n.service-image-right {\n    padding-left: 50px;\n}\n\n.service-image-left > center > img,.service-image-right > center > img{\n    max-height: 155px;\n}\n\n.sidebar {\n    top: 34px;\n    padding: 20px;\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n    border-radius: 10px;\n}\n")
 'use strict';
@@ -25397,7 +25572,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6245276f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"../comments/allComments.vue":15,"./usersidebar.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],28:[function(require,module,exports){
+},{"../btns/status.vue":14,"../comments/allComments.vue":16,"./usersidebar.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],31:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -25424,7 +25599,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-30a15f3a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],29:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],32:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -25441,7 +25616,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h4>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h4>\n            </div>\n        </div>\n        <div class=\"row\">\n\n            <div class=\"col-md-8 col-sm-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n            <div class=\"col-md-4 col-sm-12\">\n                <span class=\"btn btn-info\"><i class=\"fa fa-eye\"></i> {{ service.view_count }}</span>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h3 class=\"label label-primary\">{{ service.name }}</h3>\n    </a>\n    <label class=\"label label-success pull-right\">${{ service.price }}</label>\n    <div class=\"clearfix\"></div>\n    <div style=\"height: 7px;\"></div>\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-12 col-xs-12\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n        </div>\n        <div class=\"row\">\n\n            <div class=\"col-md-8 col-sm-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n            <div class=\"col-md-4 col-sm-12\">\n                <span class=\"btn btn-info\"><i class=\"fa fa-eye\"></i> {{ service.view_count }}</span>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25456,7 +25631,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-596182d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],30:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25482,7 +25657,6 @@ exports.default = {
             formData.append('cat_id', this.category_id);
             formData.append('price', this.price);
             formData.append('image', this.$els.image.files[0]);
-
             this.sendData(formData);
         },
         sendData: function sendData(formData) {
@@ -25492,7 +25666,6 @@ exports.default = {
                 this.category_id = '';
                 this.price = '';
                 $('input[type=file]').val(null);
-
                 if (successResponse.body == 'success') {
                     swal("Success", "your service has been added Please wait until admin approved!", "success");
                 } else if (successResponse.body == 'error') {
@@ -25523,7 +25696,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c09fbebe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],31:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],34:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.btn-group {\n    margin-top: 15px;\n}\n")
 'use strict';
@@ -25561,6 +25734,7 @@ exports.default = {
     methods: {
         getMyServices: function getMyServices() {
             this.$http.get('Services').then(function (res) {
+                console.log(res.body);
                 this.services = res.body['services'];
                 this.user = res.body['user'];
                 this.$refs.spinner.hide();
@@ -25592,7 +25766,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7362f518", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":29,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],32:[function(require,module,exports){
+},{"./SingleServices.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],35:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n/*********************************************\nTheme Elements\n*********************************************/\n\n.gold{\n    color: #FFBF00;\n}\n\n/*********************************************\nPRODUCTS\n*********************************************/\n\n.product{\n    border: 1px solid #dddddd;\n    height: 321px;\n}\n\n.product>img{\n    max-width: 230px;\n}\n\n.product-rating{\n    font-size: 20px;\n    margin-bottom: 25px;\n}\n\n.product-title{\n    font-size: 20px;\n}\n\n.product-desc{\n    font-size: 14px;\n    word-break:break-all;\n}\n\n.product-price{\n    font-size: 22px;\n}\n\n.product-stock{\n    color: #74DF00;\n    font-size: 20px;\n    margin-top: 10px;\n}\n\n.product-info{\n    margin-top: 50px;\n}\n\n/*********************************************\nVIEW\n*********************************************/\n\n.content-wrapper {\n    max-width: 1140px;\n    background: #fff;\n    margin: 0 auto;\n    margin-top: 25px;\n    margin-bottom: 10px;\n    border: 0px;\n    border-radius: 0px;\n}\n\n.container-fluid{\n    max-width: 1140px;\n    margin: 0 auto;\n}\n\n.view-wrapper {\n    float: right;\n    max-width: 70%;\n    margin-top: 25px;\n}\n\n.container {\n    padding-left: 0px;\n    padding-right: 0px;\n    max-width: 100%;\n}\n\n/*********************************************\nITEM\n*********************************************/\n\n.service1-items {\n    padding: 0px 0 0px 0;\n    float: left;\n    position: relative;\n    overflow: hidden;\n    max-width: 100%;\n    height: 321px;\n    width: 130px;\n}\n\n.service1-item {\n    height: 107px;\n    width: 120px;\n    display: block;\n    float: left;\n    position: relative;\n    padding-right: 20px;\n    border-right: 1px solid #DDD;\n    border-top: 1px solid #DDD;\n    border-bottom: 1px solid #DDD;\n}\n\n.service1-item > img {\n    max-height: 110px;\n    max-width: 110px;\n    opacity: 0.6;\n    transition: all .2s ease-in;\n    -o-transition: all .2s ease-in;\n    -moz-transition: all .2s ease-in;\n    -webkit-transition: all .2s ease-in;\n}\n\n.service1-item > img:hover {\n    cursor: pointer;\n    opacity: 1;\n}\n\n.service-image-left {\n    padding-right: 50px;\n}\n\n.service-image-right {\n    padding-left: 50px;\n}\n\n.service-image-left > center > img,.service-image-right > center > img{\n    max-height: 155px;\n}\n\n")
 'use strict';
@@ -25617,6 +25791,10 @@ var _buy = require('../btns/buy.vue');
 
 var _buy2 = _interopRequireDefault(_buy);
 
+var _fav = require('../btns/fav.vue');
+
+var _fav2 = _interopRequireDefault(_fav);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
@@ -25628,6 +25806,7 @@ exports.default = {
         other_services_in_same_cat: _SingleServices4.default,
         sidebar: _sidebar2.default,
         buy_btn: _buy2.default,
+        fav_btn: _fav2.default,
         spinner: Spinner
     },
     data: function data() {
@@ -25667,7 +25846,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">{{ service.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</strong></span> </h3>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12\">\n                                                  <div class=\"col-md-6\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12\">\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <button type=\"button\" class=\"btn btn-danger btn-sm\">\n                                                      <i class=\"fa fa-heart\"></i> Add to Favorites\n                                                  </button>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\"></sidebar>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">{{ service.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</strong></span> </h3>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                  <!-- buy Order -->\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <!-- Favorite -->\n                                                  <fav_btn :service=\"service\"></fav_btn>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\"></sidebar>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25682,7 +25861,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a36f48c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":12,"../users/SingleServices.vue":34,"./SingleServices.vue":29,"./sidebar.vue":33,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],33:[function(require,module,exports){
+},{"../btns/buy.vue":12,"../btns/fav.vue":13,"../users/SingleServices.vue":37,"./SingleServices.vue":32,"./sidebar.vue":36,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],36:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -25694,7 +25873,7 @@ exports.default = {
     props: ['service']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a v-link=\"{name: '/User', params:{ userId:service.user.id, userName: service.user.name}}\">\n    <i class=\"fa fa-user\"></i> {{ service.user.name }}\n</a>\n<br>\n<a v-link=\"{name: '/SendMessage', params: {userId: service.user.id}}\" class=\"btn btn-primary\">\n    <i class=\"fa fa-send\"></i> Send Message\n</a>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a v-link=\"{name: '/User', params:{ userId: service.user.id, userName: service.user.name}}\">\n    <i class=\"fa fa-user\"></i> {{ service.user.name }}\n</a>\n<br>\n<a v-link=\"{name: '/SendMessage', params: {userId: service.user.id}}\" class=\"btn btn-primary\">\n    <i class=\"fa fa-send\"></i> Send Message\n</a>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25709,7 +25888,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-24dcce5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],34:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],37:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -25722,12 +25901,17 @@ var _buy = require('../btns/buy.vue');
 
 var _buy2 = _interopRequireDefault(_buy);
 
+var _fav = require('../btns/fav.vue');
+
+var _fav2 = _interopRequireDefault(_fav);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     props: ['service'],
     components: {
-        buy_btn: _buy2.default
+        buy_btn: _buy2.default,
+        fav_btn: _fav2.default
     },
     data: function data() {
         return {};
@@ -25739,7 +25923,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <buy_btn :service=\"service\"></buy_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <!-- buy Order -->\n                <buy_btn :service=\"service\"></buy_btn>\n                <!-- Favorite -->\n                <fav_btn :service=\"service\"></fav_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25754,7 +25938,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-07d7dbba", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":12,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],35:[function(require,module,exports){
+},{"../btns/buy.vue":12,"../btns/fav.vue":13,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],38:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.counter\n{\n    background-color: #eaecf0;\n    text-align: center;\n}\n.div-counter\n{\n    margin-left: 42%;\n}\n.counter-count\n{\n    font-size: 18px;\n    background-color: #286090;\n    border-radius: 50%;\n    position: relative;\n    color: #ffffff;\n    text-align: center;\n    line-height: 92px;\n    width: 92px;\n    height: 92px;\n    -webkit-border-radius: 50%;\n    -moz-border-radius: 50%;\n    -ms-border-radius: 50%;\n    -o-border-radius: 50%;\n    display: inline-block;\n}\n.employee-p,.customer-p,.order-p,.design-p\n{\n    font-size: 24px;\n    color: #000000;\n    line-height: 34px;\n}\n.btn-group {\n    margin-top: 15px;\n}\n\n")
 'use strict';
@@ -25827,6 +26011,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1b198486", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":34,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}]},{},[11]);
+},{"./SingleServices.vue":37,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}]},{},[11]);
 
 //# sourceMappingURL=app.js.map

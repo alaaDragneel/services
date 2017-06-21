@@ -60,7 +60,7 @@ class ServicesController extends Controller
     public function store(AddServicesRequest $request)
     {
         $user = Auth::user();
-        $prices = [5, 10, 15, 20, 25, 30, 40, 50];
+        $prices = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         if (in_array($request->price, $prices)) {
 
             $services = new Service();
@@ -204,7 +204,7 @@ class ServicesController extends Controller
         $fileName = date("y-m-d-h-i-s") . "_" . $sha1 . "." . $extension;
         $path = public_path('images/services/');
 
-        Image::make($file)->resize(800, 400)->save($path . $fileName, 80);
+        Image::make($file)->resize(900, 600)->save($path . $fileName, 80);
         return 'images/services/' . $fileName;
     }
 }

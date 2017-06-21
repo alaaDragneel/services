@@ -75,6 +75,7 @@ export default {
     methods: {
         getMyServices: function () {
             this.$http.get('Services').then(function (res) {
+                console.log(res.body);
                 this.services = res.body['services'];
                 this.user = res.body['user'];
                 this.$refs.spinner.hide();

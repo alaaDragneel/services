@@ -21,7 +21,10 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    <!-- buy Order -->
                     <buy_btn :service="service"></buy_btn>
+                    <!-- Favorite -->
+                    <fav_btn :service="service"></fav_btn>
                 </div>
             </div>
         </div>
@@ -42,11 +45,12 @@ h4.text-center {
 <script>
 
 import buyBtn from '../btns/buy.vue';
-
+import favBtn from '../btns/fav.vue';
 export default {
     props: ['service'],
     components: {
-        buy_btn: buyBtn
+        buy_btn: buyBtn,
+        fav_btn: favBtn
     },
     data: function () {
         return {
