@@ -9,13 +9,13 @@
             <div class="row">
                 <div class="col-md-6 col-xs-6">
                     <a v-link="{name: '/User', params: {userId: service.user.id, userName: service.user.name}}">
-                        <h3>{{ service.user.name }}</h3>
+                        <h4>{{ service.user.name }}</h4>
                     </a>
 
                 </div>
-                <div class="col-md-6 col-xs-8 price text-right">
+                <div class="col-md-6 col-xs-8 price text-right" style="margin-top: -10px;">
                     <h3>
-                        <label>${{ service.price }}</label>
+                        <label class="badge">${{ service.price }}</label>
                     </h3>
                 </div>
             </div>

@@ -27,6 +27,9 @@ var singleOrder = require('./components/orders/singleOrder.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
 var UserServices = require('./components/users/UserServices.vue');
 var SendMessage = require('./components/messages/send.vue');
+var MySendMessages = require('./components/messages/sendMessage.vue');
+var MyRecivedMessages = require('./components/messages/incomingMessage.vue');
+var messageDetails = require('./components/messages/messageDetails.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -76,6 +79,16 @@ route.map({
     '/SendMessage/:userId': {
         name: '/SendMessage',
         component: SendMessage
+    },
+    '/GetMySendMessages': {
+        component: MySendMessages
+    },
+    '/GetMyRecivedMessages': {
+        component: MyRecivedMessages
+    },
+    '/messageDetails/:message_id/:viewType': {
+        name: '/messageDetails',
+        component: messageDetails
     },
 });
 

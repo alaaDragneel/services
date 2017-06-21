@@ -10,21 +10,19 @@
             <div class="row">
                 <div class="col-md-6 col-xs-6">
                     <a v-link="{name: '/User', params: {userId: service.user.id, userName: service.user.name}}">
-                        <h3>{{ service.user.name }}</h3>
+                        <h4>{{ service.user.name }}</h4>
                     </a>
 
                 </div>
                 <div class="col-md-6 col-xs-8 price text-right">
-                    <h3>
-                        <label>${{ service.price }}</label>
-                    </h3>
+                    <h4>
+                        <label class="badge">${{ service.price }}</label>
+                    </h4>
                 </div>
             </div>
-            <p class="desc">{{ service.description | limit 100 }}</p>
-            <p><i class="fa fa-eye"></i> {{ service.view_count }}</p>
             <div class="row">
 
-                <div class="col-md-12">
+                <div class="col-md-8 col-sm-12">
 
                     <span v-if="service.status == 0">
 
@@ -41,7 +39,9 @@
                         <span class="btn btn-danger btn-product btn-block"><i class="fa fa-close"></i> Rejected</span>
                     </span>
                 </div>
-
+                <div class="col-md-4 col-sm-12">
+                    <span class="btn btn-info"><i class="fa fa-eye"></i> {{ service.view_count }}</span>
+                </div>
             </div>
         </div>
     </div>

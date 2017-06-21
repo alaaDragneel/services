@@ -24,8 +24,20 @@ class MessagesController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    { // My Send Messages
+        $user = Auth::user();
+        return Message::where('user_message_you', $user->id)->with('getReceivedUser')->orderBy('id', 'DESC')->get();
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function GetRecivedMessages()
+    { // My Recived Messages
+        $user = Auth::user();
+        return Message::where('user_id', $user->id)->with('getSendUser')->orderBy('id', 'DESC')->get();
     }
 
     /**
@@ -71,9 +83,17 @@ class MessagesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($message_id)
     {
-        //
+        $message = Message::findOrFail(intval($message_id));
+        if ($message) {
+            $user = Auth::user();
+            if ($user->id == $message->user_id || $user->id == $message->user_message_you) {
+                return Message::where('id', $message_id)->with('getReceivedUser', 'getSendUser')->first();
+            }
+            App::abort(403);
+        }
+        App::abort(403);
     }
 
     /**

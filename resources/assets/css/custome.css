@@ -12,3 +12,43 @@ textarea#description {
     resize: none;
 }
 /* Add Service Seciotn */
+
+/* Customize */
+.mdl-card__media > div.over {
+   position: absolute;
+   top: 0;
+   left: 14px;
+   width: 96.5%;
+   height: 100%;
+   line-height: 214.61px;
+   font-size: 20px;
+   font-weight: bold;
+   color: #fff;
+   text-align: center;
+   background-color: rgba(0,0,0, 0.7);
+   transition: all 0.5s ease-in-out;
+   display: none;
+}
+.mdl-card__media > div.over span {
+   cursor: pointer;
+   font-size: 19px;
+}
+
+
+.mdl-card__media:hover .over,
+.mdl-card__media:hover .heart {
+    display: block;
+    transition: all 0.5s ease-in-out;
+        z-index: 1;
+}
+
+.mdl-card__media:hover img {
+    filter: blur(5px);
+}
+/* Customize */
+
+th {
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+}

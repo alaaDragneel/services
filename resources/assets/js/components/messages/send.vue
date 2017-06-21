@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="container">
+        <div class="container">
         <div class="row">
 
         </div>
@@ -38,30 +38,19 @@
                         </div>
                     </form>
                 </validator>
-                <!-- <div class="list-group">
-                    <a class="list-group-item" href="#">
-                        <div class="checkbox">
-                            <label><input type="checkbox"></label>
-                        </div>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span class="name" style="min-width: 120px; display: inline-block;">Bhaumik Patel</span>
-                        <span class="">This is big title</span>
-                        <span class="text-muted" style="font-size: 11px;">- Hi hello how r u ?</span>
-                        <span class="badge">12:10 AM</span>
-                        <span class="pull-right"><span class="glyphicon glyphicon-paperclip"></span></span>
-                    </a>
-                </div> -->
             </div>
         </div>
     </div>
-
+<spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 
 <script>
 import menu from './messageMenu.vue';
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 export default {
     components: {
-        message_menu: menu
+        message_menu: menu,
+        spinner: Spinner
     },
     data () {
         return {
@@ -80,18 +69,20 @@ export default {
             } else {
                 return true;
             }
-        }
+        },
     },
     methods: {
         sendMessage: function () {
-            
+            this.$refs.spinner.show();
             var formData = new FormData();
             formData.append('userId', this.$route.params.userId);
             formData.append('title', this.title);
             formData.append('message', this.message);
 
             this.$http.post('Messages', formData).then(function (res) {
-                alertify.success('Success: your Message has been Send');
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+                swal('Success', 'your Message has been Send', 'success');
                 this.title = '';
                 this.message = '';
             },function (res) {

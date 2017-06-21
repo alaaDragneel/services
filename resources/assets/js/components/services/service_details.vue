@@ -19,28 +19,31 @@
 
                             </div>
                             <div class="col-md-12">
-                                <div class=" text-center">
+                                <div class="text-center">
+                                    <div class="mdl-card__media">
+                                        <div class="over">
+                                            <div class="container">
+                                                <div class="row">
+                                                  <div class="col-md-12">
+                                                      <div class="col-md-6">
+                                                          <div class="label label-info">Price: $ {{ service.price }}</div>
+                                                      </div>
+                                                      <div class="col-md-6">
+                                                          <div class="product-stock">{{ ordersCount }} Order/s</div>
 
-                                    <img class="img-responsive" id="item-display" v-bind:src="service.image" alt="{{service.name}}">
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-12">
-                                <p class="product-desc">
-                                    {{ service.description }}
-                                </p>
-                                <div class="product-price pull-left">$ {{ service.price }}</div>
-                                <div class="product-stock pull-right">{{ ordersCount }} Order/s</div>
-                                <div class="clearfix"></div>
-                                <hr>
-                                <div class="btn-group cart">
-                                    <buy_btn :service="service"></buy_btn>
-                                </div>
-                                <div class="btn-group wishlist">
-                                    <button type="button" class="btn btn-danger">
-                                        Add to Favorites
-                                    </button>
+                                                      </div>
+                                                  </div>
+                                                  <div class="col-md-12">
+                                                      <buy_btn :service="service"></buy_btn>
+                                                      <button type="button" class="btn btn-danger btn-sm">
+                                                          <i class="fa fa-heart"></i> Add to Favorites
+                                                      </button>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <img class="img-responsive" id="item-display" v-bind:src="service.image" alt="{{service.name}}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -49,12 +52,20 @@
                         <div class="col-md-12 product-info">
                             <ul id="myTab" class="nav nav-tabs nav_tabs">
 
-                                <li class="active"><a href="#service-one" data-toggle="tab">My Services In Same Category</a></li>
-                                <li><a href="#service-two" data-toggle="tab">Members Services In Same Category</a></li>
+                                <li class="active"><a href="#service-one" data-toggle="tab">Details</a></li>
+                                <li><a href="#service-two" data-toggle="tab">My Services In Same Category</a></li>
+                                <li><a href="#service-three" data-toggle="tab">Members Services In Same Category</a></li>
 
                             </ul>
                             <div id="myTabContent" class="tab-content">
                                 <div class="tab-pane fade in active" id="service-one">
+                                    <br>
+                                    <p class="product-desc">
+                                        {{ service.description }}
+                                    </p>
+
+                                </div>
+                                <div class="tab-pane fade" id="service-two">
                                     <br>
                                     <div class="row">
                                         <div v-id="myOwnServicesInSameCat.length > 0">
@@ -66,8 +77,7 @@
                                     </div>
 
                                 </div>
-                                <div class="tab-pane fade" id="service-two">
-
+                                <div class="tab-pane fade" id="service-three">
                                     <br>
                                     <div class="row">
                                         <div v-id="otherServicesInSameCat.length > 0">
@@ -91,12 +101,9 @@
         </div>
     </span>
     <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
-
 </template>
 
 <script>
-
-
 
     import myOwnServicesInSameCat from './SingleServices.vue';
     import otherServicesInSameCat from '../users/SingleServices.vue';
@@ -120,13 +127,13 @@
                 isLoading: false,
                 myOwnServicesInSameCat: [],
                 otherServicesInSameCat: [],
-                ordersCount: ''
-
+                ordersCount: '',
             }
         },
         ready: function () {
             this.$refs.spinner.show();
             this.GetServicesById();
+
         },
         methods: {
             GetServicesById: function () {

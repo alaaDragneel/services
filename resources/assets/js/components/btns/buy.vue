@@ -20,8 +20,8 @@
         </p>
     </error_message>
 
-    <a @click.prevent="addOrder()" v-bind:disabled="disabled" class="btn btn-success btn-product btn-block">
-        <span class="glyphicon glyphicon-shopping-cart"></span> Buy
+    <a @click.prevent="addOrder()" v-bind:disabled="disabled" class="btn btn-success btn-sm">
+        <i class="fa fa-shopping-cart"></i> Buy
     </a>
 </template>
 

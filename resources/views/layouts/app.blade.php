@@ -98,7 +98,7 @@
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
             <button type="button" class="btn btn-primary">
-                 <i class="fa fa-search"></i> Search
+                 <i class="fa fa-search"></i>
             </button>
           </form>
         </div>
@@ -108,7 +108,7 @@
     @yield('content')
 
     <!-- JavaScripts -->
+    {{ Html::script('js/main.js') }}
     {{ Html::script('js/app.js') }}
-   {{ Html::script('js/main.js') }}
 </body>
 </html>

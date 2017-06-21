@@ -24337,6 +24337,9 @@ var singleOrder = require('./components/orders/singleOrder.vue');
 var PurchaseOrders = require('./components/orders/purchaseOrders.vue');
 var UserServices = require('./components/users/UserServices.vue');
 var SendMessage = require('./components/messages/send.vue');
+var MySendMessages = require('./components/messages/sendMessage.vue');
+var MyRecivedMessages = require('./components/messages/incomingMessage.vue');
+var messageDetails = require('./components/messages/messageDetails.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -24385,6 +24388,16 @@ route.map({
     '/SendMessage/:userId': {
         name: '/SendMessage',
         component: SendMessage
+    },
+    '/GetMySendMessages': {
+        component: MySendMessages
+    },
+    '/GetMyRecivedMessages': {
+        component: MyRecivedMessages
+    },
+    '/messageDetails/:message_id/:viewType': {
+        name: '/messageDetails',
+        component: messageDetails
     }
 });
 
@@ -24393,7 +24406,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/messages/send.vue":17,"./components/orders/incomingOrders.vue":18,"./components/orders/purchaseOrders.vue":20,"./components/orders/singleOrder.vue":21,"./components/services/addServices.vue":24,"./components/services/myServices.vue":25,"./components/services/service_details.vue":26,"./components/users/UserServices.vue":29,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],12:[function(require,module,exports){
+},{"./components/messages/incomingMessage.vue":16,"./components/messages/messageDetails.vue":17,"./components/messages/send.vue":20,"./components/messages/sendMessage.vue":21,"./components/orders/incomingOrders.vue":22,"./components/orders/purchaseOrders.vue":24,"./components/orders/singleOrder.vue":25,"./components/services/addServices.vue":28,"./components/services/myServices.vue":29,"./components/services/service_details.vue":30,"./components/users/UserServices.vue":33,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],12:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -24431,7 +24444,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<success_message :show.sync=\"done\" placement=\"top-right\" duration=\"3000\" type=\"success\" width=\"400px\" dismissable>\n    <span class=\"icon-ok-circled alert-icon-float-left\"></span>\n    <strong>Success!</strong>\n    <p>\n        Waiting For Approved.\n        <a v-link=\"{path: '/PurchaseOrders'}\"> See It Here.</a>\n    </p>\n</success_message>\n\n<error_message :show.sync=\"error\" placement=\"top-right\" duration=\"3000\" type=\"danger\" width=\"400px\" dismissable>\n    <span class=\"icon-info-circled alert-icon-float-left\"></span>\n    <strong>Something Goes Wrong You can't order this Service For The Next Resons!</strong>\n    <p>\n        1 - This Service Added By You\n        <br>\n        2 - This Service You Order It Before\n        <br>\n        3 - This Service not Found\n    </p>\n</error_message>\n\n<a @click.prevent=\"addOrder()\" v-bind:disabled=\"disabled\" class=\"btn btn-success btn-product btn-block\">\n    <span class=\"glyphicon glyphicon-shopping-cart\"></span> Buy\n</a>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<success_message :show.sync=\"done\" placement=\"top-right\" duration=\"3000\" type=\"success\" width=\"400px\" dismissable>\n    <span class=\"icon-ok-circled alert-icon-float-left\"></span>\n    <strong>Success!</strong>\n    <p>\n        Waiting For Approved.\n        <a v-link=\"{path: '/PurchaseOrders'}\"> See It Here.</a>\n    </p>\n</success_message>\n\n<error_message :show.sync=\"error\" placement=\"top-right\" duration=\"3000\" type=\"danger\" width=\"400px\" dismissable>\n    <span class=\"icon-info-circled alert-icon-float-left\"></span>\n    <strong>Something Goes Wrong You can't order this Service For The Next Resons!</strong>\n    <p>\n        1 - This Service Added By You\n        <br>\n        2 - This Service You Order It Before\n        <br>\n        3 - This Service not Found\n    </p>\n</error_message>\n\n<a @click.prevent=\"addOrder()\" v-bind:disabled=\"disabled\" class=\"btn btn-success btn-sm\">\n    <i class=\"fa fa-shopping-cart\"></i> Buy\n</a>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24612,6 +24625,141 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"../comments/addComment.vue":14,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _messageMenu = require('./messageMenu.vue');
+
+var _messageMenu2 = _interopRequireDefault(_messageMenu);
+
+var _messagesList = require('./messagesList.vue');
+
+var _messagesList2 = _interopRequireDefault(_messagesList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    components: {
+        message_menu: _messageMenu2.default,
+        message_list: _messagesList2.default,
+        spinner: Spinner
+    },
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetMySendMessage();
+    },
+    data: function data() {
+        return {
+            messages: [],
+            isLoading: false,
+            income: 'income'
+        };
+    },
+
+    methods: {
+        GetMySendMessage: function GetMySendMessage() {
+            this.$http.get('GetRecivedMessages').then(function (res) {
+                this.messages = res.body;
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <ol class=\"breadcrumb\">\n                  <li class=\"active\">\n                      <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n                  </li>\n                </ol>\n\n            </div>\n            <hr />\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"income\"></message_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-7a52551e", module.exports)
+  } else {
+    hotAPI.update("_v-7a52551e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],17:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _messageMenu = require('./messageMenu.vue');
+
+var _messageMenu2 = _interopRequireDefault(_messageMenu);
+
+var _messagesList = require('./messagesList.vue');
+
+var _messagesList2 = _interopRequireDefault(_messagesList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    components: {
+        message_menu: _messageMenu2.default,
+        message_list: _messagesList2.default,
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            message: [],
+            isLoading: false,
+            viewType: ''
+        };
+    },
+
+    ready: function ready() {
+        this.viewType = this.$route.params.viewType;
+        this.$refs.spinner.show();
+        this.GetMySendMessage();
+    },
+    methods: {
+        GetMySendMessage: function GetMySendMessage() {
+            this.$http.get('Messages/' + this.$route.params.message_id).then(function (res) {
+                this.message = res.body;
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <ol class=\"breadcrumb\">\n                  <li v-if=\"viewType == 'income'\">\n                      <a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n                  </li>\n                  <li v-else><a v-link=\"{path: '/GetMySendMessages'}\">Send  Messages</a></li>\n                  <li class=\"active\">{{ message.title }}</li>\n              </ol>\n            </div>\n            <hr />\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <h2>Message Details</h2>\n                    <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Message Title</th>\n                                <th>Message Description</th>\n                                <th>Send On</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>{{ message.title }}</td>\n                                <td>{{ message.message }}</td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    <hr>\n                    <div v-if=\"viewType == 'send'\">\n                        <h2>Sender Information</h2>\n\n                        <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>Send On</th>\n                                <th>Replay</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>\n                                    <a v-link=\"{name: '/User', params: {userId: message.get_received_user.id, userName: message.get_received_user.name}}\">\n                                        {{ message.get_received_user.name }}\n                                    </a>\n\n                                </td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                                <td>\n                                    <a v-link=\"{name: '/SendMessage', params: {userId: message.get_received_user.id}}\" class=\"btn btn-primary btn-block\">\n                                        <i class=\"fa fa-reply\"></i> Reply\n                                    </a>\n                                </td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    </div>\n                    <div v-else>\n                        <h2>Recived Information</h2>\n\n                        <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <tr>\n                                <th>Name</th>\n                                <th>Recived On</th>\n                                <th>Replay</th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>\n                                    <a v-link=\"{name: '/User', params: {userId: message.get_send_user.id, userName: message.get_send_user.name}}\">\n                                        {{ message.get_send_user.name }}\n                                    </a>\n                                </td>\n                                <td>{{ message.created_at | moment 'calendar' }}</td>\n                                <td>\n                                    <a v-link=\"{name: '/SendMessage', params: {userId: message.get_send_user.id}}\" class=\"btn btn-primary btn-block\">\n                                        <i class=\"fa fa-reply\"></i> Reply\n                                    </a>\n                                </td>\n                            </tr>\n                        </tbody>\n                    </table>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-aff0180a", module.exports)
+  } else {
+    hotAPI.update("_v-aff0180a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],18:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 "use strict";
 
@@ -24620,7 +24768,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a href=\"#\" class=\"btn btn-danger btn-sm btn-block\" role=\"button\">Send Message</a>\n<hr />\n<ul class=\"nav nav-pills nav-stacked\">\n    <li class=\"active\"><a href=\"#\"><span class=\"badge pull-right\">42</span>Inbox Messages</a>\n    </li>\n    <li><a href=\"\">Send Messages</a></li>\n    <li><a href=\"\">New Messages</a></li>\n</ul>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ul class=\"nav nav-pills nav-stacked\">\n    <li><a v-link=\"{path: '/GetMyRecivedMessages'}\">Inbox Messages</a>\n    </li>\n    <li><a v-link=\"{path: '/GetMySendMessages'}\">Send Messages</a></li>\n    <li><a href=\"\">New Messages</a></li>\n</ul>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24635,7 +24783,34 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e93ac814", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],17:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],19:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.checkbox, .radio {\n    display: inline-block;\n    margin-top: 5px;\n    margin-bottom: 5px;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['messages', 'type']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div v-for=\"message in messages\" class=\"list-group\">\n    <a class=\"list-group-item\" v-link=\"{name: '/messageDetails', params: {message_id: message.id, viewType: type}}\">\n        <div class=\"checkbox\">\n            <label><input type=\"checkbox\"></label>\n        </div>\n        <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n            <span v-if=\"message.get_received_user\">\n                {{ message.get_received_user.name }}\n            </span>\n            <span v-else>\n                {{ message.get_send_user.name }}\n            </span>\n\n        </span>\n        <span class=\"\">{{ message.title }}</span>\n        <span class=\"badge\">{{ message.created_at | moment 'calendar' }}</span>\n    </a>\n</div>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.checkbox, .radio {\n    display: inline-block;\n    margin-top: 5px;\n    margin-bottom: 5px;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-94264b6c", module.exports)
+  } else {
+    hotAPI.update("_v-94264b6c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],20:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
 'use strict';
@@ -24650,9 +24825,11 @@ var _messageMenu2 = _interopRequireDefault(_messageMenu);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 exports.default = {
     components: {
-        message_menu: _messageMenu2.default
+        message_menu: _messageMenu2.default,
+        spinner: Spinner
     },
     data: function data() {
         return {
@@ -24676,14 +24853,16 @@ exports.default = {
     },
     methods: {
         sendMessage: function sendMessage() {
-
+            this.$refs.spinner.show();
             var formData = new FormData();
             formData.append('userId', this.$route.params.userId);
             formData.append('title', this.title);
             formData.append('message', this.message);
 
             this.$http.post('Messages', formData).then(function (res) {
-                alertify.success('Success: your Message has been Send');
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+                swal('Success', 'your Message has been Send', 'success');
                 this.title = '';
                 this.message = '';
             }, function (res) {
@@ -24697,7 +24876,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <div class=\"row\">\n\n    </div>\n    <hr />\n    <div class=\"row\">\n        <div class=\"col-sm-3 col-md-2\">\n            <message_menu></message_menu>\n        </div>\n        <div class=\"col-sm-9 col-md-10\">\n            <!-- Tab panes -->\n            <validator name=\"validation1\">\n                <form novalidate>\n\n                    <div class=\"form-group\">\n                      <label for=\"title\">Message Title</label>\n                      <input type=\"text\" class=\"form-control\" id=\"title\" placeholder=\"Write Message Title\" v-model=\"title\" @valid=\"showTitle = false\" @invalid=\"showTitle = true\" v-validate:title=\"{ required: true, minlength: 10, maxlength: 50 }\">\n                    </div>\n                    <div class=\"form-group alert alert-danger text-center\" v-if=\"showTitle\">\n                        <p v-if=\"$validation1.title.required\">This Viled Is Requires</p>\n                        <p v-if=\"$validation1.title.minlength\">Your Message Must Be More Than 10 Charachters</p>\n                        <p v-if=\"$validation1.title.maxlength\">Your Message Must Be Less Than 50 Charachters</p>\n                    </div>\n                    <div class=\"form-group\">\n                        <label for=\"message\">Message</label>\n                      <textarea class=\"form-control\" id=\"message\" rows=\"3\" placeholder=\"Write Your Message\" v-model=\"message\" @valid=\"showMessage = false\" @invalid=\"showMessage = true\" v-validate:message=\"{ required: true, minlength: 20, maxlength: 500 }\"></textarea>\n                    </div>\n                    <div class=\"form-group alert alert-danger text-center\" v-if=\"showMessage\">\n                        <p v-if=\"$validation1.message.required\">This Viled Is Requires</p>\n                        <p v-if=\"$validation1.message.minlength\">Your Message Must Be More Than 20 Charachters</p>\n                        <p v-if=\"$validation1.message.maxlength\">Your Message Must Be Less Than 500 Charachters</p>\n                    </div>\n                    <div class=\"form-group\">\n                        <button type=\"button\" class=\"btn btn-success btn-block\" v-bind:disabled=\"disabled\" @click.prevent=\"sendMessage\">\n                            <i class=\"fa fa-comment\"></i> Add Comment\n                        </button>\n                    </div>\n                </form>\n            </validator>\n            <!-- <div class=\"list-group\">\n                <a class=\"list-group-item\" href=\"#\">\n                    <div class=\"checkbox\">\n                        <label><input type=\"checkbox\"></label>\n                    </div>\n                    <span class=\"glyphicon glyphicon-star-empty\"></span>\n                    <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">Bhaumik Patel</span>\n                    <span class=\"\">This is big title</span>\n                    <span class=\"text-muted\" style=\"font-size: 11px;\">- Hi hello how r u ?</span>\n                    <span class=\"badge\">12:10 AM</span>\n                    <span class=\"pull-right\"><span class=\"glyphicon glyphicon-paperclip\"></span></span>\n                </a>\n            </div> -->\n        </div>\n    </div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n        <div class=\"container\">\n        <div class=\"row\">\n\n        </div>\n        <hr />\n        <div class=\"row\">\n            <div class=\"col-sm-3 col-md-2\">\n                <message_menu></message_menu>\n            </div>\n            <div class=\"col-sm-9 col-md-10\">\n                <!-- Tab panes -->\n                <validator name=\"validation1\">\n                    <form novalidate>\n\n                        <div class=\"form-group\">\n                          <label for=\"title\">Message Title</label>\n                          <input type=\"text\" class=\"form-control\" id=\"title\" placeholder=\"Write Message Title\" v-model=\"title\" @valid=\"showTitle = false\" @invalid=\"showTitle = true\" v-validate:title=\"{ required: true, minlength: 10, maxlength: 50 }\">\n                        </div>\n                        <div class=\"form-group alert alert-danger text-center\" v-if=\"showTitle\">\n                            <p v-if=\"$validation1.title.required\">This Viled Is Requires</p>\n                            <p v-if=\"$validation1.title.minlength\">Your Message Must Be More Than 10 Charachters</p>\n                            <p v-if=\"$validation1.title.maxlength\">Your Message Must Be Less Than 50 Charachters</p>\n                        </div>\n                        <div class=\"form-group\">\n                            <label for=\"message\">Message</label>\n                          <textarea class=\"form-control\" id=\"message\" rows=\"3\" placeholder=\"Write Your Message\" v-model=\"message\" @valid=\"showMessage = false\" @invalid=\"showMessage = true\" v-validate:message=\"{ required: true, minlength: 20, maxlength: 500 }\"></textarea>\n                        </div>\n                        <div class=\"form-group alert alert-danger text-center\" v-if=\"showMessage\">\n                            <p v-if=\"$validation1.message.required\">This Viled Is Requires</p>\n                            <p v-if=\"$validation1.message.minlength\">Your Message Must Be More Than 20 Charachters</p>\n                            <p v-if=\"$validation1.message.maxlength\">Your Message Must Be Less Than 500 Charachters</p>\n                        </div>\n                        <div class=\"form-group\">\n                            <button type=\"button\" class=\"btn btn-success btn-block\" v-bind:disabled=\"disabled\" @click.prevent=\"sendMessage\">\n                                <i class=\"fa fa-comment\"></i> Add Comment\n                            </button>\n                        </div>\n                    </form>\n                </validator>\n            </div>\n        </div>\n    </div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24712,7 +24891,74 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-261e42c8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":16,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],18:[function(require,module,exports){
+},{"./messageMenu.vue":18,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],21:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _messageMenu = require('./messageMenu.vue');
+
+var _messageMenu2 = _interopRequireDefault(_messageMenu);
+
+var _messagesList = require('./messagesList.vue');
+
+var _messagesList2 = _interopRequireDefault(_messagesList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+exports.default = {
+    components: {
+        message_menu: _messageMenu2.default,
+        message_list: _messagesList2.default,
+        spinner: Spinner
+    },
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetMySendMessage();
+    },
+    data: function data() {
+        return {
+            messages: [],
+            isLoading: false,
+            send: 'send'
+        };
+    },
+
+    methods: {
+        GetMySendMessage: function GetMySendMessage() {
+            this.$http.get('Messages').then(function (res) {
+                this.messages = res.body;
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Error Happend Try Again Later');
+            });
+        }
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <ol class=\"breadcrumb\">\n                  <li class=\"active\">\n                          <a v-link=\"{path: '/GetMySendMessages'}\">Send  Messages</a>\n                  </li>\n                </ol>\n            </div>\n            <hr />\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <message_menu></message_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <message_list :messages=\"messages\" :type=\"send\"></message_list>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }\n.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}\n.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}\n.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }\n.tab-pane .list-group input[type=\"checkbox\"]{ margin-top: 2px; }\n.tab-pane .list-group .glyphicon { margin-right:5px; }\n.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }\na.list-group-item.read { color: #222;background-color: #F3F3F3; }\nhr { margin-top: 5px;margin-bottom: 10px; }\n.nav-pills>li>a {padding: 5px 10px;}\n\n.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }\n.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}\n.ad a.url {color: #093;text-decoration: none;}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-b2464e62", module.exports)
+  } else {
+    hotAPI.update("_v-b2464e62", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./messageMenu.vue":18,"./messagesList.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],22:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -24778,7 +25024,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ae94e32", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],19:[function(require,module,exports){
+},{"./orderStructure.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],23:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#items div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -24815,7 +25061,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-34a13c4c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],20:[function(require,module,exports){
+},{"../btns/status.vue":13,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],24:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n#head div {\n    word-break: break-all;\n}\n")
 'use strict';
@@ -24881,7 +25127,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5fdf7566", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":19,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],21:[function(require,module,exports){
+},{"./orderStructure.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],25:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n/*********************************************\nTheme Elements\n*********************************************/\n\n.gold{\n    color: #FFBF00;\n}\n\n/*********************************************\nPRODUCTS\n*********************************************/\n\n.product{\n    border: 1px solid #dddddd;\n    height: 321px;\n}\n\n.product>img{\n    max-width: 230px;\n}\n\n.product-rating{\n    font-size: 20px;\n    margin-bottom: 25px;\n}\n\n.product-title{\n    font-size: 20px;\n}\n\n.product-desc{\n    font-size: 14px;\n    word-break:break-all;\n}\n\n.product-price{\n    font-size: 22px;\n}\n\n.product-stock{\n    color: #74DF00;\n    font-size: 20px;\n    margin-top: 10px;\n}\n\n.product-info{\n    margin-top: 50px;\n}\n\n/*********************************************\nVIEW\n*********************************************/\n\n.content-wrapper {\n    max-width: 1140px;\n    background: #fff;\n    margin: 0 auto;\n    margin-top: 25px;\n    margin-bottom: 10px;\n    border: 0px;\n    border-radius: 0px;\n}\n\n.container-fluid{\n    max-width: 1140px;\n    margin: 0 auto;\n}\n\n.view-wrapper {\n    float: right;\n    max-width: 70%;\n    margin-top: 25px;\n}\n\n.container {\n    padding-left: 0px;\n    padding-right: 0px;\n    max-width: 100%;\n}\n\n/*********************************************\nITEM\n*********************************************/\n\n.service1-items {\n    padding: 0px 0 0px 0;\n    float: left;\n    position: relative;\n    overflow: hidden;\n    max-width: 100%;\n    height: 321px;\n    width: 130px;\n}\n\n.service1-item {\n    height: 107px;\n    width: 120px;\n    display: block;\n    float: left;\n    position: relative;\n    padding-right: 20px;\n    border-right: 1px solid #DDD;\n    border-top: 1px solid #DDD;\n    border-bottom: 1px solid #DDD;\n}\n\n.service1-item > img {\n    max-height: 110px;\n    max-width: 110px;\n    opacity: 0.6;\n    transition: all .2s ease-in;\n    -o-transition: all .2s ease-in;\n    -moz-transition: all .2s ease-in;\n    -webkit-transition: all .2s ease-in;\n}\n\n.service1-item > img:hover {\n    cursor: pointer;\n    opacity: 1;\n}\n\n.service-image-left {\n    padding-right: 50px;\n}\n\n.service-image-right {\n    padding-left: 50px;\n}\n\n.service-image-left > center > img,.service-image-right > center > img{\n    max-height: 155px;\n}\n\n.sidebar {\n    top: 34px;\n    padding: 20px;\n    background-color: #f5f5f5;\n    border-right: 1px solid #eee;\n    border-radius: 10px;\n}\n")
 'use strict';
@@ -24987,7 +25233,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6245276f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":13,"../comments/allComments.vue":15,"./usersidebar.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],22:[function(require,module,exports){
+},{"../btns/status.vue":13,"../comments/allComments.vue":15,"./usersidebar.vue":26,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],26:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -25014,7 +25260,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-30a15f3a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],23:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],27:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -25031,7 +25277,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h3>{{ service.user.name }}</h3>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <p class=\"desc\">{{ service.description | limit 100 }}</p>\n        <p><i class=\"fa fa-eye\"></i> {{ service.view_count }}</p>\n        <div class=\"row\">\n\n            <div class=\"col-md-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h4>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h4>\n            </div>\n        </div>\n        <div class=\"row\">\n\n            <div class=\"col-md-8 col-sm-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n            <div class=\"col-md-4 col-sm-12\">\n                <span class=\"btn btn-info\"><i class=\"fa fa-eye\"></i> {{ service.view_count }}</span>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25046,7 +25292,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-596182d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],24:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25113,7 +25359,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c09fbebe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],25:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],29:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.btn-group {\n    margin-top: 15px;\n}\n")
 'use strict';
@@ -25182,7 +25428,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7362f518", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],26:[function(require,module,exports){
+},{"./SingleServices.vue":27,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],30:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n\n/*********************************************\nTheme Elements\n*********************************************/\n\n.gold{\n    color: #FFBF00;\n}\n\n/*********************************************\nPRODUCTS\n*********************************************/\n\n.product{\n    border: 1px solid #dddddd;\n    height: 321px;\n}\n\n.product>img{\n    max-width: 230px;\n}\n\n.product-rating{\n    font-size: 20px;\n    margin-bottom: 25px;\n}\n\n.product-title{\n    font-size: 20px;\n}\n\n.product-desc{\n    font-size: 14px;\n    word-break:break-all;\n}\n\n.product-price{\n    font-size: 22px;\n}\n\n.product-stock{\n    color: #74DF00;\n    font-size: 20px;\n    margin-top: 10px;\n}\n\n.product-info{\n    margin-top: 50px;\n}\n\n/*********************************************\nVIEW\n*********************************************/\n\n.content-wrapper {\n    max-width: 1140px;\n    background: #fff;\n    margin: 0 auto;\n    margin-top: 25px;\n    margin-bottom: 10px;\n    border: 0px;\n    border-radius: 0px;\n}\n\n.container-fluid{\n    max-width: 1140px;\n    margin: 0 auto;\n}\n\n.view-wrapper {\n    float: right;\n    max-width: 70%;\n    margin-top: 25px;\n}\n\n.container {\n    padding-left: 0px;\n    padding-right: 0px;\n    max-width: 100%;\n}\n\n/*********************************************\nITEM\n*********************************************/\n\n.service1-items {\n    padding: 0px 0 0px 0;\n    float: left;\n    position: relative;\n    overflow: hidden;\n    max-width: 100%;\n    height: 321px;\n    width: 130px;\n}\n\n.service1-item {\n    height: 107px;\n    width: 120px;\n    display: block;\n    float: left;\n    position: relative;\n    padding-right: 20px;\n    border-right: 1px solid #DDD;\n    border-top: 1px solid #DDD;\n    border-bottom: 1px solid #DDD;\n}\n\n.service1-item > img {\n    max-height: 110px;\n    max-width: 110px;\n    opacity: 0.6;\n    transition: all .2s ease-in;\n    -o-transition: all .2s ease-in;\n    -moz-transition: all .2s ease-in;\n    -webkit-transition: all .2s ease-in;\n}\n\n.service1-item > img:hover {\n    cursor: pointer;\n    opacity: 1;\n}\n\n.service-image-left {\n    padding-right: 50px;\n}\n\n.service-image-right {\n    padding-left: 50px;\n}\n\n.service-image-left > center > img,.service-image-right > center > img{\n    max-height: 155px;\n}\n\n")
 'use strict';
@@ -25228,7 +25474,6 @@ exports.default = {
             myOwnServicesInSameCat: [],
             otherServicesInSameCat: [],
             ordersCount: ''
-
         };
     },
 
@@ -25258,7 +25503,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">{{ service.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</strong></span> </h3>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\" text-center\">\n\n                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                            </div>\n\n                        </div>\n\n                        <div class=\"col-md-12\">\n                            <p class=\"product-desc\">\n                                {{ service.description }}\n                            </p>\n                            <div class=\"product-price pull-left\">$ {{ service.price }}</div>\n                            <div class=\"product-stock pull-right\">{{ ordersCount }} Order/s</div>\n                            <div class=\"clearfix\"></div>\n                            <hr>\n                            <div class=\"btn-group cart\">\n                                <buy_btn :service=\"service\"></buy_btn>\n                            </div>\n                            <div class=\"btn-group wishlist\">\n                                <button type=\"button\" class=\"btn btn-danger\">\n                                    Add to Favorites\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\"></sidebar>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">{{ service.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ service.created_at | moment \"calendar\" }}</strong></span> </h3>\n                            <div class=\"product-rating\">\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star gold\"></i>\n                                <i class=\"fa fa-star-o\"></i>\n                            </div>\n                            <hr>\n\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12\">\n                                                  <div class=\"col-md-6\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12\">\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <button type=\"button\" class=\"btn btn-danger btn-sm\">\n                                                      <i class=\"fa fa-heart\"></i> Add to Favorites\n                                                  </button>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\"></sidebar>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25273,7 +25518,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a36f48c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":12,"../users/SingleServices.vue":28,"./SingleServices.vue":23,"./sidebar.vue":27,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],27:[function(require,module,exports){
+},{"../btns/buy.vue":12,"../users/SingleServices.vue":32,"./SingleServices.vue":27,"./sidebar.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}],31:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n")
 'use strict';
@@ -25300,7 +25545,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-24dcce5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],28:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],32:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\np.desc {\n    word-break: break-all;\n}\nh4.text-center {\n    font-size: 18px\n}\n")
 'use strict';
@@ -25330,7 +25575,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h3>{{ service.user.name }}</h3>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\">\n                <h3>\n                    <label>${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <buy_btn :service=\"service\"></buy_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <buy_btn :service=\"service\"></buy_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25345,7 +25590,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-07d7dbba", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":12,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],29:[function(require,module,exports){
+},{"../btns/buy.vue":12,"vue":9,"vue-hot-reload-api":3,"vueify/lib/insert-css":10}],33:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.btn-product{\n    width: 100%;\n}\n.img-container {\n    height: 200px;\n}\n.img-container img {\n    height: 100%;\n    width: 100%;\n}\n.counter\n{\n    background-color: #eaecf0;\n    text-align: center;\n}\n.div-counter\n{\n    margin-left: 42%;\n}\n.counter-count\n{\n    font-size: 18px;\n    background-color: #286090;\n    border-radius: 50%;\n    position: relative;\n    color: #ffffff;\n    text-align: center;\n    line-height: 92px;\n    width: 92px;\n    height: 92px;\n    -webkit-border-radius: 50%;\n    -moz-border-radius: 50%;\n    -ms-border-radius: 50%;\n    -o-border-radius: 50%;\n    display: inline-block;\n}\n.employee-p,.customer-p,.order-p,.design-p\n{\n    font-size: 24px;\n    color: #000000;\n    line-height: 34px;\n}\n.btn-group {\n    margin-top: 15px;\n}\n\n")
 'use strict';
@@ -25418,6 +25663,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1b198486", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}]},{},[11]);
+},{"./SingleServices.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7,"vueify/lib/insert-css":10}]},{},[11]);
 
 //# sourceMappingURL=app.js.map
