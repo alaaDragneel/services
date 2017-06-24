@@ -39,7 +39,7 @@ export default {
         return {
             disabled: false,
             done: false,
-            error: false    
+            error: false
         }
     },
     methods: {
@@ -55,6 +55,3 @@ export default {
     }
 }
 </script>
-
-<style lang="css">
-</style>

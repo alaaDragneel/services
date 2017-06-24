@@ -21,6 +21,3 @@ export default {
     props: ['status']
 }
 </script>
-
-<style lang="css">
-</style>

@@ -18,6 +18,7 @@ elixir(function(mix) {
     mix.styles([
         'main/font-awesome.min.css',
         'main/bootstrap.min.css',
+        // 'main/fontawesome-stars.css',
         'sweetalert.css',
         'default.css',
         'alertify.css',
@@ -27,6 +28,7 @@ elixir(function(mix) {
     mix.scripts([
         'main/jquery-1.12.4.min.js',
         'main/bootstrap.min.js',
+        // 'main/jquery.barrating.min.js',
         'sweetalert.min.js',
         'alertify.js'
     ], 'public/js/main.js');

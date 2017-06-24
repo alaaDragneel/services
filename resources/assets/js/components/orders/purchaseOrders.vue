@@ -97,8 +97,3 @@
         }
     }
 </script>
-<style>
-    #head div {
-        word-break: break-all;
-    }
-</style>

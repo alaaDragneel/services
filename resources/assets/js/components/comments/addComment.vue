@@ -43,7 +43,7 @@ export default {
             formData.append('comment', this.comment);
 
             this.$http.post('Comments', formData).then(function (res) {
-                alertify.success('Success: your Comment has been added');                
+                alertify.success('Success: your Comment has been added');
                 this.comment = '';
                 this.$dispatch('AddNewComment', res.body);
 
@@ -59,6 +59,3 @@ export default {
 
 }
 </script>
-
-<style lang="css">
-</style>

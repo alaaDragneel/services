@@ -75,7 +75,6 @@ export default {
     methods: {
         getMyServices: function () {
             this.$http.get('Services').then(function (res) {
-                console.log(res.body);
                 this.services = res.body['services'];
                 this.user = res.body['user'];
                 this.$refs.spinner.hide();
@@ -92,19 +91,3 @@ export default {
 
 }
 </script>
-
-<style>
-.btn-product{
-    width: 100%;
-}
-.img-container {
-    height: 200px;
-}
-.img-container img {
-    height: 100%;
-    width: 100%;
-}
-.btn-group {
-    margin-top: 15px;
-}
-</style>

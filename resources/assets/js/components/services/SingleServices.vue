@@ -43,18 +43,6 @@
         </div>
     </div>
 </template>
-
-<style>
-.btn-product{
-    width: 100%;
-}
-p.desc {
-    word-break: break-all;
-}
-h4.text-center {
-    font-size: 18px
-}
-</style>
 <script>
 
 export default {

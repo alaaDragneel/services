@@ -138,7 +138,7 @@
     @yield('content')
 
     <!-- JavaScripts -->
-    {{ Html::script('js/app.js') }}
     {{ Html::script('js/main.js') }}
+    {{ Html::script('js/app.js') }}
 </body>
 </html>

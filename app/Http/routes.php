@@ -38,7 +38,9 @@ Route::get('getMessagesCount', 'MessagesController@getMessagesCount');
 Route::get('GetRecivedMessages', 'MessagesController@GetRecivedMessages');
 Route::get('GetUnReadMessages', 'MessagesController@GetUnReadMessages');
 Route::get('GetReadMessages', 'MessagesController@GetReadMessages');
-// firvorite
+// fevorite
 Route::get('/Addfavorite/{service_id}', 'FavoriteController@Addfavorite');
 Route::get('/userFavorites', 'FavoriteController@userFavorites');
 Route::delete('/deleteFav/{fav_id}', 'FavoriteController@deleteFav');
+// Rating
+Route::post('addNewVote', 'VoteController@addNewVote');

@@ -27,8 +27,3 @@ export default {
     }
 }
 </script>
-<style>
-    #items div {
-        word-break: break-all;
-    }
-</style>

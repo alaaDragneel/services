@@ -20,6 +20,8 @@ use App\Service;
 
 use App\View;
 
+use App\Vote;
+
 use App\Order;
 
 class ServicesController extends Controller
@@ -104,7 +106,8 @@ class ServicesController extends Controller
         }
 
         /*Get Data*/
-        $service = Service::where('id', $id)->with('user')->first();
+        $service = Service::where('id', $id)->with('user')->withCount('votes')->first();
+        $sumVotes = Vote::where('service_id', $service->id)->sum('vote');
         if ($service->status != 1) {
             if (Auth::guest()) {
                 abort(403);
@@ -140,7 +143,8 @@ class ServicesController extends Controller
             'service' => $service,
             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
             'otherServicesInSameCat' => $otherServicesInSameCat,
-            'ordersCount' => $ordersCount
+            'ordersCount' => $ordersCount,
+            'sumVotes' => $sumVotes
         ], 200);
     }
 

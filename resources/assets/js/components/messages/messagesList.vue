@@ -156,9 +156,3 @@ export default {
     }
 }
 </script>
-
-<style lang="css">
-.badge-success {
-    background-color: #5cb85c;
-}
-</style>

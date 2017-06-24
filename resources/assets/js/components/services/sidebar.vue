@@ -13,6 +13,3 @@ export default {
     props:['service']
 }
 </script>
-
-<style lang="css">
-</style>
