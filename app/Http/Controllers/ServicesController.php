@@ -10,6 +10,8 @@ use App\http\Requests\AddServicesRequest;
 
 use Auth;
 
+use DB;
+
 use Image;
 
 use Response;
@@ -90,21 +92,7 @@ class ServicesController extends Controller
      */
     public function show($id)
     {
-        /*Add New view*/
-        $ip = $_SERVER['REMOTE_ADDR'];
-        if (View::where('ip', $ip)->count() == 0) {
-            $guest = Auth::guest();
-            $view = new View();
-            $view->service_id = $id; // id prefer to service id
-            if ($guest) {
-                $view->user_id = 0;
-            } else {
-                $view->user_id = Auth::user()->id;
-            }
-            $view->ip = $ip;
-            $view->save();
-        }
-
+        $user = Auth::user();
         /*Get Data*/
         $service = Service::where('id', $id)->with('user')->withCount('votes')->first();
         $sumVotes = Vote::where('service_id', $service->id)->sum('vote');
@@ -112,11 +100,35 @@ class ServicesController extends Controller
             if (Auth::guest()) {
                 abort(403);
             } else {
-                if (Auth::user()->id != $service->user_id) {
+                if ($user->id != $service->user_id) {
                     abort(403);
                 }
             }
         }
+
+        /*Add New view*/
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $viewCount = View::where(function ($q) use($ip, $user, $service) {
+            $q->where('ip', $ip);
+            $q->where('user_id', $user->id);
+            $q->where('service_id', $service->id);
+        })->count();
+        if ($viewCount == 0) {
+            if ($user->id != $service->user_id) {
+                $guest = Auth::guest();
+                $view = new View();
+                $view->service_id = $id; // id prefer to service id
+                if ($guest) {
+                    $view->user_id = 0;
+                } else {
+                    $view->user_id = $user->id;
+                }
+                $view->ip = $ip;
+                $view->save();
+            }
+        }
+        /*Add New view*/
+
         $ordersCount = Order::where(function ($q) use ($service){
             $q->where('service_id', $service->id);
             $q->whereIn('status', [0, 1, 2, 4]); // status => 0 => New, 1 => Old, 2 => inprogress, 4 => finished
@@ -125,16 +137,43 @@ class ServicesController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             $myOwnServicesInSameCat = Service::where(function ($q) use($service, $user) {
-                $q->where('cat_id', $service->cat_id);
-                $q->where('user_id', $user->id);
-                $q->where('id', '!=', $service->id);
+                $q->where('cat_id', $service->cat_id); // in same cat
+                $q->where('user_id', $user->id); // all my services
+                $q->where('id', '!=', $service->id); // not the current services
             })->with('user')->withCount('view')->orderBy('id', 'DESC')->take(4)->get();
 
             $otherServicesInSameCat = Service::where(function ($q) use($service, $user) {
-                $q->where('cat_id', $service->cat_id);
-                $q->where('user_id', '!=', $user->id);
-                $q->where('status', 1);
+                $q->where('cat_id', $service->cat_id); // in same cat
+                $q->where('user_id', '!=', $user->id); // all others service
+                $q->where('status', 1); // approved
             })->with('user')->orderBy('id', 'DESC')->take(4)->get();
+
+            $mostVoted =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                        ->leftJoin('votes', 'services.id', '=', 'votes.service_id')
+                        ->select('services.id', 'services.name', DB::raw('SUM(votes.vote) as vote_sum'))
+                        ->groupBy('services.id')
+                        ->where('services.cat_id', $service->cat_id)
+                        ->where('services.id', '!=', $service->id)
+                        ->where('services.status', 1)
+                        ->having('vote_sum', '>', 0)
+                        ->orderBy('vote_sum', 'DESC')
+                        ->take(6)
+                        ->get();
+
+            $mostViewd =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                        ->leftJoin('views', 'services.id', '=', 'views.service_id')
+                        ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
+                        ->groupBy('services.id')
+                        ->where('services.cat_id', $service->cat_id)
+                        ->where('services.id', '!=', $service->id)
+                        ->where('services.status', 1)
+                        ->having('view_count', '>', 0)
+                        ->orderBy('view_count', 'DESC')
+                        ->take(6)
+                        ->get();
+
         } else {
             $myOwnServicesInSameCat = [];
             $otherServicesInSameCat = [];
@@ -144,7 +183,9 @@ class ServicesController extends Controller
             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
             'otherServicesInSameCat' => $otherServicesInSameCat,
             'ordersCount' => $ordersCount,
-            'sumVotes' => $sumVotes
+            'sumVotes' => intval($sumVotes), // because it return the sum as string
+            'mostVoted' => $mostVoted,
+            'mostViewd' => $mostViewd,
         ], 200);
     }
 
@@ -192,7 +233,7 @@ class ServicesController extends Controller
             $services = Service::where(function ($q) use ($user_id) {
                 $q->where('user_id', $user_id);
                 $q->where('status', 1);
-            })->with('user')->get();
+            })->with('user')->withCount('votes')->get();
 
             return Response::json(['user' => $user, 'services' => $services], 200);
         }

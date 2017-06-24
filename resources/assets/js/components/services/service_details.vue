@@ -1,5 +1,8 @@
 <template>
     <span v-if="isLoading">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" >
+            <sidebar :service="service" :most_voted="mostVoted" :most_viewd="mostViewd"></sidebar>
+        </div>
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
             <div class="container-fluid">
@@ -23,31 +26,34 @@
                                     <span class="pull-left">
                                         <rating :service="service"></rating>
                                     </span>
-                                    <!-- Number Of Users Whose Rate -->
-                                    <span class="pull-right label label-danger">
-                                        <i class="fa fa-user"></i>
-                                        Number of voters
-                                        {{ service.votes_count }}
-                                    </span>
-                                    <!-- The Service Rates -->
-                                    <span class="pull-right label label-warning" style="margin-right: 5px;">
-                                        <i class="fa fa-star"></i>
-                                        Number of stars
-                                        {{ sumVotes }}
-                                    </span>
-                                    <span class="pull-right label label-success" style="margin-right: 5px;">
-                                        <!--
-                                        Percent =>
+                                    <span v-if="service.votes_count > 0">
+                                        <!-- Number Of Users Whose Rate -->
+                                        <span class="pull-right label label-danger">
+                                            <i class="fa fa-user"></i>
+                                            Number of voters
+                                            {{ service.votes_count }}
+                                        </span>
+                                        <!-- The Service Rates -->
+                                        <span class="pull-right label label-warning" style="margin-right: 5px;">
+                                            <i class="fa fa-star"></i>
+                                            Number of stars
+                                            {{ sumVotes }}
+                                        </span>
+                                        <span class="pull-right label label-success" style="margin-right: 5px;">
+                                            <!--
+                                            Percent =>
                                             [
-                                                NOTE This Is The Service Score
-                                                            (total votes * 100)
-                                                =============================================
-                                                (number Of rated users * max rate value[ 5 ])
-                                                NOTE this is the final score
+                                            NOTE This Is The Service Score
+                                            (total votes * 100)
+                                            =============================================
+                                            (number Of rated users * max rate value[ 5 ])
+                                            NOTE this is the final score
                                             ]
+                                            0/0 => NaN
                                         -->
-                                         % {{ (sumVotes * 100) / (service.votes_count * 5) }}
+                                        % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}
                                         percentage
+                                    </span>
                                     </span>
                                     <!-- Rating run Here -->
                                 </div>
@@ -132,9 +138,6 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" >
-            <sidebar :service="service"></sidebar>
-        </div>
     </span>
     <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
@@ -167,8 +170,10 @@
                 isLoading: false,
                 myOwnServicesInSameCat: [],
                 otherServicesInSameCat: [],
-                ordersCount: '',
-                sumVotes: ''
+                ordersCount: 0,
+                sumVotes: 0,
+                mostVoted: [],
+                mostViewd: [],
             }
         },
         ready: function () {
@@ -184,6 +189,8 @@
                     this.otherServicesInSameCat = res.body['otherServicesInSameCat'];
                     this.ordersCount = res.body['ordersCount'];
                     this.sumVotes = res.body['sumVotes'];
+                    this.mostVoted = res.body['mostVoted'];
+                    this.mostViewd = res.body['mostViewd'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {
@@ -192,6 +199,12 @@
                         path: '/'
                     });
                 });
+            }
+        },
+        events: {
+            AddNewRate: function (val) {
+                this.service.votes_count += 1; // users count
+                this.sumVotes += val; // stars count
             }
         },
         route: {

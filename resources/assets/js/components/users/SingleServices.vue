@@ -19,6 +19,15 @@
                     </h3>
                 </div>
             </div>
+            <div class="product-rating" v-if="service.votes_count > 0">
+                <!-- Rating run Here -->
+                <!-- Number Of Users Whose Rate -->
+                <span class="label label-primary">
+                    <i class="fa fa-user"></i>
+                    {{ service.votes_count }}
+                </span>
+                <!-- Rating run Here -->
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <!-- buy Order -->
@@ -31,13 +40,14 @@
     </div>
 </template>
 <script>
-
 import buyBtn from '../btns/buy.vue';
 import favBtn from '../btns/fav.vue';
+import Rating from '../btns/rating.vue';
 export default {
     props: ['service'],
     components: {
         buy_btn: buyBtn,
+        rating: Rating,
         fav_btn: favBtn
     },
     data: function () {

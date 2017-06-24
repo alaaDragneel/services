@@ -24309,6 +24309,7 @@ Vue.use(VueValidator
 // Vue Router init
 
 // Define some Components.
+var MainPage = require('./components/pages/mainPage.vue');
 var AddServices = require('./components/services/addServices.vue');
 var MyServices = require('./components/services/myServices.vue');
 var ServicesDetails = require('./components/services/service_details.vue');
@@ -24342,7 +24343,7 @@ var route = new VueRouter();
 // We'll talk about nested routes later.
 route.map({
     '/': {
-        component: AddServices
+        component: MainPage
     },
     '/AddServices': {
         component: AddServices
@@ -24398,7 +24399,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/favorite/favorite.vue":18,"./components/messages/incomingMessage.vue":19,"./components/messages/messageDetails.vue":20,"./components/messages/newMessage.vue":23,"./components/messages/oldMessage.vue":24,"./components/messages/send.vue":25,"./components/messages/sendMessage.vue":26,"./components/orders/incomingOrders.vue":27,"./components/orders/purchaseOrders.vue":29,"./components/orders/singleOrder.vue":30,"./components/services/addServices.vue":33,"./components/services/myServices.vue":34,"./components/services/service_details.vue":35,"./components/users/UserServices.vue":38,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],11:[function(require,module,exports){
+},{"./components/favorite/favorite.vue":18,"./components/messages/incomingMessage.vue":19,"./components/messages/messageDetails.vue":20,"./components/messages/newMessage.vue":23,"./components/messages/oldMessage.vue":24,"./components/messages/send.vue":25,"./components/messages/sendMessage.vue":26,"./components/orders/incomingOrders.vue":27,"./components/orders/purchaseOrders.vue":29,"./components/orders/singleOrder.vue":30,"./components/pages/mainPage.vue":32,"./components/services/addServices.vue":34,"./components/services/myServices.vue":35,"./components/services/service_details.vue":36,"./components/users/UserServices.vue":39,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24494,7 +24495,8 @@ exports.default = {
     props: ['service'],
     data: function data() {
         return {
-            rating: true
+            rating: true,
+            ratingValue: ''
         };
     },
 
@@ -24506,6 +24508,8 @@ exports.default = {
 
             this.$http.post('addNewVote', formData).then(function (res) {
                 this.rating = false;
+                this.ratingValue = vote;
+                this.$dispatch('AddNewRate', vote);
                 alertify.success("Service Has Been Rated By " + vote + " Star/s");
             }, function (res) {
                 alertify.error('Error: Some Problems occure Try Again Later');
@@ -24514,7 +24518,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"rating\" v-if=\"rating\">\n    <input type=\"radio\" id=\"star5\" name=\"rating\" value=\"5\" @click.prevent=\"AddRate(5)\"/>\n    <label for=\"star5\" title=\"Rocks!\">5 stars</label>\n    <input type=\"radio\" id=\"star4\" name=\"rating\" value=\"4\" @click.prevent=\"AddRate(4)\"/>\n    <label for=\"star4\" title=\"Pretty good\">4 stars</label>\n    <input type=\"radio\" id=\"star3\" name=\"rating\" value=\"3\" @click.prevent=\"AddRate(3)\"/>\n    <label for=\"star3\" title=\"Meh\">3 stars</label>\n    <input type=\"radio\" id=\"star2\" name=\"rating\" value=\"2\" @click.prevent=\"AddRate(2)\"/>\n    <label for=\"star2\" title=\"Kinda bad\">2 stars</label>\n    <input type=\"radio\" id=\"star1\" name=\"rating\" value=\"1\" @click.prevent=\"AddRate(1)\"/>\n    <label for=\"star1\" title=\"Sucks big time\">1 star</label>\n</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"rating\" v-if=\"rating\">\n    <input type=\"radio\" id=\"star5\" name=\"rating\" value=\"5\" @click.prevent=\"AddRate(5)\"/>\n    <label for=\"star5\" title=\"Rocks!\">5 stars</label>\n    <input type=\"radio\" id=\"star4\" name=\"rating\" value=\"4\" @click.prevent=\"AddRate(4)\"/>\n    <label for=\"star4\" title=\"Pretty good\">4 stars</label>\n    <input type=\"radio\" id=\"star3\" name=\"rating\" value=\"3\" @click.prevent=\"AddRate(3)\"/>\n    <label for=\"star3\" title=\"Meh\">3 stars</label>\n    <input type=\"radio\" id=\"star2\" name=\"rating\" value=\"2\" @click.prevent=\"AddRate(2)\"/>\n    <label for=\"star2\" title=\"Kinda bad\">2 stars</label>\n    <input type=\"radio\" id=\"star1\" name=\"rating\" value=\"1\" @click.prevent=\"AddRate(1)\"/>\n    <label for=\"star1\" title=\"Sucks big time\">1 star</label>\n</div>\n<div class=\"rating\" v-if=\"!rating\">\n    <label v-for=\"rate in ratingValue\" class=\"fa fa-star ratingStyleActive\"></label>\n</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25543,6 +25547,25 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":9,"vue-hot-reload-api":3}],32:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n  <div class=\"row\">\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n    </div>\n  </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-2edd5b00", module.exports)
+  } else {
+    hotAPI.update("_v-2edd5b00", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":9,"vue-hot-reload-api":3}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25568,7 +25591,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-596182d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],33:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25633,7 +25656,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c09fbebe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],34:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25696,7 +25719,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7362f518", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],35:[function(require,module,exports){
+},{"./SingleServices.vue":33,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25749,8 +25772,10 @@ exports.default = {
             isLoading: false,
             myOwnServicesInSameCat: [],
             otherServicesInSameCat: [],
-            ordersCount: '',
-            sumVotes: ''
+            ordersCount: 0,
+            sumVotes: 0,
+            mostVoted: [],
+            mostViewd: []
         };
     },
 
@@ -25766,6 +25791,8 @@ exports.default = {
                 this.otherServicesInSameCat = res.body['otherServicesInSameCat'];
                 this.ordersCount = res.body['ordersCount'];
                 this.sumVotes = res.body['sumVotes'];
+                this.mostVoted = res.body['mostVoted'];
+                this.mostViewd = res.body['mostViewd'];
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
@@ -25776,12 +25803,18 @@ exports.default = {
             });
         }
     },
+    events: {
+        AddNewRate: function AddNewRate(val) {
+            this.service.votes_count += 1; // users count
+            this.sumVotes += val; // stars count
+        }
+    },
     route: {
         canReuse: false // force relode the data
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">\n                                <span class=\"pull-left\">{{ service.name }}</span>\n                                <span class=\"small pull-right\">\n                                    <strong>\n                                        <i class=\"fa fa-clock-o\"></i>\n                                         {{ service.created_at | moment \"calendar\" }}\n                                    </strong>\n                                </span>\n                            </h3>\n                            <div class=\"clearfix\"></div>\n                            <br>\n                            <div class=\"product-rating\">\n                                <!-- Rating run Here -->\n                                <span class=\"pull-left\">\n                                    <rating :service=\"service\"></rating>\n                                </span>\n                                <!-- Number Of Users Whose Rate -->\n                                <span class=\"pull-right label label-danger\">\n                                    <i class=\"fa fa-user\"></i>\n                                    Number of voters\n                                    {{ service.votes_count }}\n                                </span>\n                                <!-- The Service Rates -->\n                                <span class=\"pull-right label label-warning\" style=\"margin-right: 5px;\">\n                                    <i class=\"fa fa-star\"></i>\n                                    Number of stars\n                                    {{ sumVotes }}\n                                </span>\n                                <span class=\"pull-right label label-success\" style=\"margin-right: 5px;\">\n                                    <!--\n                                    Percent =>\n                                        [\n                                            NOTE This Is The Service Score\n                                                        (total votes * 100)\n                                            =============================================\n                                            (number Of rated users * max rate value[ 5 ])\n                                            NOTE this is the final score\n                                        ]\n                                    -->\n                                     % {{ (sumVotes * 100) / (service.votes_count * 5) }}\n                                    percentage\n                                </span>\n                                <!-- Rating run Here -->\n                            </div>\n                            <div class=\"clearfix\"></div>\n                            <hr>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                  <!-- buy Order -->\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <!-- Favorite -->\n                                                  <fav_btn :service=\"service\"></fav_btn>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\"></sidebar>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\" :most_voted=\"mostVoted\" :most_viewd=\"mostViewd\"></sidebar>\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">\n                                <span class=\"pull-left\">{{ service.name }}</span>\n                                <span class=\"small pull-right\">\n                                    <strong>\n                                        <i class=\"fa fa-clock-o\"></i>\n                                         {{ service.created_at | moment \"calendar\" }}\n                                    </strong>\n                                </span>\n                            </h3>\n                            <div class=\"clearfix\"></div>\n                            <br>\n                            <div class=\"product-rating\">\n                                <!-- Rating run Here -->\n                                <span class=\"pull-left\">\n                                    <rating :service=\"service\"></rating>\n                                </span>\n                                <span v-if=\"service.votes_count > 0\">\n                                    <!-- Number Of Users Whose Rate -->\n                                    <span class=\"pull-right label label-danger\">\n                                        <i class=\"fa fa-user\"></i>\n                                        Number of voters\n                                        {{ service.votes_count }}\n                                    </span>\n                                    <!-- The Service Rates -->\n                                    <span class=\"pull-right label label-warning\" style=\"margin-right: 5px;\">\n                                        <i class=\"fa fa-star\"></i>\n                                        Number of stars\n                                        {{ sumVotes }}\n                                    </span>\n                                    <span class=\"pull-right label label-success\" style=\"margin-right: 5px;\">\n                                        <!--\n                                        Percent =>\n                                        [\n                                        NOTE This Is The Service Score\n                                        (total votes * 100)\n                                        =============================================\n                                        (number Of rated users * max rate value[ 5 ])\n                                        NOTE this is the final score\n                                        ]\n                                        0/0 => NaN\n                                    -->\n                                    % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}\n                                    percentage\n                                </span>\n                                </span>\n                                <!-- Rating run Here -->\n                            </div>\n                            <div class=\"clearfix\"></div>\n                            <hr>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                  <!-- buy Order -->\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <!-- Favorite -->\n                                                  <fav_btn :service=\"service\"></fav_btn>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25792,17 +25825,17 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a36f48c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":37,"./SingleServices.vue":32,"./sidebar.vue":36,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],36:[function(require,module,exports){
+},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":38,"./SingleServices.vue":33,"./sidebar.vue":37,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['service']
+    props: ['service', 'most_voted', 'most_viewd']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a v-link=\"{name: '/User', params:{ userId: service.user.id, userName: service.user.name}}\">\n    <i class=\"fa fa-user\"></i> {{ service.user.name }}\n</a>\n<br>\n<a v-link=\"{name: '/SendMessage', params: {userId: service.user.id}}\" class=\"btn btn-primary\">\n    <i class=\"fa fa-send\"></i> Send Message\n</a>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <div class=\"row profile\">\n        <div class=\"profile-sidebar\">\n            <!-- SIDEBAR BUTTONS -->\n            <div class=\"profile-userbuttons\">\n                <a class=\"btn btn-info btn-sm\" v-link=\"{name: '/User', params:{ userId: service.user.id, userName: service.user.name}}\">\n                    <i class=\"fa fa-user\"></i> {{ service.user.name }}\n                </a>\n                <a class=\"btn btn-primary btn-sm\" v-link=\"{name: '/SendMessage', params: {userId: service.user.id}}\" class=\"btn btn-primary\">\n                    <i class=\"fa fa-send\"></i> Send Message\n                </a>\n            </div>\n            <!-- END SIDEBAR BUTTONS -->\n            <!-- SIDEBAR MENU -->\n            <div class=\"profile-usermenu\">\n                <ul class=\"nav\">\n                    <li class=\"active\">\n                        <a href=\"#\">\n                            <i class=\"fa fa-star-half-o\"></i>\n                            Most Rated\n                        </a>\n                    </li>\n                    <li v-for=\"vote in most_voted\">\n                        <a v-link=\"{name: '/ServicesDetails', params:{serviceId: vote.id, serviceName: vote.name}}\">\n                            <span class=\"pull-left\">{{ vote.name }}</span>\n                            <span class=\"label label-warning pull-right\"><i class=\"fa fa-star\"></i>{{ vote.vote_sum }}</span>\n                            <div class=\"clearfix\"></div>\n                        </a>\n                    </li>\n                    <li class=\"active\">\n                        <a href=\"#\">\n                            <i class=\"fa fa-eye-slash\"></i>\n                            Most Viewd\n                        </a>\n                    </li>\n                    <li v-for=\"view in most_viewd\">\n                        <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                            <span class=\"pull-left\">{{ view.name }}</span>\n                            <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                            <div class=\"clearfix\"></div>\n                        </a>\n                    </li>\n                </ul>\n            </div>\n            <!-- END MENU -->\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25813,7 +25846,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-24dcce5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],37:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25828,12 +25861,17 @@ var _fav = require('../btns/fav.vue');
 
 var _fav2 = _interopRequireDefault(_fav);
 
+var _rating = require('../btns/rating.vue');
+
+var _rating2 = _interopRequireDefault(_rating);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     props: ['service'],
     components: {
         buy_btn: _buy2.default,
+        rating: _rating2.default,
         fav_btn: _fav2.default
     },
     data: function data() {
@@ -25846,7 +25884,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <!-- buy Order -->\n                <buy_btn :service=\"service\"></buy_btn>\n                <!-- Favorite -->\n                <fav_btn :service=\"service\"></fav_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"product-rating\" v-if=\"service.votes_count > 0\">\n            <!-- Rating run Here -->\n            <!-- Number Of Users Whose Rate -->\n            <span class=\"label label-primary\">\n                <i class=\"fa fa-user\"></i>\n                {{ service.votes_count }}\n            </span>\n            <!-- Rating run Here -->\n        </div>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <!-- buy Order -->\n                <buy_btn :service=\"service\"></buy_btn>\n                <!-- Favorite -->\n                <fav_btn :service=\"service\"></fav_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25857,7 +25895,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-07d7dbba", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"vue":9,"vue-hot-reload-api":3}],38:[function(require,module,exports){
+},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"vue":9,"vue-hot-reload-api":3}],39:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25924,6 +25962,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1b198486", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":37,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
+},{"./SingleServices.vue":38,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
 
 //# sourceMappingURL=app.js.map

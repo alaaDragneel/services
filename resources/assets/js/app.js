@@ -19,6 +19,7 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementById('_token').getA
 // Vue Router init
 
 // Define some Components.
+var MainPage = require('./components/pages/mainPage.vue');
 var AddServices = require('./components/services/addServices.vue');
 var MyServices = require('./components/services/myServices.vue');
 var ServicesDetails = require('./components/services/service_details.vue');
@@ -53,7 +54,7 @@ var route = new VueRouter();
 // We'll talk about nested routes later.
 route.map({
     '/': {
-        component: AddServices
+        component: MainPage
     },
     '/AddServices': {
         component: AddServices

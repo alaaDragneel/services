@@ -18,7 +18,9 @@ class CreateViewsTable extends Migration
             // Services Relations
             $table->integer('service_id')->unsigned();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');
+            // Users Relations
             $table->integer('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
 
             $table->string('ip');
 

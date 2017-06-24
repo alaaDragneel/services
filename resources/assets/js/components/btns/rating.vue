@@ -12,6 +12,9 @@
         <input type="radio" id="star1" name="rating" value="1" @click.prevent="AddRate(1)"/>
         <label for="star1" title="Sucks big time">1 star</label>
     </div>
+    <div class="rating" v-if="!rating">
+        <label v-for="rate in ratingValue" class="fa fa-star ratingStyleActive"></label>
+    </div>
 
 
 </template>
@@ -21,7 +24,8 @@ export default {
     props: ['service'],
     data() {
         return {
-            rating: true
+            rating: true,
+            ratingValue: ''
         }
     },
     methods: {
@@ -32,6 +36,8 @@ export default {
 
             this.$http.post('addNewVote', formData).then(function (res) {
                 this.rating = false;
+                this.ratingValue = vote;
+                this.$dispatch('AddNewRate', vote);
                 alertify.success("Service Has Been Rated By "+ vote +" Star/s");
             }, function (res) {
                 alertify.error('Error: Some Problems occure Try Again Later');
@@ -40,3 +46,4 @@ export default {
     }
 }
 </script>
+ipt>

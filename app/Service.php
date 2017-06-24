@@ -9,7 +9,7 @@ class Service extends Model
     // User Relation
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
 
     // Category Relation
