@@ -26,6 +26,8 @@ use App\Vote;
 
 use App\Order;
 
+use App\Category as Cat;
+
 class ServicesController extends Controller
 {
     /**
@@ -90,7 +92,7 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $user = Auth::user();
         /*Get Data*/
@@ -107,7 +109,7 @@ class ServicesController extends Controller
         }
 
         /*Add New view*/
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $request->server('REMOTE_ADDR');
         $viewCount = View::where(function ($q) use($ip, $user, $service) {
             $q->where('ip', $ip);
             $q->where('user_id', $user->id);
@@ -142,11 +144,20 @@ class ServicesController extends Controller
                 $q->where('id', '!=', $service->id); // not the current services
             })->with('user')->withCount('view')->orderBy('id', 'DESC')->take(4)->get();
 
-            $otherServicesInSameCat = Service::where(function ($q) use($service, $user) {
-                $q->where('cat_id', $service->cat_id); // in same cat
-                $q->where('user_id', '!=', $user->id); // all others service
-                $q->where('status', 1); // approved
-            })->with('user')->orderBy('id', 'DESC')->take(4)->get();
+            $otherServicesInSameCat =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                    ->leftJoin('votes', 'services.id', '=', 'votes.service_id')
+                    ->select('services.*',
+                                DB::raw('SUM(votes.vote) as votes_sum'),
+                                DB::raw('COUNT(votes.vote) as votes_count'))
+                    ->groupBy('services.id')
+                    ->where('services.cat_id', $service->cat_id)
+                    ->where('services.user_id', '!=', $user->id)
+                    ->where('services.status', 1)
+                    ->with('user')
+                    ->orderBy('id', 'DESC')
+                    ->take(6)
+                    ->get();
 
             $mostVoted =
                 Service::join('users', 'users.id', '=', 'services.user_id')
@@ -160,7 +171,6 @@ class ServicesController extends Controller
                         ->orderBy('vote_sum', 'DESC')
                         ->take(6)
                         ->get();
-
             $mostViewd =
                 Service::join('users', 'users.id', '=', 'services.user_id')
                         ->leftJoin('views', 'services.id', '=', 'views.service_id')
@@ -220,9 +230,66 @@ class ServicesController extends Controller
      */
     public function destroy($id)
     {
-    }
         //
+    }
+    public function getAllServices(Request $request)
+    {
+        // all services
+        $services =
+            Service::join('users', 'users.id', '=', 'services.user_id')
+                ->leftJoin('votes', 'services.id', '=', 'votes.service_id')
+                ->select('services.*',
+                    DB::raw('SUM(votes.vote) as votes_sum'),
+                    DB::raw('COUNT(votes.vote) as votes_count'))
+                ->with('user')
+                ->groupBy('services.id')
+                ->where('services.status', 1)
+                ->orderBy('votes_sum', 'DESC')
+                ->get();
+        // All Cateogries
+        $cat = Cat::orderBy('id', 'DESC')->get(['id', 'name']);
 
+        // Related Services
+
+        $ip = $request->server('REMOTE_ADDR');
+
+        $checkIfHasViewBefore = View::where('ip', $ip)->count();
+
+        if ($checkIfHasViewBefore == 0) {
+            // most Viewd Services
+            $sidebarSection1 =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                        ->leftJoin('views', 'services.id', '=', 'views.service_id')
+                        ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
+                        ->groupBy('services.id')
+                        ->where('services.status', 1)
+                        ->orderBy('view_count', 'DESC')
+                        ->take(6)
+                        ->get();
+        } else {
+            $catView = View::join('services', 'views.service_id', '=', 'services.id')
+                ->where('ip', $ip)
+                ->lists('services.cat_id')->all();
+            $sidebarSection1 =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                        ->leftJoin('views', 'services.id', '=', 'views.service_id')
+                        ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
+                        ->groupBy('services.id')
+                        ->whereIn('services.cat_id', $catView)
+                        ->where('services.status', 1)
+                        ->orderBy('view_count', 'DESC')
+                        ->take(6)
+                        ->get();
+        }
+
+
+        $array = [
+            'services' => $services,
+            'cat' => $cat,
+            'sidebarSection1' => $sidebarSection1
+        ];
+        return Response::json($array, 200);
+    }
 
     public function getUserServices($userId)
     {
@@ -230,10 +297,19 @@ class ServicesController extends Controller
 
         $user = User::findOrFail($userId);
         if ($user) {
-            $services = Service::where(function ($q) use ($user_id) {
-                $q->where('user_id', $user_id);
-                $q->where('status', 1);
-            })->with('user')->withCount('votes')->get();
+            $services =
+            Service::join('users', 'users.id', '=', 'services.user_id')
+                ->leftJoin('votes', 'services.id', '=', 'votes.service_id')
+                ->select('services.*',
+                            DB::raw('SUM(votes.vote) as votes_sum'),
+                            DB::raw('COUNT(votes.vote) as votes_count'))
+                ->groupBy('services.id')
+                ->where('services.user_id', $user_id)
+                ->where('services.status', 1)
+                ->with('user')
+                ->orderBy('id', 'DESC')
+                ->take(6)
+                ->get();
 
             return Response::json(['user' => $user, 'services' => $services], 200);
         }

@@ -30,7 +30,7 @@
         <hr>
         <div class="row">
             <span v-if="services.length > 0">
-                <div class="col-sm-4 col-md-3" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
+                <div class="col-sm-4 col-md-4" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
                     <single_services :service="service"></single_services>
                 </div>
             </span>

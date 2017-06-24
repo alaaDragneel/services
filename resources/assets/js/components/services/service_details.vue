@@ -41,19 +41,19 @@
                                         </span>
                                         <span class="pull-right label label-success" style="margin-right: 5px;">
                                             <!--
-                                            Percent =>
-                                            [
-                                            NOTE This Is The Service Score
-                                            (total votes * 100)
-                                            =============================================
-                                            (number Of rated users * max rate value[ 5 ])
-                                            NOTE this is the final score
-                                            ]
-                                            0/0 => NaN
-                                        -->
-                                        % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}
-                                        percentage
-                                    </span>
+                                                Percent =>
+                                                [
+                                                NOTE This Is The Service Score
+                                                (total votes * 100)
+                                                =============================================
+                                                (number Of rated users * max rate value[ 5 ])
+                                                NOTE this is the final score
+                                                ]
+                                                0/0 => NaN
+                                            -->
+                                            % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}
+                                            percentage
+                                        </span>
                                     </span>
                                     <!-- Rating run Here -->
                                 </div>
