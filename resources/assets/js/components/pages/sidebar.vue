@@ -1,5 +1,20 @@
 <template lang="html">
     <div class="container">
+        <ul v-if="section3" class="list-group" style="padding:0px;">
+              <li class="list-group-item active">
+                  <h5>
+                      <i class="fa fa-shopping-cart"></i>
+                      Best seller
+                  </h5>
+              </li>
+              <li v-for="mostPurchased in section3" track-by="$index" class="list-group-item ">
+                  <a v-link="{name: '/ServicesDetails', params:{serviceId: mostPurchased.id, serviceName: mostPurchased.name}}">
+                      <span class="pull-left">{{ mostPurchased.name }}</span>
+                      <span class="label label-danger pull-right"><i class="fa fa-cart-plus"></i> {{ mostPurchased.order_count }}</span>
+                      <div class="clearfix"></div>
+                  </a>
+              </li>
+        </ul>
         <ul v-if="section2" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
@@ -26,7 +41,7 @@
                   </a>
               </li>
         </ul>
-        <ul class="list-group" style="padding:0px;">
+        <ul v-if="section1" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
                       <i class="fa fa-eye-slash"></i>
@@ -46,6 +61,6 @@
 
 <script>
 export default {
-    props: ['category', 'section1', 'section2']
+    props: ['category', 'section1', 'section2', 'section3']
 }
 </script>

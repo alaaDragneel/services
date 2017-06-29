@@ -35,17 +35,10 @@ class ServicesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $user = Auth::user();
-
-        $services = Service::where('user_id', $user->id)->with('user')->withCount('view')->orderBy('id', 'DESC')->get();
-
-        return Response::json([
-            'user' => $user,
-            'services' => $services
-        ], 200);
-    }
+     public function index()
+     {
+         //
+     }
 
     /**
      * Show the form for creating a new resource.
@@ -254,8 +247,36 @@ class ServicesController extends Controller
     {
         //
     }
-    public function getAllServices(Request $request)
+
+    public function getMyServices($length = null)
     {
+        if ($length === null) {
+            $skipLengthOfServices = 0;
+        } else {
+            $skipLengthOfServices = $length;
+        }
+
+        $user = Auth::user();
+
+        $services = Service::where('user_id', $user->id)
+        ->with('user')
+        ->withCount('view')
+        ->skip($skipLengthOfServices)
+        ->take(env('LIMIT_SERVICES'))
+        ->orderBy('id', 'DESC')
+        ->get();
+        return Response::json([
+            'user' => $user,
+            'services' => $services
+        ], 200);
+    }
+    public function getAllServices(Request $request, $length = null)
+    {
+        if ($length === null) {
+            $skipLengthOfServices = 0;
+        } else {
+            $skipLengthOfServices = $length;
+        }
         // all services
         $services =
             Service::join('users', 'users.id', '=', 'services.user_id')
@@ -266,79 +287,104 @@ class ServicesController extends Controller
                 ->with('user')
                 ->groupBy('services.id')
                 ->where('services.status', 1)
+                ->skip($skipLengthOfServices)
+                ->take(env('LIMIT_SERVICES'))
                 ->orderBy('votes_sum', 'DESC')
                 ->get();
-        // All Cateogries
-        $cat = Cat::orderBy('id', 'DESC')->get(['id', 'name']);
+        if ($length == null) {
+            // All Cateogries
+            $cat = Cat::orderBy('id', 'DESC')->get(['id', 'name']);
 
-        // Related Services
+            // Related Services
 
-        $ip = $request->server('REMOTE_ADDR');
+            $ip = $request->server('REMOTE_ADDR');
 
-        $checkIfHasViewBefore = View::where('ip', $ip)->count();
+            $checkIfHasViewBefore = View::where('ip', $ip)->count();
 
-        if ($checkIfHasViewBefore == 0) {
-            // most Viewd Services
-            $sidebarSection1 =
+            if ($checkIfHasViewBefore == 0) {
+                // most Viewd Services
+                $sidebarSection1 =
                 Service::join('users', 'users.id', '=', 'services.user_id')
-                        ->leftJoin('views', 'services.id', '=', 'views.service_id')
-                        ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
-                        ->groupBy('services.id')
-                        ->where('services.status', 1)
-                        ->orderBy('view_count', 'DESC')
-                        ->take(6)
-                        ->get();
-        } else {
-            $catView = View::join('services', 'views.service_id', '=', 'services.id')
+                ->leftJoin('views', 'services.id', '=', 'views.service_id')
+                ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
+                ->groupBy('services.id')
+                ->where('services.status', 1)
+                ->orderBy('view_count', 'DESC')
+                ->take(6)
+                ->get();
+            } else {
+                $catView = View::join('services', 'views.service_id', '=', 'services.id')
                 ->where('ip', $ip)
                 ->lists('services.cat_id')->all();
-            $sidebarSection1 =
+                $sidebarSection1 =
                 Service::join('users', 'users.id', '=', 'services.user_id')
-                        ->leftJoin('views', 'services.id', '=', 'views.service_id')
-                        ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
-                        ->groupBy('services.id')
-                        ->whereIn('services.cat_id', $catView)
-                        ->where('services.status', 1)
-                        ->orderBy('view_count', 'DESC')
-                        ->take(6)
-                        ->get();
-        }
+                ->leftJoin('views', 'services.id', '=', 'views.service_id')
+                ->select('services.id', 'services.name', DB::raw('COUNT(views.id) as view_count'))
+                ->groupBy('services.id')
+                ->whereIn('services.cat_id', $catView)
+                ->where('services.status', 1)
+                ->orderBy('view_count', 'DESC')
+                ->take(6)
+                ->get();
+            }
+            if ($sidebarSection1->count() <= 0) {
+                $sidebarSection1 = null;
+            }
 
-        // append to User Orders Get the services from the same category
-
-        $guest = Auth::guest();
-        if (!$guest) {
-          $user = Auth::user();
-            $orderCat = Order::join('services', 'orders.service_id', '=', 'services.id')
+            // append to User Orders Get the services from the same category
+            $guest = Auth::guest();
+            if (!$guest) {
+                $user = Auth::user();
+                $orderCat = Order::join('services', 'orders.service_id', '=', 'services.id')
                 ->where('user_order', $user->id)
                 ->lists('services.cat_id')->all();
-            $sidebarSection2 =
+                $sidebarSection2 =
                 Service::join('users', 'users.id', '=', 'services.user_id')
-                        ->select('services.id', 'services.name')
-                        ->whereIn('services.cat_id', $orderCat)
-                        ->where('services.status', 1)
-                        ->inRandomOrder()
-                        ->take(6)
-                        ->get();
-        } else {
-          $sidebarSection2 = null;
+                ->select('services.id', 'services.name')
+                ->whereIn('services.cat_id', $orderCat)
+                ->where('services.status', 1)
+                ->inRandomOrder()
+                ->take(6)
+                ->get();
+            } else {
+                $sidebarSection2 = null;
+            }
+
+            // most purshed Services From Same Category
+            $sidebarSection3 =
+            Service::join('orders', 'services.id', '=', 'orders.service_id')
+                ->select('services.id', 'services.name', DB::raw('COUNT(orders.id) as order_count'))
+                ->groupBy('services.id')
+                ->where('services.status', 1)
+                ->orderBy('order_count', 'DESC')
+                ->take(6)
+                ->get();
+            if ($sidebarSection3->count() <= 0) {
+                $sidebarSection3 = null;
+            }
         }
 
         $array = [
             'services' => $services,
             'cat' => $cat,
             'sidebarSection1' => $sidebarSection1,
-            'sidebarSection2' => $sidebarSection2
+            'sidebarSection2' => $sidebarSection2,
+            'sidebarSection3' => $sidebarSection3,
         ];
         return Response::json($array, 200);
     }
 
-    public function getUserServices($userId)
+    public function getUserServices($userId, $length = null)
     {
         $user_id = intval($userId);
 
         $user = User::findOrFail($userId);
         if ($user) {
+            if ($length === null) {
+                $skipLengthOfServices = 0;
+            } else {
+                $skipLengthOfServices = $length;
+            }
             $services =
             Service::join('users', 'users.id', '=', 'services.user_id')
                 ->leftJoin('votes', 'services.id', '=', 'votes.service_id')
@@ -349,8 +395,9 @@ class ServicesController extends Controller
                 ->where('services.user_id', $user_id)
                 ->where('services.status', 1)
                 ->with('user')
+                ->skip($skipLengthOfServices)
+                ->take(env('LIMIT_SERVICES'))
                 ->orderBy('id', 'DESC')
-                ->take(6)
                 ->get();
 
             return Response::json(['user' => $user, 'services' => $services], 200);

@@ -13,7 +13,7 @@
                     </a>
 
                 </div>
-                <div class="col-md-6 col-xs-8 price text-right" style="margin-top: -10px;">
+                <div class="col-md-6 col-xs-6 price text-right" style="margin-top: -10px;">
                     <h3>
                         <label class="badge">${{ service.price }}</label>
                     </h3>

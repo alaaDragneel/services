@@ -1,4 +1,220 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
+},{"core-js/library/fn/object/define-property":3}],2:[function(require,module,exports){
+"use strict";
+
+exports.__esModule = true;
+
+var _defineProperty = require("../core-js/object/define-property");
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (obj, key, value) {
+  if (key in obj) {
+    (0, _defineProperty2.default)(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+},{"../core-js/object/define-property":1}],3:[function(require,module,exports){
+require('../../modules/es6.object.define-property');
+var $Object = require('../../modules/_core').Object;
+module.exports = function defineProperty(it, key, desc){
+  return $Object.defineProperty(it, key, desc);
+};
+},{"../../modules/_core":6,"../../modules/es6.object.define-property":19}],4:[function(require,module,exports){
+module.exports = function(it){
+  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+  return it;
+};
+},{}],5:[function(require,module,exports){
+var isObject = require('./_is-object');
+module.exports = function(it){
+  if(!isObject(it))throw TypeError(it + ' is not an object!');
+  return it;
+};
+},{"./_is-object":15}],6:[function(require,module,exports){
+var core = module.exports = {version: '2.4.0'};
+if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+},{}],7:[function(require,module,exports){
+// optional / simple context binding
+var aFunction = require('./_a-function');
+module.exports = function(fn, that, length){
+  aFunction(fn);
+  if(that === undefined)return fn;
+  switch(length){
+    case 1: return function(a){
+      return fn.call(that, a);
+    };
+    case 2: return function(a, b){
+      return fn.call(that, a, b);
+    };
+    case 3: return function(a, b, c){
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function(/* ...args */){
+    return fn.apply(that, arguments);
+  };
+};
+},{"./_a-function":4}],8:[function(require,module,exports){
+// Thank's IE8 for his funny defineProperty
+module.exports = !require('./_fails')(function(){
+  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+});
+},{"./_fails":11}],9:[function(require,module,exports){
+var isObject = require('./_is-object')
+  , document = require('./_global').document
+  // in old IE typeof document.createElement is 'object'
+  , is = isObject(document) && isObject(document.createElement);
+module.exports = function(it){
+  return is ? document.createElement(it) : {};
+};
+},{"./_global":12,"./_is-object":15}],10:[function(require,module,exports){
+var global    = require('./_global')
+  , core      = require('./_core')
+  , ctx       = require('./_ctx')
+  , hide      = require('./_hide')
+  , PROTOTYPE = 'prototype';
+
+var $export = function(type, name, source){
+  var IS_FORCED = type & $export.F
+    , IS_GLOBAL = type & $export.G
+    , IS_STATIC = type & $export.S
+    , IS_PROTO  = type & $export.P
+    , IS_BIND   = type & $export.B
+    , IS_WRAP   = type & $export.W
+    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+    , expProto  = exports[PROTOTYPE]
+    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
+    , key, own, out;
+  if(IS_GLOBAL)source = name;
+  for(key in source){
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if(own && key in exports)continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function(C){
+      var F = function(a, b, c){
+        if(this instanceof C){
+          switch(arguments.length){
+            case 0: return new C;
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if(IS_PROTO){
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if(type & $export.R && expProto && !expProto[key])hide(expProto, key, out);
+    }
+  }
+};
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library` 
+module.exports = $export;
+},{"./_core":6,"./_ctx":7,"./_global":12,"./_hide":13}],11:[function(require,module,exports){
+module.exports = function(exec){
+  try {
+    return !!exec();
+  } catch(e){
+    return true;
+  }
+};
+},{}],12:[function(require,module,exports){
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+},{}],13:[function(require,module,exports){
+var dP         = require('./_object-dp')
+  , createDesc = require('./_property-desc');
+module.exports = require('./_descriptors') ? function(object, key, value){
+  return dP.f(object, key, createDesc(1, value));
+} : function(object, key, value){
+  object[key] = value;
+  return object;
+};
+},{"./_descriptors":8,"./_object-dp":16,"./_property-desc":17}],14:[function(require,module,exports){
+module.exports = !require('./_descriptors') && !require('./_fails')(function(){
+  return Object.defineProperty(require('./_dom-create')('div'), 'a', {get: function(){ return 7; }}).a != 7;
+});
+},{"./_descriptors":8,"./_dom-create":9,"./_fails":11}],15:[function(require,module,exports){
+module.exports = function(it){
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+},{}],16:[function(require,module,exports){
+var anObject       = require('./_an-object')
+  , IE8_DOM_DEFINE = require('./_ie8-dom-define')
+  , toPrimitive    = require('./_to-primitive')
+  , dP             = Object.defineProperty;
+
+exports.f = require('./_descriptors') ? Object.defineProperty : function defineProperty(O, P, Attributes){
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if(IE8_DOM_DEFINE)try {
+    return dP(O, P, Attributes);
+  } catch(e){ /* empty */ }
+  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
+  if('value' in Attributes)O[P] = Attributes.value;
+  return O;
+};
+},{"./_an-object":5,"./_descriptors":8,"./_ie8-dom-define":14,"./_to-primitive":18}],17:[function(require,module,exports){
+module.exports = function(bitmap, value){
+  return {
+    enumerable  : !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable    : !(bitmap & 4),
+    value       : value
+  };
+};
+},{}],18:[function(require,module,exports){
+// 7.1.1 ToPrimitive(input [, PreferredType])
+var isObject = require('./_is-object');
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function(it, S){
+  if(!isObject(it))return it;
+  var fn, val;
+  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
+  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+},{"./_is-object":15}],19:[function(require,module,exports){
+var $export = require('./_export');
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !require('./_descriptors'), 'Object', {defineProperty: require('./_object-dp').f});
+},{"./_descriptors":8,"./_export":10,"./_object-dp":16}],20:[function(require,module,exports){
 //! moment.js
 //! version : 2.18.1
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -4463,7 +4679,7 @@ return hooks;
 
 })));
 
-},{}],2:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -4649,7 +4865,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],3:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -4950,7 +5166,7 @@ function format (id) {
   return match ? match[0] : id
 }
 
-},{}],4:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var moment = require('moment');
 
 module.exports = {
@@ -5091,7 +5307,7 @@ module.exports = {
 	},
 };
 
-},{"moment":1}],5:[function(require,module,exports){
+},{"moment":20}],24:[function(require,module,exports){
 /*!
  * vue-resource v1.0.2
  * https://github.com/vuejs/vue-resource
@@ -6603,7 +6819,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 module.exports = plugin;
-},{}],6:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*!
  * vue-router v0.7.10
  * (c) 2016 Evan You
@@ -9238,7 +9454,7 @@ module.exports = plugin;
   return Router;
 
 }));
-},{}],7:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -11597,7 +11813,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }]);
 });
 
-},{}],8:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (process){
 /*!
  * vue-validator v2.1.7
@@ -14209,7 +14425,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 module.exports = plugin;
 }).call(this,require('_process'))
-},{"_process":2}],9:[function(require,module,exports){
+},{"_process":21}],28:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.26
@@ -24286,7 +24502,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":2}],10:[function(require,module,exports){
+},{"_process":21}],29:[function(require,module,exports){
 'use strict';
 
 var Vue = require('vue');
@@ -24404,7 +24620,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/category/category.vue":15,"./components/favorite/favorite.vue":19,"./components/messages/incomingMessage.vue":20,"./components/messages/messageDetails.vue":21,"./components/messages/newMessage.vue":24,"./components/messages/oldMessage.vue":25,"./components/messages/send.vue":26,"./components/messages/sendMessage.vue":27,"./components/orders/incomingOrders.vue":28,"./components/orders/purchaseOrders.vue":30,"./components/orders/singleOrder.vue":31,"./components/pages/mainPage.vue":33,"./components/services/addServices.vue":36,"./components/services/myServices.vue":37,"./components/services/service_details.vue":38,"./components/users/UserServices.vue":41,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],11:[function(require,module,exports){
+},{"./components/category/category.vue":34,"./components/favorite/favorite.vue":38,"./components/messages/incomingMessage.vue":39,"./components/messages/messageDetails.vue":40,"./components/messages/newMessage.vue":43,"./components/messages/oldMessage.vue":44,"./components/messages/send.vue":45,"./components/messages/sendMessage.vue":46,"./components/orders/incomingOrders.vue":47,"./components/orders/purchaseOrders.vue":49,"./components/orders/singleOrder.vue":50,"./components/pages/mainPage.vue":52,"./components/services/addServices.vue":55,"./components/services/myServices.vue":56,"./components/services/service_details.vue":57,"./components/users/UserServices.vue":60,"vue":28,"vue-moment":23,"vue-resource":24,"vue-router":25,"vue-validator":27}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24451,7 +24667,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0fd0cc00", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],12:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],31:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24490,7 +24706,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ad3557d6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],13:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],32:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24534,7 +24750,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e621e2da", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],14:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24555,16 +24771,24 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1f15fa68", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],15:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
 var _SingleServices = require('../users/SingleServices.vue');
 
 var _SingleServices2 = _interopRequireDefault(_SingleServices);
+
+var _sidebar = require('../pages/sidebar.vue');
+
+var _sidebar2 = _interopRequireDefault(_sidebar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24573,18 +24797,20 @@ var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 exports.default = {
     components: {
         single_services: _SingleServices2.default,
-        spinner: Spinner
+        spinner: Spinner,
+        side_bar: _sidebar2.default
     },
     data: function data() {
-        return {
+        var _ref;
+
+        return _ref = {
             isLoading: false,
             services: [],
             cat: [],
             sortKey: '',
             reverse: 1,
-            serviceName: '',
-            moreServices: true
-        };
+            serviceName: ''
+        }, (0, _defineProperty3.default)(_ref, 'cat', []), (0, _defineProperty3.default)(_ref, 'singleCat', []), (0, _defineProperty3.default)(_ref, 'section1', []), (0, _defineProperty3.default)(_ref, 'section2', []), (0, _defineProperty3.default)(_ref, 'section3', []), (0, _defineProperty3.default)(_ref, 'moreServices', true), _ref;
     },
     ready: function ready() {
         this.$refs.spinner.show();
@@ -24607,13 +24833,17 @@ exports.default = {
                         this.services = this.services.concat(res.body['services']);
                     } else {
                         this.moreServices = false;
-                        alertify.success('No More Services Found In This Category');
+                        alertify.error('No More Services Found In This Category');
                     }
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 } else {
                     this.services = res.body['services'];
+                    this.singleCat = res.body['singleCat'];
                     this.cat = res.body['cat'];
+                    this.section1 = res.body['sidebarSection1'];
+                    this.section2 = res.body['sidebarSection2'];
+                    this.section3 = res.body['sidebarSection3'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }
@@ -24637,7 +24867,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-md-12\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-folder-open\"></i> {{ cat.name }} Section\n            <br>\n            <small><strong> {{ cat.description }} </strong></small>\n            <br>\n            <small><strong> <i class=\"fa fa-cart-plus\"></i> {{ services.length }} service/s</strong></small>\n        </h2>\n        <hr>\n    </div>\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <div class=\"col-md-11\">\n                    <form class=\"form-horizontal\">\n                        <div class=\"form-group\">\n                            <label for=\"serviceName\"></label>\n                            <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                        </div>\n                    </form>\n                </div>\n            </div>\n            <div class=\"col-md-6 text-right \">\n                <div class=\"btn-group\">\n                    <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                    <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                    <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                    <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                </div>\n            </div>\n\n        </div>\n        <hr>\n        <div class=\"row\">\n            <span v-if=\"services.length > 0\">\n                <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                    <single_services :service=\"service\"></single_services>\n                </div>\n                <div v-if=\"services.length >= 6\">\n                    <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                    <div class=\"clearfix\"></div>\n                    <br>\n                </div>\n            </span>\n            <span v-else>\n                <div class=\"alert alert-warning\">\n                    {{ cat.name }} Category Doesn't have Any Services Currently\n                </div>\n            </span>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-md-12\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-folder-open\"></i> {{ singleCat.name }} Section\n            <br>\n            <small><strong> {{ singleCat.description }} </strong></small>\n            <br>\n            <small><strong> <i class=\"fa fa-cart-plus\"></i> {{ services.length }} service/s</strong></small>\n        </h2>\n        <hr>\n    </div>\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <side_bar :category=\"cat\" :section1=\"section1\" :section2=\"section2\" :section3=\"section3\"></side_bar>\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <div class=\"col-md-11\">\n                    <form class=\"form-horizontal\">\n                        <div class=\"form-group\">\n                            <label for=\"serviceName\"></label>\n                            <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                        </div>\n                    </form>\n                </div>\n            </div>\n            <div class=\"col-md-6 text-right \">\n                <div class=\"btn-group\">\n                    <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                    <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                    <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                    <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                </div>\n            </div>\n\n        </div>\n        <hr>\n        <div class=\"row\">\n            <span v-if=\"services.length > 0\">\n                <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                    <single_services :service=\"service\"></single_services>\n                </div>\n                <div v-if=\"services.length >= 6\">\n                    <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                    <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services In This Category</div>\n                    <div class=\"clearfix\"></div>\n                    <br>\n                </div>\n            </span>\n            <span v-else>\n                <div class=\"alert alert-warning\">\n                    {{ cat.name }} Category Doesn't have Any Services Currently\n                </div>\n            </span>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24648,7 +24878,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-67e66eed", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../users/SingleServices.vue":40,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],16:[function(require,module,exports){
+},{"../pages/sidebar.vue":53,"../users/SingleServices.vue":59,"babel-runtime/helpers/defineProperty":2,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24704,7 +24934,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7833da12", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],17:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24773,7 +25003,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3f8e6e0c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../comments/addComment.vue":16,"vue":9,"vue-hot-reload-api":3}],18:[function(require,module,exports){
+},{"../comments/addComment.vue":35,"vue":28,"vue-hot-reload-api":22}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24829,7 +25059,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ed42d8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],19:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24893,7 +25123,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-18e8e0ad", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../messages/messageMenu.vue":22,"./favList.vue":18,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],20:[function(require,module,exports){
+},{"../messages/messageMenu.vue":41,"./favList.vue":37,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],39:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24957,7 +25187,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-04d37630", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],21:[function(require,module,exports){
+},{"./messageMenu.vue":41,"./messagesList.vue":42,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],40:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25019,7 +25249,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ccb68148", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],22:[function(require,module,exports){
+},{"./messageMenu.vue":41,"./messagesList.vue":42,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25066,7 +25296,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-83d91796", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],23:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],42:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25105,7 +25335,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4d51ec2a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],24:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25169,7 +25399,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-18ec5be8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],25:[function(require,module,exports){
+},{"./messageMenu.vue":41,"./messagesList.vue":42,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25233,7 +25463,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-239fe5fe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],26:[function(require,module,exports){
+},{"./messageMenu.vue":41,"./messagesList.vue":42,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],45:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25308,7 +25538,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-20dea369", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],27:[function(require,module,exports){
+},{"./messageMenu.vue":41,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25372,7 +25602,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4ce49de4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],28:[function(require,module,exports){
+},{"./messageMenu.vue":41,"./messagesList.vue":42,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],47:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25397,7 +25627,8 @@ exports.default = {
             orders: [],
             user: '',
             filterData: '',
-            serviceName: ''
+            serviceName: '',
+            moreOrders: true
         };
     },
     ready: function ready() {
@@ -25405,23 +25636,48 @@ exports.default = {
         this.getMyPurchaseOrders();
     },
     methods: {
-        getMyPurchaseOrders: function getMyPurchaseOrders() {
-            this.$http.get('incomingOrders').then(function (res) {
-                this.orders = res.body['orders'];
-                this.user = res.body['user'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        getMyPurchaseOrders: function getMyPurchaseOrders(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            this.$http.get('incomingOrders' + sendLen).then(function (res) {
+
+                if (length !== undefined) {
+                    if (res.body['orders'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['orders'] return as array
+                        this.orders = this.orders.concat(res.body['orders']);
+                    } else {
+                        this.moreOrders = false;
+                        alertify.error('No More Services Found In This Category');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+
+                    this.orders = res.body['orders'];
+                    this.user = res.body['user'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
                 swal('Error', 'Something Wrong Happend Contact With the Adminstratore Please', 'error');
             });
         },
         filter: function filter(status) {
             this.filterData = status;
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.orders.length;
+            this.getMyPurchaseOrders(length);
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Incoming Orders Section\n            <br>\n            <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Incoming Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Requester</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_my_orders.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_my_orders\"></purchase_orders>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Incoming Orders Section\n            <br>\n            <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Incoming Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Requester</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_my_orders.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_my_orders\"></purchase_orders>\n            </div>\n            <div v-if=\"orders.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Incoming Orders</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25432,7 +25688,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-453c5513", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":29,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],29:[function(require,module,exports){
+},{"./orderStructure.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],48:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25463,7 +25719,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5ef4432d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":14,"vue":9,"vue-hot-reload-api":3}],30:[function(require,module,exports){
+},{"../btns/status.vue":33,"vue":28,"vue-hot-reload-api":22}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25488,7 +25744,8 @@ exports.default = {
             orders: [],
             user: '',
             filterData: '',
-            serviceName: ''
+            serviceName: '',
+            moreOrders: true
         };
     },
     ready: function ready() {
@@ -25496,23 +25753,47 @@ exports.default = {
         this.getMyPurchaseOrders();
     },
     methods: {
-        getMyPurchaseOrders: function getMyPurchaseOrders() {
-            this.$http.get('purchaseOrders').then(function (res) {
-                this.orders = res.body['orders'];
-                this.user = res.body['user'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        getMyPurchaseOrders: function getMyPurchaseOrders(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            this.$http.get('purchaseOrders' + sendLen).then(function (res) {
+                if (length !== undefined) {
+                    if (res.body['orders'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['orders'] return as array
+                        this.orders = this.orders.concat(res.body['orders']);
+                    } else {
+                        this.moreOrders = false;
+                        alertify.error('No More Services Found In This Category');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+
+                    this.orders = res.body['orders'];
+                    this.user = res.body['user'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
                 swal('Error', 'Something Wrong Happend Contact With the Adminstratore Please', 'error');
             });
         },
         filter: function filter(status) {
             this.filterData = status;
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.orders.length;
+            this.getMyPurchaseOrders(length);
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Purchase Orders Section\n            <br>\n            <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Purchase Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Provider</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_user_add_service.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_user_add_service\"></purchase_orders>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Purchase Orders Section\n            <br>\n            <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Purchase Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Provider</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_user_add_service.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_user_add_service\"></purchase_orders>\n            </div>\n            <div v-if=\"orders.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Purchase Orders</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25523,7 +25804,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0b3967a4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":29,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],31:[function(require,module,exports){
+},{"./orderStructure.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],50:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25623,7 +25904,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-10d5742e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":14,"../comments/allComments.vue":17,"./usersidebar.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],32:[function(require,module,exports){
+},{"../btns/status.vue":33,"../comments/allComments.vue":36,"./usersidebar.vue":51,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],51:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25644,7 +25925,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-419ca80e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],33:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],52:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25679,7 +25960,9 @@ exports.default = {
             serviceName: '',
             cat: [],
             section1: [],
-            section2: []
+            section2: [],
+            section3: [],
+            moreServices: true
         };
     },
     ready: function ready() {
@@ -25687,14 +25970,34 @@ exports.default = {
         this.getUserServices();
     },
     methods: {
-        getUserServices: function getUserServices() {
-            this.$http.get('/getAllServices/').then(function (res) {
-                this.services = res.body['services'];
-                this.cat = res.body['cat'];
-                this.section1 = res.body['sidebarSection1'];
-                this.section2 = res.body['sidebarSection2'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        getUserServices: function getUserServices(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            var url = '/getAllServices' + sendLen;
+            this.$http.get(url).then(function (res) {
+                if (length !== undefined) {
+                    if (res.body['services'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['services'] return as array
+                        this.services = this.services.concat(res.body['services']);
+                    } else {
+                        this.moreServices = false;
+                        alertify.error('No More Services Found');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+                    this.services = res.body['services'];
+                    this.cat = res.body['cat'];
+                    this.section1 = res.body['sidebarSection1'];
+                    this.section2 = res.body['sidebarSection2'];
+                    this.section3 = res.body['sidebarSection3'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
 
                 alertify.error('There are Some Erros Try Again later');
@@ -25703,6 +26006,11 @@ exports.default = {
         sort: function sort(_sort) {
             this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
             this.sortKey = _sort;
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.services.length;
+            this.getUserServices(length);
         }
     },
     route: {
@@ -25710,7 +26018,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <span v-if=\"isLoading\">\n        <div class=\"row\">\n\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <main_side_bar :category=\"cat\" :section1=\"section1\" :section2=\"section2\"></main_side_bar>\n            </div>\n\n            <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"col-md-11\">\n                            <form class=\"form-horizontal\">\n                                <div class=\"form-group\">\n                                    <label for=\"serviceName\"></label>\n                                    <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                                </div>\n                            </form>\n                        </div>\n                    </div>\n                    <div class=\"col-md-6 text-right \">\n                        <div class=\"btn-group\">\n                            <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                            <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                            <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                            <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                        </div>\n                    </div>\n\n                </div>\n                <hr>\n                <div class=\"row\">\n                    <span v-if=\"services.length > 0\">\n                        <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                            <single_services :service=\"service\"></single_services>\n                        </div>\n                    </span>\n                    <span v-else>\n                        <div class=\"alert alert-danger\">\n                            No Services Till Now in Our Site\n                        </div>\n                    </span>\n                </div>\n            </div>\n        </div>\n    </span>\n    <spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <span v-if=\"isLoading\">\n        <div class=\"row\">\n\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <main_side_bar :category=\"cat\" :section1=\"section1\" :section2=\"section2\" :section3=\"section3\"></main_side_bar>\n            </div>\n\n            <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"col-md-11\">\n                            <form class=\"form-horizontal\">\n                                <div class=\"form-group\">\n                                    <label for=\"serviceName\"></label>\n                                    <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                                </div>\n                            </form>\n                        </div>\n                    </div>\n                    <div class=\"col-md-6 text-right \">\n                        <div class=\"btn-group\">\n                            <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                            <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                            <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                            <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                        </div>\n                    </div>\n\n                </div>\n                <hr>\n                <div class=\"row\">\n                    <span v-if=\"services.length > 0\">\n                        <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                            <single_services :service=\"service\"></single_services>\n                        </div>\n                        <div v-if=\"services.length >= 6\">\n                            <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                            <div class=\"clearfix\"></div>\n                            <br>\n                        </div>\n                    </span>\n                    <span v-else>\n                        <div class=\"alert alert-danger\">\n                            No Services Till Now in Our Site\n                        </div>\n                    </span>\n                </div>\n            </div>\n        </div>\n    </span>\n    <spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25721,17 +26029,17 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-49bdc3c5", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../users/SingleServices.vue":40,"./sidebar.vue":34,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],34:[function(require,module,exports){
+},{"../users/SingleServices.vue":59,"./sidebar.vue":53,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],53:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['category', 'section1', 'section2']
+    props: ['category', 'section1', 'section2', 'section3']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <ul v-if=\"section2\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-heart\"></i>\n                  Choosed For You\n              </h5>\n          </li>\n          <li v-for=\"choosed in section2\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: choosed.id, serviceName: choosed.name}}\">\n                  <span>{{ choosed.name }}</span>\n              </a>\n          </li>\n    </ul>\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-folder\"></i>\n                  Categories\n              </h5>\n          </li>\n          <li v-for=\"cat in category\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/Category', params:{catId: cat.id, catName: cat.name}}\">\n                  {{ cat.name }}\n              </a>\n          </li>\n    </ul>\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-eye-slash\"></i>\n                  Most Viewd\n              </h5>\n          </li>\n          <li v-for=\"view in section1\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                  <span class=\"pull-left\">{{ view.name }}</span>\n                  <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                  <div class=\"clearfix\"></div>\n              </a>\n          </li>\n    </ul>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <ul v-if=\"section3\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-shopping-cart\"></i>\n                  Best seller\n              </h5>\n          </li>\n          <li v-for=\"mostPurchased in section3\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: mostPurchased.id, serviceName: mostPurchased.name}}\">\n                  <span class=\"pull-left\">{{ mostPurchased.name }}</span>\n                  <span class=\"label label-danger pull-right\"><i class=\"fa fa-cart-plus\"></i> {{ mostPurchased.order_count }}</span>\n                  <div class=\"clearfix\"></div>\n              </a>\n          </li>\n    </ul>\n    <ul v-if=\"section2\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-heart\"></i>\n                  Choosed For You\n              </h5>\n          </li>\n          <li v-for=\"choosed in section2\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: choosed.id, serviceName: choosed.name}}\">\n                  <span>{{ choosed.name }}</span>\n              </a>\n          </li>\n    </ul>\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-folder\"></i>\n                  Categories\n              </h5>\n          </li>\n          <li v-for=\"cat in category\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/Category', params:{catId: cat.id, catName: cat.name}}\">\n                  {{ cat.name }}\n              </a>\n          </li>\n    </ul>\n    <ul v-if=\"section1\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-eye-slash\"></i>\n                  Most Viewd\n              </h5>\n          </li>\n          <li v-for=\"view in section1\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                  <span class=\"pull-left\">{{ view.name }}</span>\n                  <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                  <div class=\"clearfix\"></div>\n              </a>\n          </li>\n    </ul>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25742,7 +26050,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0832f3e2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],35:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],54:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25757,7 +26065,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h3 class=\"label label-primary\">{{ service.name }}</h3>\n    </a>\n    <label class=\"label label-success pull-right\">${{ service.price }}</label>\n    <div class=\"clearfix\"></div>\n    <div style=\"height: 7px;\"></div>\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-12 col-xs-12\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n        </div>\n        <div class=\"row\">\n\n            <div class=\"col-md-8 col-sm-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n            <div class=\"col-md-4 col-sm-12\">\n                <span class=\"btn btn-info\"><i class=\"fa fa-eye\"></i> {{ service.view_count }}</span>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"thumbnail\">\n    <div class=\"row\">\n      <div class=\"col-lg-9 col-md-9 col-sm-9 col-xs-9\">\n          <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n              <h4>{{ service.name }}</h4>\n          </a>\n      </div>\n      <div class=\"col-lg-3 col-md-3 col-sm-3 col-xs-3\" style=\"margin-top: 8px; margin-left: -5px;\">\n          <span class=\"badge\"><i class=\"fa fa-eye\"></i> {{ service.view_count }}</span>\n\n      </div>\n    </div>\n    <div class=\"clearfix\"></div>\n    <div style=\"height: 7px;\"></div>\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-12 col-xs-12\">\n                <div class=\"col-md-6 col-xs-6\">\n                    <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                        <h4>{{ service.user.name }}</h4>\n                    </a>\n\n                </div>\n                <div class=\"col-md-6 col-xs-6 price text-right\" style=\"margin-top: -10px;\">\n                    <h3>\n                        <label class=\"badge\">${{ service.price }}</label>\n                    </h3>\n                </div>\n\n            </div>\n        </div>\n        <div class=\"row\">\n\n            <div class=\"col-md-12 col-sm-12\">\n\n                <span v-if=\"service.status == 0\">\n\n                    <span class=\"btn btn-warning btn-product btn-block\"><i class=\"fa fa-clock-o\"></i> Waiting</span>\n                </span>\n\n                <span v-if=\"service.status == 1\">\n\n                    <span class=\"btn btn-info btn-product btn-block\"><i class=\"fa fa-check\"></i> Approved</span>\n                </span>\n\n                <span v-if=\"service.status == 2\">\n\n                    <span class=\"btn btn-danger btn-product btn-block\"><i class=\"fa fa-close\"></i> Rejected</span>\n                </span>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25768,7 +26076,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4afe4e35", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],36:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25833,7 +26141,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5b3e0e40", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],37:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25859,7 +26167,8 @@ exports.default = {
             user: '',
             sortKey: '',
             reverse: 1,
-            isLoading: false
+            isLoading: false,
+            moreServices: true
         };
     },
     ready: function ready() {
@@ -25867,12 +26176,31 @@ exports.default = {
         this.getMyServices();
     },
     methods: {
-        getMyServices: function getMyServices() {
-            this.$http.get('Services').then(function (res) {
-                this.services = res.body['services'];
-                this.user = res.body['user'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        getMyServices: function getMyServices(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            this.$http.get('/getMyServices' + sendLen).then(function (res) {
+
+                if (length !== undefined) {
+                    if (res.body['services'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['services'] return as array
+                        this.services = this.services.concat(res.body['services']);
+                    } else {
+                        this.moreServices = false;
+                        alertify.error('No More Services Found In This Category');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+                    this.services = res.body['services'];
+                    this.user = res.body['user'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
                 alertify.error('There are Some Erros Try Again later');
             });
@@ -25880,12 +26208,17 @@ exports.default = {
         sort: function sort(_sort) {
             this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
             this.sortKey = _sort;
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.services.length;
+            this.getMyServices(length);
         }
     }
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n        <br>\n        <small><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n    <span v-if=\"services.length > 0\">\n        <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n            <single_services :service=\"service\"></single_services>\n        </div>\n    </span>\n    <span v-else=\"\">\n        <div class=\"alert alert-warning\">\n            You Do'nt Have Any Services Current Now Please Add One\n            <a v-link=\"{path: '/AddServices'}\">\n                <i class=\"fa fa-plus\"></i>\n                Add Service\n            </a>\n        </div>\n    </span>\n</div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n        <br>\n        <small><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n    <span v-if=\"services.length > 0\">\n        <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n            <single_services :service=\"service\"></single_services>\n        </div>\n        <div v-if=\"services.length >= 6\">\n            <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n            <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services</div>\n            <div class=\"clearfix\"></div>\n            <br>\n        </div>\n    </span>\n    <span v-else=\"\">\n        <div class=\"alert alert-warning\">\n            You Do'nt Have Any Services Current Now Please Add One\n            <a v-link=\"{path: '/AddServices'}\">\n                <i class=\"fa fa-plus\"></i>\n                Add Service\n            </a>\n        </div>\n    </span>\n</div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25896,7 +26229,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0db2ce0e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":35,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],38:[function(require,module,exports){
+},{"./SingleServices.vue":54,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],57:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26004,7 +26337,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-163db30e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":40,"./SingleServices.vue":35,"./sidebar.vue":39,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],39:[function(require,module,exports){
+},{"../btns/buy.vue":30,"../btns/fav.vue":31,"../btns/rating.vue":32,"../users/SingleServices.vue":59,"./SingleServices.vue":54,"./sidebar.vue":58,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26025,7 +26358,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e099e1d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],40:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26063,7 +26396,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-8 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"product-rating\">\n            <!-- Rating run Here -->\n            <div class=\"col-md-12\" v-if=\"service.votes_count > 0\">\n                <div class=\"row\">\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- Number Of Users Whose Rate -->\n                      <span class=\"label label-primary\">\n                          <i class=\"fa fa-user\"></i>\n                          {{ service.votes_count }}\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- The Service Rates -->\n                      <span class=\"label label-warning\">\n                          <i class=\"fa fa-star\"></i>\n                          {{ parseInt(service.votes_sum) }}\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n\n                      <span class=\"label label-info\">\n                          <!--\n                              Percent =>\n                              [\n                              NOTE This Is The Service Score\n                              (total votes * 100)\n                              =============================================\n                              (number Of rated users * max rate value[ 5 ])\n                              NOTE this is the final score\n                              ]\n                              0/0 => NaN\n                          -->\n                          % {{ parseInt((service.votes_sum * 100) / (service.votes_count * 5)) }}\n                    </span>\n                  </div>\n                </div>\n            </div>\n            <!-- Rating run Here -->\n            <!-- Rating run Here -->\n            <div class=\"col-md-12\" v-else=\"\">\n                <div class=\"row\">\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- Number Of Users Whose Rate -->\n                      <span class=\"label label-primary\">\n                          <i class=\"fa fa-user\"></i>\n                          0\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- The Service Rates -->\n                      <span class=\"label label-warning\" style=\"margin-right: 5px;\">\n                          <i class=\"fa fa-star\"></i>\n                          0\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n\n                      <span class=\"label label-success\" style=\"margin-right: 5px;\">\n                          <!--\n                              Percent =>\n                              [\n                              NOTE This Is The Service Score\n                              (total votes * 100)\n                              =============================================\n                              (number Of rated users * max rate value[ 5 ])\n                              NOTE this is the final score\n                              ]\n                              0/0 => NaN\n                          -->\n                          % 0\n                    </span>\n                  </div>\n                </div>\n            </div>\n            <!-- Rating run Here -->\n        </div>\n        <br>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <!-- buy Order -->\n                <buy_btn :service=\"service\"></buy_btn>\n                <!-- Favorite -->\n                <fav_btn :service=\"service\"></fav_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"thumbnail\">\n    <a v-link=\"{name: '/ServicesDetails', params: { serviceId: service.id, serviceName: service.name }}\">\n        <h4 class=\"text-center\">{{ service.name }}</h4>\n    </a>\n\n    <img v-bind:src=\"service.image\" class=\"img-responsive\">\n    <div class=\"caption\">\n        <div class=\"row\">\n            <div class=\"col-md-6 col-xs-6\">\n                <a v-link=\"{name: '/User', params: {userId: service.user.id, userName: service.user.name}}\">\n                    <h4>{{ service.user.name }}</h4>\n                </a>\n\n            </div>\n            <div class=\"col-md-6 col-xs-6 price text-right\" style=\"margin-top: -10px;\">\n                <h3>\n                    <label class=\"badge\">${{ service.price }}</label>\n                </h3>\n            </div>\n        </div>\n        <div class=\"product-rating\">\n            <!-- Rating run Here -->\n            <div class=\"col-md-12\" v-if=\"service.votes_count > 0\">\n                <div class=\"row\">\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- Number Of Users Whose Rate -->\n                      <span class=\"label label-primary\">\n                          <i class=\"fa fa-user\"></i>\n                          {{ service.votes_count }}\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- The Service Rates -->\n                      <span class=\"label label-warning\">\n                          <i class=\"fa fa-star\"></i>\n                          {{ parseInt(service.votes_sum) }}\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n\n                      <span class=\"label label-info\">\n                          <!--\n                              Percent =>\n                              [\n                              NOTE This Is The Service Score\n                              (total votes * 100)\n                              =============================================\n                              (number Of rated users * max rate value[ 5 ])\n                              NOTE this is the final score\n                              ]\n                              0/0 => NaN\n                          -->\n                          % {{ parseInt((service.votes_sum * 100) / (service.votes_count * 5)) }}\n                    </span>\n                  </div>\n                </div>\n            </div>\n            <!-- Rating run Here -->\n            <!-- Rating run Here -->\n            <div class=\"col-md-12\" v-else=\"\">\n                <div class=\"row\">\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- Number Of Users Whose Rate -->\n                      <span class=\"label label-primary\">\n                          <i class=\"fa fa-user\"></i>\n                          0\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n                      <!-- The Service Rates -->\n                      <span class=\"label label-warning\" style=\"margin-right: 5px;\">\n                          <i class=\"fa fa-star\"></i>\n                          0\n                      </span>\n                  </div>\n                  <div class=\"col-md-4 col-sm-12 col-xs-12\">\n\n                      <span class=\"label label-success\" style=\"margin-right: 5px;\">\n                          <!--\n                              Percent =>\n                              [\n                              NOTE This Is The Service Score\n                              (total votes * 100)\n                              =============================================\n                              (number Of rated users * max rate value[ 5 ])\n                              NOTE this is the final score\n                              ]\n                              0/0 => NaN\n                          -->\n                          % 0\n                    </span>\n                  </div>\n                </div>\n            </div>\n            <!-- Rating run Here -->\n        </div>\n        <br>\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <!-- buy Order -->\n                <buy_btn :service=\"service\"></buy_btn>\n                <!-- Favorite -->\n                <fav_btn :service=\"service\"></fav_btn>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26074,7 +26407,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8b8cf582", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"vue":9,"vue-hot-reload-api":3}],41:[function(require,module,exports){
+},{"../btns/buy.vue":30,"../btns/fav.vue":31,"../btns/rating.vue":32,"vue":28,"vue-hot-reload-api":22}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26101,7 +26434,8 @@ exports.default = {
             services: [],
             sortKey: '',
             reverse: 1,
-            serviceName: ''
+            serviceName: '',
+            moreServices: true
         };
     },
     ready: function ready() {
@@ -26109,12 +26443,31 @@ exports.default = {
         this.getUserServices();
     },
     methods: {
-        getUserServices: function getUserServices() {
-            this.$http.get('/getUserServices/' + this.$route.params.userId).then(function (res) {
-                this.services = res.body['services'];
-                this.user = res.body['user'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        getUserServices: function getUserServices(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            var url = '/getUserServices/' + this.$route.params.userId + sendLen;
+            this.$http.get(url).then(function (res) {
+                if (length !== undefined) {
+                    if (res.body['services'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['services'] return as array
+                        this.services = this.services.concat(res.body['services']);
+                    } else {
+                        this.moreServices = false;
+                        alertify.error('No More Services Found');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+                    this.services = res.body['services'];
+                    this.user = res.body['user'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
 
                 alertify.error('There are Some Erros Try Again later');
@@ -26123,6 +26476,11 @@ exports.default = {
         sort: function sort(_sort) {
             this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
             this.sortKey = _sort;
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.services.length;
+            this.getUserServices(length);
         }
     },
     route: {
@@ -26130,7 +26488,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n        <span v-if=\"services.length > 0\">\n            <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                <single_services :service=\"service\"></single_services>\n            </div>\n        </span>\n        <span v-else>\n            <div class=\"alert alert-warning\">\n                {{ user.name }} Don't have Any Servicess Currently\n            </div>\n        </span>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n        <span v-if=\"services.length > 0\">\n            <div class=\"col-sm-3 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                <single_services :service=\"service\"></single_services>\n            </div>\n            <div v-if=\"services.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n        </span>\n        <span v-else>\n            <div class=\"alert alert-warning\">\n                {{ user.name }} Don't have Any Servicess Currently\n            </div>\n        </span>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26141,6 +26499,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-19cb8482", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":40,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
+},{"./SingleServices.vue":59,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}]},{},[29]);
 
 //# sourceMappingURL=app.js.map

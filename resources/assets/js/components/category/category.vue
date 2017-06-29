@@ -2,16 +2,16 @@
     <span v-if="isLoading">
         <div class="col-md-12">
             <h2 class="text-center">
-                <i class="fa fa-folder-open"></i> {{ cat.name }} Section
+                <i class="fa fa-folder-open"></i> {{ singleCat.name }} Section
                 <br>
-                <small><strong> {{ cat.description }} </strong></small>
+                <small><strong> {{ singleCat.description }} </strong></small>
                 <br>
                 <small><strong> <i class="fa fa-cart-plus"></i> {{ services.length }} service/s</strong></small>
             </h2>
             <hr>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-
+            <side_bar :category="cat" :section1="section1" :section2="section2" :section3="section3"></side_bar>
         </div>
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <div class="row">
@@ -43,6 +43,7 @@
                     </div>
                     <div v-if="services.length >= 6">
                         <div class="col-lg-12 btn btn-info" v-if="moreServices" @click="showMore()">Show More</div>
+                        <div class="col-lg-12 alert alert-danger text-center" v-if="!moreServices">NO More Services In This Category</div>
                         <div class="clearfix"></div>
                         <br>
                     </div>
@@ -60,12 +61,14 @@
 
 <script>
     import SingleServices from '../users/SingleServices.vue';
+    import SideBar from '../pages/sidebar.vue';
     var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 
     export default {
         components: {
             single_services: SingleServices,
-            spinner: Spinner
+            spinner: Spinner,
+            side_bar: SideBar
         },
         data: function () {
             return {
@@ -75,6 +78,11 @@
                 sortKey: '',
                 reverse: 1,
                 serviceName: '',
+                cat: [],
+                singleCat: [],
+                section1: [],
+                section2: [],
+                section3: [],
                 moreServices: true
             }
         },
@@ -99,13 +107,17 @@
                             this.services = this.services.concat(res.body['services']);
                         } else {
                             this.moreServices = false;
-                            alertify.success('No More Services Found In This Category');
+                            alertify.error('No More Services Found In This Category');
                         }
                         this.$refs.spinner.hide();
                         this.isLoading = true;
                     } else {
                         this.services = res.body['services'];
+                        this.singleCat = res.body['singleCat'];
                         this.cat = res.body['cat'];
+                        this.section1 = res.body['sidebarSection1'];
+                        this.section2 = res.body['sidebarSection2'];
+                        this.section3 = res.body['sidebarSection3'];
                         this.$refs.spinner.hide();
                         this.isLoading = true;
                     }

@@ -130,20 +130,39 @@ class OrdersController extends Controller
         //
     }
 
-    public function getMyPurchaseOrders()
+    public function getMyPurchaseOrders($length = null)
     {
+        if ($length === null) {
+            $skipLengthOfServices = 0;
+        } else {
+            $skipLengthOfServices = $length;
+        }
         $user = Auth::user();
         $orders = Order::where('user_order', $user->id)
-            ->with('services', 'getUserAddService')->orderBy('id', 'DESC')->get();
+            ->with('services', 'getUserAddService')
+            ->skip($skipLengthOfServices)
+            ->take(env('LIMIT_SERVICES'))
+            ->orderBy('id', 'DESC')
+            ->get();
 
         return Response::json(['user' => $user, 'orders' => $orders], 200);
     }
 
-    public function getMyIncomingOrders()
+    public function getMyIncomingOrders($length = null)
     {
+        if ($length === null) {
+            $skipLengthOfServices = 0;
+        } else {
+            $skipLengthOfServices = $length;
+        }
+
         $user = Auth::user();
         $orders = Order::where('user_id', $user->id)
-            ->with('services', 'getMyOrders')->orderBy('id', 'DESC')->get();
+            ->with('services', 'getMyOrders')
+            ->skip($skipLengthOfServices)
+            ->take(env('LIMIT_SERVICES'))
+            ->orderBy('id', 'DESC')
+            ->get();
 
         return Response::json(['user' => $user, 'orders' => $orders], 200);
     }
@@ -168,7 +187,7 @@ class OrdersController extends Controller
 
             if ($user_id->id != $order_user->id) {
                 if ($authUser->id == $user_id->id) {
-                    if ($order->status == 0) {                        
+                    if ($order->status == 0) {
                         $order->status = 1;
                         $order->update();
                     }

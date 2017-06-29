@@ -46,6 +46,12 @@
             <div v-for="order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_user_add_service.name'" track-by="$index">
                 <purchase_orders :order="order" :user_to_show="order.get_user_add_service"></purchase_orders>
             </div>
+            <div v-if="orders.length >= 6">
+                <div class="col-lg-12 btn btn-info" v-if="moreOrders" @click="showMore()">Show More</div>
+                <div class="col-lg-12 alert alert-danger text-center" v-if="!moreOrders">NO More Purchase Orders</div>
+                <div class="clearfix"></div>
+                <br>
+            </div>
 
         </div>
         <div v-else>
@@ -73,7 +79,8 @@
                 orders: [],
                 user: '',
                 filterData: '',
-                serviceName: ''
+                serviceName: '',
+                moreOrders: true
             }
         },
         ready: function () {
@@ -81,18 +88,42 @@
             this.getMyPurchaseOrders();
         },
         methods: {
-            getMyPurchaseOrders: function () {
-                this.$http.get('purchaseOrders').then(function (res) {
-                    this.orders = res.body['orders'];
-                    this.user = res.body['user'];
-                    this.$refs.spinner.hide();
-                    this.isLoading = true;
+            getMyPurchaseOrders: function (length) {
+                if (length !== undefined) {
+                    var sendLen = '/' + length;
+                } else {
+                    sendLen = '';
+                }
+                this.$http.get('purchaseOrders' + sendLen).then(function (res) {
+                    if (length !== undefined) {
+                        if (res.body['orders'].length > 0) {
+                            // use push if the result to add object in the array
+                            // use concat because res.body['orders'] return as array
+                            this.orders = this.orders.concat(res.body['orders']);
+                        } else {
+                            this.moreOrders = false;
+                            alertify.error('No More Services Found In This Category');
+                        }
+                        this.$refs.spinner.hide();
+                        this.isLoading = true;
+                    } else {
+
+                        this.orders = res.body['orders'];
+                        this.user = res.body['user'];
+                        this.$refs.spinner.hide();
+                        this.isLoading = true;
+                    }
                 }, function (res) {
                     swal('Error', 'Something Wrong Happend Contact With the Adminstratore Please', 'error');
                 });
             },
             filter: function (status) {
                 this.filterData = status;
+            },
+            showMore: function () {
+                this.$refs.spinner.show();
+                var length = this.orders.length;
+                this.getMyPurchaseOrders(length);
             }
         }
     }

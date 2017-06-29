@@ -30,8 +30,14 @@
         <hr>
         <div class="row">
             <span v-if="services.length > 0">
-                <div class="col-sm-4 col-md-4" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
+                <div class="col-sm-3 col-md-3" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
                     <single_services :service="service"></single_services>
+                </div>
+                <div v-if="services.length >= 6">
+                    <div class="col-lg-12 btn btn-info" v-if="moreServices" @click="showMore()">Show More</div>
+                    <div class="col-lg-12 alert alert-danger text-center" v-if="!moreServices">NO More Services</div>
+                    <div class="clearfix"></div>
+                    <br>
                 </div>
             </span>
             <span v-else>
@@ -60,7 +66,8 @@
                 services: [],
                 sortKey: '',
                 reverse: 1,
-                serviceName: ''
+                serviceName: '',
+                moreServices: true
             }
         },
         ready: function () {
@@ -68,12 +75,32 @@
             this.getUserServices();
         },
         methods: {
-            getUserServices: function () {
-                this.$http.get('/getUserServices/' + this.$route.params.userId).then(function (res) {
-                    this.services = res.body['services'];
-                    this.user = res.body['user'];
-                    this.$refs.spinner.hide();
-                    this.isLoading = true;
+            getUserServices: function (length) {
+                if (length !== undefined) {
+                    var sendLen = '/' + length;
+                } else {
+                    sendLen = '';
+                }
+                var url = '/getUserServices/' + this.$route.params.userId + sendLen;
+                this.$http.get(url).then(function (res) {
+                    if (length !== undefined) {
+                        if (res.body['services'].length > 0) {
+                            // use push if the result to add object in the array
+                            // use concat because res.body['services'] return as array
+                            this.services = this.services.concat(res.body['services']);
+                        } else {
+                            this.moreServices = false;
+                            alertify.error('No More Services Found');
+                        }
+                        this.$refs.spinner.hide();
+                        this.isLoading = true;
+                    } else {
+                        this.services = res.body['services'];
+                        this.user = res.body['user'];
+                        this.$refs.spinner.hide();
+                        this.isLoading = true;
+                    }
+
 
                 }, function (res) {
 
@@ -83,6 +110,11 @@
             sort: function(sort) {
                 this.reverse = (this.sortKey == sort) ? this.reverse * -1 : 1;
                 this.sortKey = sort;
+            },
+            showMore: function () {
+                this.$refs.spinner.show();
+                var length = this.services.length;
+                this.getUserServices(length);
             }
         },
         route: {

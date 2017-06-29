@@ -21,13 +21,14 @@ Route::get('/home', 'HomeController@index');
 
 // Services
 Route::resource('/Services', 'ServicesController');
-Route::get('/getAllServices', 'ServicesController@getAllServices');
-Route::get('/getUserServices/{userId}', 'ServicesController@getUserServices');
+Route::get('/getMyServices/{length?}', 'ServicesController@getMyServices');
+Route::get('/getAllServices/{length?}', 'ServicesController@getAllServices');
+Route::get('/getUserServices/{userId}/{length?}', 'ServicesController@getUserServices');
 
 // Orders
 Route::resource('/Orders', 'OrdersController');
-Route::get('/purchaseOrders', 'OrdersController@getMyPurchaseOrders');
-Route::get('/incomingOrders', 'OrdersController@getMyIncomingOrders');
+Route::get('/purchaseOrders/{length?}', 'OrdersController@getMyPurchaseOrders');
+Route::get('/incomingOrders/{length?}', 'OrdersController@getMyIncomingOrders');
 Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
 Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
 // Comments

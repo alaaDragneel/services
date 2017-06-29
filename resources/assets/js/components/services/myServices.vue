@@ -34,6 +34,12 @@
             <div class="col-sm-4 col-md-3" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
                 <single_services :service="service"></single_services>
             </div>
+            <div v-if="services.length >= 6">
+                <div class="col-lg-12 btn btn-info" v-if="moreServices" @click="showMore()">Show More</div>
+                <div class="col-lg-12 alert alert-danger text-center" v-if="!moreServices">NO More Services</div>
+                <div class="clearfix"></div>
+                <br>
+            </div>
         </span>
         <span v-else>
             <div class="alert alert-warning">
@@ -65,7 +71,8 @@ export default {
             user: '',
             sortKey: '',
             reverse: 1,
-            isLoading: false
+            isLoading: false,
+            moreServices: true
         }
     },
     ready: function () {
@@ -73,12 +80,31 @@ export default {
         this.getMyServices();
     },
     methods: {
-        getMyServices: function () {
-            this.$http.get('Services').then(function (res) {
-                this.services = res.body['services'];
-                this.user = res.body['user'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        getMyServices: function (length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            this.$http.get('/getMyServices' + sendLen).then(function (res) {
+
+                if (length !== undefined) {
+                    if (res.body['services'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['services'] return as array
+                        this.services = this.services.concat(res.body['services']);
+                    } else {
+                        this.moreServices = false;
+                        alertify.error('No More Services Found In This Category');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+                    this.services = res.body['services'];
+                    this.user = res.body['user'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
                 alertify.error('There are Some Erros Try Again later');
             });
@@ -86,6 +112,11 @@ export default {
         sort: function(sort) {
             this.reverse = (this.sortKey == sort) ? this.reverse * -1 : 1;
             this.sortKey = sort;
+        },
+        showMore: function () {
+            this.$refs.spinner.show();
+            var length = this.services.length;
+            this.getMyServices(length);
         }
     },
 
