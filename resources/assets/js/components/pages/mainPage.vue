@@ -4,7 +4,7 @@
             <div class="row">
 
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                    <main_side_bar :category="cat" :section1="section1"></main_side_bar>
+                    <main_side_bar :category="cat" :section1="section1" :section2="section2"></main_side_bar>
                 </div>
 
                 <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
@@ -68,7 +68,8 @@
                 reverse: 1,
                 serviceName: '',
                 cat: [],
-                section1: []
+                section1: [],
+                section2: []
             }
         },
         ready: function () {
@@ -81,6 +82,7 @@
                     this.services = res.body['services'];
                     this.cat = res.body['cat'];
                     this.section1 = res.body['sidebarSection1'];
+                    this.section2 = res.body['sidebarSection2'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
 

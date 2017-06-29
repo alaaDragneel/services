@@ -24324,6 +24324,7 @@ var messageDetails = require('./components/messages/messageDetails.vue');
 var unReadMessages = require('./components/messages/newMessage.vue');
 var ReadMessages = require('./components/messages/oldMessage.vue');
 var favorite = require('./components/favorite/favorite.vue');
+var category = require('./components/category/category.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -24391,6 +24392,10 @@ route.map({
     },
     '/GetMyFavorites': {
         component: favorite
+    },
+    '/Category/:catId/:catName': {
+        name: '/Category',
+        component: category
     }
 });
 
@@ -24399,7 +24404,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/favorite/favorite.vue":18,"./components/messages/incomingMessage.vue":19,"./components/messages/messageDetails.vue":20,"./components/messages/newMessage.vue":23,"./components/messages/oldMessage.vue":24,"./components/messages/send.vue":25,"./components/messages/sendMessage.vue":26,"./components/orders/incomingOrders.vue":27,"./components/orders/purchaseOrders.vue":29,"./components/orders/singleOrder.vue":30,"./components/pages/mainPage.vue":32,"./components/services/addServices.vue":35,"./components/services/myServices.vue":36,"./components/services/service_details.vue":37,"./components/users/UserServices.vue":40,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],11:[function(require,module,exports){
+},{"./components/category/category.vue":15,"./components/favorite/favorite.vue":19,"./components/messages/incomingMessage.vue":20,"./components/messages/messageDetails.vue":21,"./components/messages/newMessage.vue":24,"./components/messages/oldMessage.vue":25,"./components/messages/send.vue":26,"./components/messages/sendMessage.vue":27,"./components/orders/incomingOrders.vue":28,"./components/orders/purchaseOrders.vue":30,"./components/orders/singleOrder.vue":31,"./components/pages/mainPage.vue":33,"./components/services/addServices.vue":36,"./components/services/myServices.vue":37,"./components/services/service_details.vue":38,"./components/users/UserServices.vue":41,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-validator":8}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24556,6 +24561,99 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _SingleServices = require('../users/SingleServices.vue');
+
+var _SingleServices2 = _interopRequireDefault(_SingleServices);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+
+exports.default = {
+    components: {
+        single_services: _SingleServices2.default,
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            services: [],
+            cat: [],
+            sortKey: '',
+            reverse: 1,
+            serviceName: '',
+            moreServices: true
+        };
+    },
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.getUserServices();
+    },
+    methods: {
+        getUserServices: function getUserServices(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+            var url = '/getServicesByCategoryId/' + this.$route.params.catId + sendLen;
+            this.$http.get(url).then(function (res) {
+
+                if (length !== undefined) {
+                    if (res.body['services'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['services'] return as array
+                        this.services = this.services.concat(res.body['services']);
+                    } else {
+                        this.moreServices = false;
+                        alertify.success('No More Services Found In This Category');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+                    this.services = res.body['services'];
+                    this.cat = res.body['cat'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
+            }, function (res) {
+
+                alertify.error('There are Some Erros Try Again later');
+            });
+        },
+        sort: function sort(_sort) {
+            this.reverse = this.sortKey == _sort ? this.reverse * -1 : 1;
+            this.sortKey = _sort;
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.services.length;
+            this.getUserServices(length);
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-md-12\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-folder-open\"></i> {{ cat.name }} Section\n            <br>\n            <small><strong> {{ cat.description }} </strong></small>\n            <br>\n            <small><strong> <i class=\"fa fa-cart-plus\"></i> {{ services.length }} service/s</strong></small>\n        </h2>\n        <hr>\n    </div>\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <div class=\"col-md-11\">\n                    <form class=\"form-horizontal\">\n                        <div class=\"form-group\">\n                            <label for=\"serviceName\"></label>\n                            <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                        </div>\n                    </form>\n                </div>\n            </div>\n            <div class=\"col-md-6 text-right \">\n                <div class=\"btn-group\">\n                    <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                    <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                    <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                    <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                </div>\n            </div>\n\n        </div>\n        <hr>\n        <div class=\"row\">\n            <span v-if=\"services.length > 0\">\n                <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                    <single_services :service=\"service\"></single_services>\n                </div>\n                <div v-if=\"services.length >= 6\">\n                    <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                    <div class=\"clearfix\"></div>\n                    <br>\n                </div>\n            </span>\n            <span v-else>\n                <div class=\"alert alert-warning\">\n                    {{ cat.name }} Category Doesn't have Any Services Currently\n                </div>\n            </span>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-67e66eed", module.exports)
+  } else {
+    hotAPI.update("_v-67e66eed", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../users/SingleServices.vue":40,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],16:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.default = {
     props: ['order'],
     data: function data() {
@@ -24606,7 +24704,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7833da12", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],16:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24675,7 +24773,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3f8e6e0c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../comments/addComment.vue":15,"vue":9,"vue-hot-reload-api":3}],17:[function(require,module,exports){
+},{"../comments/addComment.vue":16,"vue":9,"vue-hot-reload-api":3}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24731,7 +24829,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ed42d8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],18:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24795,7 +24893,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-18e8e0ad", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../messages/messageMenu.vue":21,"./favList.vue":17,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],19:[function(require,module,exports){
+},{"../messages/messageMenu.vue":22,"./favList.vue":18,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24859,7 +24957,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-04d37630", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],20:[function(require,module,exports){
+},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],21:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24921,7 +25019,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ccb68148", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],21:[function(require,module,exports){
+},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],22:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24968,7 +25066,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-83d91796", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],22:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25007,7 +25105,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4d51ec2a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],23:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],24:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25071,7 +25169,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-18ec5be8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],24:[function(require,module,exports){
+},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25135,7 +25233,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-239fe5fe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],25:[function(require,module,exports){
+},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],26:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25210,7 +25308,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-20dea369", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":21,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],26:[function(require,module,exports){
+},{"./messageMenu.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],27:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25274,7 +25372,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4ce49de4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":21,"./messagesList.vue":22,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],27:[function(require,module,exports){
+},{"./messageMenu.vue":22,"./messagesList.vue":23,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25334,7 +25432,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-453c5513", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],28:[function(require,module,exports){
+},{"./orderStructure.vue":29,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25365,7 +25463,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5ef4432d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":14,"vue":9,"vue-hot-reload-api":3}],29:[function(require,module,exports){
+},{"../btns/status.vue":14,"vue":9,"vue-hot-reload-api":3}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25425,7 +25523,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0b3967a4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":28,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],30:[function(require,module,exports){
+},{"./orderStructure.vue":29,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],31:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25525,7 +25623,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-10d5742e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":14,"../comments/allComments.vue":16,"./usersidebar.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],31:[function(require,module,exports){
+},{"../btns/status.vue":14,"../comments/allComments.vue":17,"./usersidebar.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],32:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25546,7 +25644,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-419ca80e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],32:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25580,7 +25678,8 @@ exports.default = {
             reverse: 1,
             serviceName: '',
             cat: [],
-            section1: []
+            section1: [],
+            section2: []
         };
     },
     ready: function ready() {
@@ -25593,6 +25692,7 @@ exports.default = {
                 this.services = res.body['services'];
                 this.cat = res.body['cat'];
                 this.section1 = res.body['sidebarSection1'];
+                this.section2 = res.body['sidebarSection2'];
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
@@ -25610,7 +25710,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <span v-if=\"isLoading\">\n        <div class=\"row\">\n\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <main_side_bar :category=\"cat\" :section1=\"section1\"></main_side_bar>\n            </div>\n\n            <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"col-md-11\">\n                            <form class=\"form-horizontal\">\n                                <div class=\"form-group\">\n                                    <label for=\"serviceName\"></label>\n                                    <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                                </div>\n                            </form>\n                        </div>\n                    </div>\n                    <div class=\"col-md-6 text-right \">\n                        <div class=\"btn-group\">\n                            <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                            <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                            <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                            <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                        </div>\n                    </div>\n\n                </div>\n                <hr>\n                <div class=\"row\">\n                    <span v-if=\"services.length > 0\">\n                        <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                            <single_services :service=\"service\"></single_services>\n                        </div>\n                    </span>\n                    <span v-else>\n                        <div class=\"alert alert-danger\">\n                            No Services Till Now in Our Site\n                        </div>\n                    </span>\n                </div>\n            </div>\n        </div>\n    </span>\n    <spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <span v-if=\"isLoading\">\n        <div class=\"row\">\n\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <main_side_bar :category=\"cat\" :section1=\"section1\" :section2=\"section2\"></main_side_bar>\n            </div>\n\n            <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n                <div class=\"row\">\n                    <div class=\"col-md-6\">\n                        <div class=\"col-md-11\">\n                            <form class=\"form-horizontal\">\n                                <div class=\"form-group\">\n                                    <label for=\"serviceName\"></label>\n                                    <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                                </div>\n                            </form>\n                        </div>\n                    </div>\n                    <div class=\"col-md-6 text-right \">\n                        <div class=\"btn-group\">\n                            <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                            <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                            <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                            <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                        </div>\n                    </div>\n\n                </div>\n                <hr>\n                <div class=\"row\">\n                    <span v-if=\"services.length > 0\">\n                        <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                            <single_services :service=\"service\"></single_services>\n                        </div>\n                    </span>\n                    <span v-else>\n                        <div class=\"alert alert-danger\">\n                            No Services Till Now in Our Site\n                        </div>\n                    </span>\n                </div>\n            </div>\n        </div>\n    </span>\n    <spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25621,17 +25721,17 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-49bdc3c5", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../users/SingleServices.vue":39,"./sidebar.vue":33,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],33:[function(require,module,exports){
+},{"../users/SingleServices.vue":40,"./sidebar.vue":34,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['category', 'section1']
+    props: ['category', 'section1', 'section2']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <div class=\"row profile\">\n        <div class=\"profile-sidebar\">\n            <!-- SIDEBAR MENU -->\n            <div class=\"profile-usermenu\">\n                <ul class=\"nav\">\n                    <li class=\"active\">\n                        <a href=\"#\">\n                            <i class=\"fa fa-folder\"></i>\n                            Categories\n                        </a>\n                    </li>\n                    <li v-for=\"cat in category\">\n                        <a v-link=\"\">\n                            {{ cat.name }}\n                        </a>\n                    </li>\n                    <li class=\"active\">\n                        <a href=\"#\">\n                            <i class=\"fa fa-eye-slash\"></i>\n                            Most Viewd\n                        </a>\n                    </li>\n                    <li v-for=\"view in section1\" track-by=\"$index\">\n                        <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                            <span class=\"pull-left\">{{ view.name }}</span>\n                            <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                            <div class=\"clearfix\"></div>\n                        </a>\n                    </li>\n                </ul>\n            </div>\n            <!-- END MENU -->\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <ul v-if=\"section2\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-heart\"></i>\n                  Choosed For You\n              </h5>\n          </li>\n          <li v-for=\"choosed in section2\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: choosed.id, serviceName: choosed.name}}\">\n                  <span>{{ choosed.name }}</span>\n              </a>\n          </li>\n    </ul>\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-folder\"></i>\n                  Categories\n              </h5>\n          </li>\n          <li v-for=\"cat in category\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/Category', params:{catId: cat.id, catName: cat.name}}\">\n                  {{ cat.name }}\n              </a>\n          </li>\n    </ul>\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-eye-slash\"></i>\n                  Most Viewd\n              </h5>\n          </li>\n          <li v-for=\"view in section1\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                  <span class=\"pull-left\">{{ view.name }}</span>\n                  <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                  <div class=\"clearfix\"></div>\n              </a>\n          </li>\n    </ul>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25642,7 +25742,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0832f3e2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],34:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25668,7 +25768,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4afe4e35", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],35:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25733,7 +25833,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5b3e0e40", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],36:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25796,7 +25896,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0db2ce0e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":34,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],37:[function(require,module,exports){
+},{"./SingleServices.vue":35,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25852,7 +25952,8 @@ exports.default = {
             ordersCount: 0,
             sumVotes: 0,
             mostVoted: [],
-            mostViewd: []
+            mostViewd: [],
+            section2: []
         };
     },
 
@@ -25870,6 +25971,7 @@ exports.default = {
                 this.sumVotes = res.body['sumVotes'];
                 this.mostVoted = res.body['mostVoted'];
                 this.mostViewd = res.body['mostViewd'];
+                this.section2 = res.body['sidebarSection2'];
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
@@ -25891,7 +25993,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\" :most_voted=\"mostVoted\" :most_viewd=\"mostViewd\"></sidebar>\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">\n                                <span class=\"pull-left\">{{ service.name }}</span>\n                                <span class=\"small pull-right\">\n                                    <strong>\n                                        <i class=\"fa fa-clock-o\"></i>\n                                         {{ service.created_at | moment \"calendar\" }}\n                                    </strong>\n                                </span>\n                            </h3>\n                            <div class=\"clearfix\"></div>\n                            <br>\n                            <div class=\"product-rating\">\n                                <!-- Rating run Here -->\n                                <span class=\"pull-left\">\n                                    <rating :service=\"service\"></rating>\n                                </span>\n                                <span v-if=\"service.votes_count > 0\">\n                                    <!-- Number Of Users Whose Rate -->\n                                    <span class=\"pull-right label label-danger\">\n                                        <i class=\"fa fa-user\"></i>\n                                        Number of voters\n                                        {{ service.votes_count }}\n                                    </span>\n                                    <!-- The Service Rates -->\n                                    <span class=\"pull-right label label-warning\" style=\"margin-right: 5px;\">\n                                        <i class=\"fa fa-star\"></i>\n                                        Number of stars\n                                        {{ sumVotes }}\n                                    </span>\n                                    <span class=\"pull-right label label-success\" style=\"margin-right: 5px;\">\n                                        <!--\n                                            Percent =>\n                                            [\n                                            NOTE This Is The Service Score\n                                            (total votes * 100)\n                                            =============================================\n                                            (number Of rated users * max rate value[ 5 ])\n                                            NOTE this is the final score\n                                            ]\n                                            0/0 => NaN\n                                        -->\n                                        % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}\n                                        percentage\n                                    </span>\n                                </span>\n                                <!-- Rating run Here -->\n                            </div>\n                            <div class=\"clearfix\"></div>\n                            <hr>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                  <!-- buy Order -->\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <!-- Favorite -->\n                                                  <fav_btn :service=\"service\"></fav_btn>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <sidebar :service=\"service\" :most_voted=\"mostVoted\" :most_viewd=\"mostViewd\" :section2=\"section2\"></sidebar>\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n\n        <div class=\"container-fluid\">\n            <div class=\"content-wrapper\">\n                <div class=\"item-container\">\n                    <div class=\"container\">\n                        <div class=\"col-md-12\">\n                            <h3 class=\"product-title\">\n                                <span class=\"pull-left\">{{ service.name }}</span>\n                                <span class=\"small pull-right\">\n                                    <strong>\n                                        <i class=\"fa fa-clock-o\"></i>\n                                         {{ service.created_at | moment \"calendar\" }}\n                                    </strong>\n                                </span>\n                            </h3>\n                            <div class=\"clearfix\"></div>\n                            <br>\n                            <div class=\"product-rating\">\n                                <!-- Rating run Here -->\n                                <span class=\"pull-left\">\n                                    <rating :service=\"service\"></rating>\n                                </span>\n                                <span v-if=\"service.votes_count > 0\">\n                                    <!-- Number Of Users Whose Rate -->\n                                    <span class=\"pull-right label label-danger\">\n                                        <i class=\"fa fa-user\"></i>\n                                        Number of voters\n                                        {{ service.votes_count }}\n                                    </span>\n                                    <!-- The Service Rates -->\n                                    <span class=\"pull-right label label-warning\" style=\"margin-right: 5px;\">\n                                        <i class=\"fa fa-star\"></i>\n                                        Number of stars\n                                        {{ sumVotes }}\n                                    </span>\n                                    <span class=\"pull-right label label-success\" style=\"margin-right: 5px;\">\n                                        <!--\n                                            Percent =>\n                                            [\n                                            NOTE This Is The Service Score\n                                            (total votes * 100)\n                                            =============================================\n                                            (number Of rated users * max rate value[ 5 ])\n                                            NOTE this is the final score\n                                            ]\n                                            0/0 => NaN\n                                        -->\n                                        % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}\n                                        percentage\n                                    </span>\n                                </span>\n                                <!-- Rating run Here -->\n                            </div>\n                            <div class=\"clearfix\"></div>\n                            <hr>\n                        </div>\n                        <div class=\"col-md-12\">\n                            <div class=\"text-center\">\n                                <div class=\"mdl-card__media\">\n                                    <div class=\"over\">\n                                        <div class=\"container\">\n                                            <div class=\"row\">\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                      <div class=\"label label-info\">Price: $ {{ service.price }}</div>\n                                                  </div>\n                                                  <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                      <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n\n                                                  </div>\n                                              </div>\n                                              <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                  <!-- buy Order -->\n                                                  <buy_btn :service=\"service\"></buy_btn>\n                                                  <!-- Favorite -->\n                                                  <fav_btn :service=\"service\"></fav_btn>\n                                              </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"service.image\" alt=\"{{service.name}}\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"container-fluid\">\n                    <div class=\"col-md-12 product-info\">\n                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n\n                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                            <li><a href=\"#service-two\" data-toggle=\"tab\">My Services In Same Category</a></li>\n                            <li><a href=\"#service-three\" data-toggle=\"tab\">Members Services In Same Category</a></li>\n\n                        </ul>\n                        <div id=\"myTabContent\" class=\"tab-content\">\n                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                <br>\n                                <p class=\"product-desc\">\n                                    {{ service.description }}\n                                </p>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-two\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"myOwnServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in myOwnServicesInSameCat\" track-by=\"$index\">\n                                            <my_own_services_in_same_cat :service=\"service\"></my_own_services_in_same_cat>\n                                        </div>\n                                    </div>\n\n                                </div>\n\n                            </div>\n                            <div class=\"tab-pane fade\" id=\"service-three\">\n                                <br>\n                                <div class=\"row\">\n                                    <div v-id=\"otherServicesInSameCat.length > 0\">\n                                        <div class=\"col-md-5 col-sm-4\" v-for=\"service in otherServicesInSameCat\" track-by=\"$index\">\n                                            <other_services_in_same_cat :service=\"service\"></other_services_in_same_cat>\n                                        </div>\n                                    </div>\n                                </div>\n\n                            </div>\n                        </div>\n                        <hr>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25902,17 +26004,17 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-163db30e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":39,"./SingleServices.vue":34,"./sidebar.vue":38,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],38:[function(require,module,exports){
+},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":40,"./SingleServices.vue":35,"./sidebar.vue":39,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],39:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['service', 'most_voted', 'most_viewd']
+    props: ['service', 'most_voted', 'most_viewd', 'section2']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <div class=\"row profile\">\n        <div class=\"profile-sidebar\">\n            <!-- SIDEBAR BUTTONS -->\n            <div class=\"profile-userbuttons\">\n                <a class=\"btn btn-info btn-sm\" v-link=\"{name: '/User', params:{ userId: service.user.id, userName: service.user.name}}\">\n                    <i class=\"fa fa-user\"></i> {{ service.user.name }}\n                </a>\n                <a class=\"btn btn-primary btn-sm\" v-link=\"{name: '/SendMessage', params: {userId: service.user.id}}\" class=\"btn btn-primary\">\n                    <i class=\"fa fa-send\"></i> Send Message\n                </a>\n            </div>\n            <!-- END SIDEBAR BUTTONS -->\n            <!-- SIDEBAR MENU -->\n            <div class=\"profile-usermenu\">\n                <ul class=\"nav\">\n                    <li class=\"active\">\n                        <a href=\"#\">\n                            <i class=\"fa fa-star-half-o\"></i>\n                            Most Rated\n                        </a>\n                    </li>\n                    <li v-for=\"vote in most_voted\">\n                        <a v-link=\"{name: '/ServicesDetails', params:{serviceId: vote.id, serviceName: vote.name}}\">\n                            <span class=\"pull-left\">{{ vote.name }}</span>\n                            <span class=\"label label-warning pull-right\"><i class=\"fa fa-star\"></i>{{ vote.vote_sum }}</span>\n                            <div class=\"clearfix\"></div>\n                        </a>\n                    </li>\n                    <li class=\"active\">\n                        <a href=\"#\">\n                            <i class=\"fa fa-eye-slash\"></i>\n                            Most Viewd\n                        </a>\n                    </li>\n                    <li v-for=\"view in most_viewd\">\n                        <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                            <span class=\"pull-left\">{{ view.name }}</span>\n                            <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                            <div class=\"clearfix\"></div>\n                        </a>\n                    </li>\n                </ul>\n            </div>\n            <!-- END MENU -->\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-user\"></i>\n                 View Or Contact The Provider\n              </h5>\n          </li>\n          <li class=\"list-group-item \">\n              <a class=\"btn btn-success btn-sm\" v-link=\"{name: '/User', params:{ userId: service.user.id, userName: service.user.name}}\">\n                  <i class=\"fa fa-user\"></i> {{ service.user.name }}\n              </a>\n          </li>\n          <li class=\"list-group-item \">\n              <a class=\"btn btn-danger btn-sm\" v-link=\"{name: '/SendMessage', params: {userId: service.user.id}}\" >\n                  <i class=\"fa fa-send\"></i> Send Message\n              </a>\n          </li>\n    </ul>\n    <!-- SIDEBAR MENU -->\n    <ul v-if=\"section2\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-heart\"></i>\n                  Choosed For You\n              </h5>\n          </li>\n          <li v-for=\"choosed in section2\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: choosed.id, serviceName: choosed.name}}\">\n                  <span>{{ choosed.name }}</span>\n              </a>\n          </li>\n    </ul>\n    <ul v-if=\"most_voted.length > 0\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-star-half-o\"></i>\n                  Most Rated\n              </h5>\n          </li>\n          <li v-for=\"vote in most_voted\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: vote.id, serviceName: vote.name}}\">\n                  <span class=\"pull-left\">{{ vote.name }}</span>\n                  <span class=\"label label-warning pull-right\"><i class=\"fa fa-star\"></i>{{ vote.vote_sum }}</span>\n                  <div class=\"clearfix\"></div>\n              </a>\n          </li>\n    </ul>\n    <ul v-if=\"most_voted.length > 0\" class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <i class=\"fa fa-eye-slash\"></i>\n                  Most Viewd\n              </h5>\n          </li>\n          <li v-for=\"view in most_viewd\" track-by=\"$index\" class=\"list-group-item \">\n              <a v-link=\"{name: '/ServicesDetails', params:{serviceId: view.id, serviceName: view.name}}\">\n                  <span class=\"pull-left\">{{ view.name }}</span>\n                  <span class=\"label label-success pull-right\"><i class=\"fa fa-eye\"></i>{{ view.view_count }}</span>\n                  <div class=\"clearfix\"></div>\n              </a>\n          </li>\n    </ul>\n    <!-- END MENU -->\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25923,7 +26025,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e099e1d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],39:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],40:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25972,7 +26074,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8b8cf582", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"vue":9,"vue-hot-reload-api":3}],40:[function(require,module,exports){
+},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"vue":9,"vue-hot-reload-api":3}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26039,6 +26141,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-19cb8482", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":39,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
+},{"./SingleServices.vue":40,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
 
 //# sourceMappingURL=app.js.map

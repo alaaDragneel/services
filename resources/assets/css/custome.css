@@ -15,6 +15,18 @@ textarea#description {
 /* Add Service Section */
 
 /* Customize */
+li.list-group-item:hover {
+    color: #555;
+    text-decoration: none;
+    background-color: #f5f5f5;
+    cursor: pointer;
+ }
+li.list-group-item a {
+    color: #333;
+    display: block;
+    text-decoration: none;
+ }
+
 .badge-success {
     background-color: #5cb85c;
 }

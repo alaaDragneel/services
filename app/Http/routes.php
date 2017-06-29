@@ -44,3 +44,5 @@ Route::get('/userFavorites', 'FavoriteController@userFavorites');
 Route::delete('/deleteFav/{fav_id}', 'FavoriteController@deleteFav');
 // Rating
 Route::post('/addNewVote', 'VoteController@addNewVote');
+// Category
+Route::get('/getServicesByCategoryId/{catId}/{length?}', 'CategoryController@getServicesByCategoryId');

@@ -188,6 +188,27 @@ class ServicesController extends Controller
             $myOwnServicesInSameCat = [];
             $otherServicesInSameCat = [];
         }
+
+        // append to User Orders Get the services from the same category
+
+        $guest = Auth::guest();
+        if (!$guest) {
+            $user = Auth::user();
+            $orderCat = Order::join('services', 'orders.service_id', '=', 'services.id')
+                ->where('user_order', $user->id)
+                ->lists('services.cat_id')->all();
+            $sidebarSection2 =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                ->select('services.id', 'services.name')
+                ->whereIn('services.cat_id', $orderCat)
+                ->where('services.status', 1)
+                ->inRandomOrder()
+                ->take(6)
+                ->get();
+        } else {
+            $sidebarSection2 = null;
+        }
+
         return Response::json([
             'service' => $service,
             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
@@ -196,6 +217,7 @@ class ServicesController extends Controller
             'sumVotes' => intval($sumVotes), // because it return the sum as string
             'mostVoted' => $mostVoted,
             'mostViewd' => $mostViewd,
+            'sidebarSection2' => $sidebarSection2,
         ], 200);
     }
 
@@ -282,11 +304,31 @@ class ServicesController extends Controller
                         ->get();
         }
 
+        // append to User Orders Get the services from the same category
+
+        $guest = Auth::guest();
+        if (!$guest) {
+          $user = Auth::user();
+            $orderCat = Order::join('services', 'orders.service_id', '=', 'services.id')
+                ->where('user_order', $user->id)
+                ->lists('services.cat_id')->all();
+            $sidebarSection2 =
+                Service::join('users', 'users.id', '=', 'services.user_id')
+                        ->select('services.id', 'services.name')
+                        ->whereIn('services.cat_id', $orderCat)
+                        ->where('services.status', 1)
+                        ->inRandomOrder()
+                        ->take(6)
+                        ->get();
+        } else {
+          $sidebarSection2 = null;
+        }
 
         $array = [
             'services' => $services,
             'cat' => $cat,
-            'sidebarSection1' => $sidebarSection1
+            'sidebarSection1' => $sidebarSection1,
+            'sidebarSection2' => $sidebarSection2
         ];
         return Response::json($array, 200);
     }

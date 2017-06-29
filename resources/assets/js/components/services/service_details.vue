@@ -1,7 +1,7 @@
 <template>
     <span v-if="isLoading">
         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" >
-            <sidebar :service="service" :most_voted="mostVoted" :most_viewd="mostViewd"></sidebar>
+            <sidebar :service="service" :most_voted="mostVoted" :most_viewd="mostViewd" :section2="section2"></sidebar>
         </div>
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 
@@ -174,6 +174,7 @@
                 sumVotes: 0,
                 mostVoted: [],
                 mostViewd: [],
+                section2: []
             }
         },
         ready: function () {
@@ -191,6 +192,7 @@
                     this.sumVotes = res.body['sumVotes'];
                     this.mostVoted = res.body['mostVoted'];
                     this.mostViewd = res.body['mostViewd'];
+                    this.section2 = res.body['sidebarSection2'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {

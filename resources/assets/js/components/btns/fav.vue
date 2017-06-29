@@ -3,7 +3,6 @@
         <i class="fa fa-heart"></i> Add to Favorites
     </button>
 </template>
-
 <script>
 export default {
     props: ['service'],

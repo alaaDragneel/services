@@ -848,12 +848,13 @@
   max-height: 100%;
   padding: 15px;
   margin-top: 10px;
+  color: #FFF;
 }
 .alertify-notifier .ajs-message.ajs-success {
   background: rgba(91, 189, 114, 0.95);
 }
 .alertify-notifier .ajs-message.ajs-error {
-  background: #dd4b39;
+  background: rgba(217, 92, 92, 0.95);
 }
 .alertify-notifier .ajs-message.ajs-warning {
   background: rgba(252, 248, 215, 0.95);

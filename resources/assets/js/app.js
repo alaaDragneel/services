@@ -34,6 +34,7 @@ var messageDetails = require('./components/messages/messageDetails.vue');
 var unReadMessages = require('./components/messages/newMessage.vue');
 var ReadMessages = require('./components/messages/oldMessage.vue');
 var favorite = require('./components/favorite/favorite.vue');
+var category = require('./components/category/category.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -102,6 +103,10 @@ route.map({
     },
     '/GetMyFavorites': {
         component: favorite
+    },
+    '/Category/:catId/:catName': {
+        name: '/Category',
+        component: category
     },
 });
 

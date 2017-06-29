@@ -1,7 +1,5 @@
 var elixir = require('laravel-elixir');
 
-require('laravel-elixir-vueify');
-
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management
@@ -13,25 +11,26 @@ require('laravel-elixir-vueify');
  |
  */
 
+require('laravel-elixir-vueify');
+
 elixir(function(mix) {
 
     mix.styles([
         'main/font-awesome.min.css',
         'main/bootstrap.min.css',
-        // 'main/fontawesome-stars.css',
         'sweetalert.css',
-        'default.css',
+        'alertify.core.css',
+        'alertify.default.css',
         'alertify.css',
         'custome.css'
     ], 'public/css/style.css');
 
-    mix.scripts([
-        'main/jquery-1.12.4.min.js',
-        'main/bootstrap.min.js',
-        // 'main/jquery.barrating.min.js',
-        'sweetalert.min.js',
-        'alertify.js'
-    ], 'public/js/main.js');
+    // mix.scripts([
+    //     'main/jquery-1.12.4.min.js',
+    //     'main/bootstrap.min.js',
+    //     'sweetalert.min.js',
+    //     'alertify.js'
+    // ], 'public/js/main.js');
 
     mix.browserify([
         'app.js'
