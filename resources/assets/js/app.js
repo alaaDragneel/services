@@ -35,6 +35,7 @@ var unReadMessages = require('./components/messages/newMessage.vue');
 var ReadMessages = require('./components/messages/oldMessage.vue');
 var favorite = require('./components/favorite/favorite.vue');
 var category = require('./components/category/category.vue');
+var addCredit = require('./components/credit/add.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -107,6 +108,9 @@ route.map({
     '/Category/:catId/:catName': {
         name: '/Category',
         component: category
+    },
+    '/AddCredit': {
+        component: addCredit
     },
 });
 
