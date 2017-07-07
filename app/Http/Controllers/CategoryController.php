@@ -103,14 +103,18 @@ class CategoryController extends Controller
                     if ($sidebarSection3->count() <= 0) {
                         $sidebarSection3 = null;
                     }
+                    $array = [
+                        'services' => $services,
+                        'cat' => $cat,
+                        'singleCat' => $singleCat,
+                        'sidebarSection1' => $sidebarSection1,
+                        'sidebarSection2' => $sidebarSection2,
+                        'sidebarSection3' => $sidebarSection3,
+                    ];
+                    return Response::json($array, 200);
             }
             $array = [
                 'services' => $services,
-                'cat' => $cat,
-                'singleCat' => $singleCat,
-                'sidebarSection1' => $sidebarSection1,
-                'sidebarSection2' => $sidebarSection2,
-                'sidebarSection3' => $sidebarSection3,
             ];
             return Response::json($array, 200);
 

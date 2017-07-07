@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::auth();
@@ -31,6 +31,7 @@ Route::get('/purchaseOrders/{length?}', 'OrdersController@getMyPurchaseOrders');
 Route::get('/incomingOrders/{length?}', 'OrdersController@getMyIncomingOrders');
 Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
 Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
+Route::get('/finishOrder/{order_id}', 'OrdersController@finishOrder');
 // Comments
 Route::resource('/Comments', 'CommentsController');
 // Message
@@ -49,3 +50,9 @@ Route::post('/addNewVote', 'VoteController@addNewVote');
 Route::get('/getServicesByCategoryId/{catId}/{length?}', 'CategoryController@getServicesByCategoryId');
 // users
 Route::get('/GetAuthUser', 'UsersController@GetAuthUser');
+Route::get('/GetAllChargeOperation', 'UsersController@GetAllChargeOperation');
+Route::get('/GetAllPaymentOperation', 'UsersController@GetAllPaymentOperation');
+Route::get('/GetAllProfitOperation', 'UsersController@GetAllProfitOperation');
+Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
+// Payment
+Route::post('/AddCredit', 'PayController@AddCredit');

@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <h2 class="page-header">
                     <span class="pull-left">Comments</span>
-                    <small class="pull-right"><strong><i class="fa fa-comments"></i> {{ comments.length }} comment/s</strong></small>
+                    <small class="pull-right text-primary"><strong><i class="fa fa-comments"></i> {{ comments.length }} comment/s</strong></small>
                     <div class="clearfix"></div>
                 </h2>
                 <div class="row">

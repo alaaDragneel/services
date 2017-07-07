@@ -1,11 +1,11 @@
 <template>
-    <h2 class="text-center">Add Services Section</h2>
+    <h2 class="text-center"><i class="fa fa-plus"></i> Add Services Section</h2>
     <hr>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Add Services</h3>
+                    <h3 class="panel-title"><i class="fa fa-plus"></i> Add Services</h3>
                 </div>
                 <div class="panel-body">
                     <form>

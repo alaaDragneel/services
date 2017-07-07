@@ -4,9 +4,9 @@
             <h2 class="text-center">
                 <i class="fa fa-folder-open"></i> {{ singleCat.name }} Section
                 <br>
-                <small><strong> {{ singleCat.description }} </strong></small>
+                <small class="text-danger"><strong> {{ singleCat.description }} </strong></small>
                 <br>
-                <small><strong> <i class="fa fa-cart-plus"></i> {{ services.length }} service/s</strong></small>
+                <small class="text-primary"><strong> <i class="fa fa-cart-plus"></i> {{ services.length }} service/s</strong></small>
             </h2>
             <hr>
         </div>

@@ -29,9 +29,6 @@
     	<div class="collapse navbar-collapse js-navbar-collapse">
     		<ul class="nav navbar-nav">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
-                </ul>
             	<li class="dropdown mega-dropdown">
     				<a href="#" class="dropdown-toggle catFolder" data-toggle="dropdown">
                         <i class="fa fa-folder"></i> Categories <span class="caret"></span>
@@ -50,9 +47,52 @@
                                 </ul>
                             </li>
                         @endforeach
-
     				</ul>
     			</li>
+                @if (Auth::check())
+                    {{-- Orders Section --}}
+                   <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           Orders <span class="caret"></span>
+                      </a>
+
+                      <ul class="dropdown-menu" role="menu">
+                           <li>
+                                <a v-link="{path: '/IncomingOrders'}">
+                                     <i class="fa fa-truck"></i>
+                                     Incoming Orders
+                                </a>
+                           </li>
+                           <li>
+                                <a v-link="{path: '/PurchaseOrders'}">
+                                     <i class="fa fa-cart-plus"></i>
+                                     Purchase Orders
+                                </a>
+                           </li>
+                      </ul>
+                   </li>
+                   {{-- Services Section --}}
+                   <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                           Services <span class="caret"></span>
+                      </a>
+
+                      <ul class="dropdown-menu" role="menu">
+                           <li>
+                                <a v-link="{path: '/AddServices'}">
+                                     <i class="fa fa-plus"></i>
+                                     Add Service
+                                </a>
+                           </li>
+                           <li>
+                                <a v-link="{path: '/MyServices'}">
+                                     <i class="fa fa-user"></i>
+                                     My Services
+                                </a>
+                           </li>
+                      </ul>
+                   </li>
+                @endif
     		</ul>
           <ul class="nav navbar-nav navbar-right">
               <!-- Authentication Links -->
@@ -60,69 +100,25 @@
                   <li><a href="{{ url('/login') }}">Login</a></li>
                   <li><a href="{{ url('/register') }}">Register</a></li>
               @else
-                   {{-- Orders Section --}}
+                  {{-- Credit Section --}}
                   <li class="dropdown">
                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                          Orders <span class="caret"></span>
+                          <i class="fa fa-money"></i> <span class="hidden-lg hidden-md">Payments</span> <span class="caret"></span>
                      </a>
 
                      <ul class="dropdown-menu" role="menu">
-                          <li>
-                               <a v-link="{path: '/IncomingOrders'}">
-                                    <i class="fa fa-truck"></i>
-                                    Incoming Orders
-                               </a>
-                          </li>
-                          <li>
-                               <a v-link="{path: '/PurchaseOrders'}">
-                                    <i class="fa fa-cart-plus"></i>
-                                    Purchase Orders
-                               </a>
-                          </li>
-                     </ul>
-                  </li>
-                  {{-- Services Section --}}
-                  <li class="dropdown">
-                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                          Services <span class="caret"></span>
-                     </a>
-
-                     <ul class="dropdown-menu" role="menu">
-                          <li>
-                               <a v-link="{path: '/AddServices'}">
-                                    <i class="fa fa-plus"></i>
-                                    Add Service
-                               </a>
-                          </li>
-                          <li>
-                               <a v-link="{path: '/MyServices'}">
-                                    <i class="fa fa-user"></i>
-                                    My Services
-                               </a>
-                          </li>
-                     </ul>
-                  </li>
-                  {{-- User Section --}}
-                  <li class="dropdown">
-                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                          {{ Auth::user()->name }} <span class="caret"></span>
-                     </a>
-
-                     <ul class="dropdown-menu" role="menu">
-                          <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-edit"></i> My Information</a></li>
-                          <li><a v-link="{path: '/AddCredit'}"><i class="fa fa-btn fa-plus"></i> Add credit</a></li>
-                          <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-money"></i> My account</a></li>
-                          <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
+                         <li><a v-link="{path: '/AddCredit'}"><i class="fa fa-btn fa-plus"></i> Add Credit</a></li>
+                         <li><a v-link="{path: '/AllCharge'}"><i class="fa fa-btn fa-gear fa-spin"></i> Charge</a></li>
+                         <li><a v-link="{path: '/AllPayment'}"><i class="fa fa-btn fa-minus-circle"></i> Payment</a></li>
+                         <li><a v-link="{path: '/AllProfit'}"><i class="fa fa-btn fa-briefcase"></i> Profit</a></li>
+                         <li><a v-link="{path: '/AllBalance'}"><i class="fa fa-btn fa-money"></i> Balance</a></li>
                      </ul>
                   </li>
                   {{-- Messages Section --}}
                   <li class="dropdown">
                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                           <i class="fa fa-envelope"></i> <span class="hidden-lg hidden-md">Messages</span> <span class="caret"></span>
-
-
                      </a>
-
                      <ul class="dropdown-menu" role="menu">
                           <li>
                                <a v-link="{path: '/GetMyRecivedMessages'}">
@@ -136,14 +132,85 @@
                                     Send Messages
                                </a>
                           </li>
+                          <li>
+                               <a v-link="{path: '/GetUnReadMessages'}">
+                                    <i class="fa fa-eye-slash"></i>
+                                    UnRead Messages
+                               </a>
+                          </li>
+                          <li>
+                               <a v-link="{path: '/GetReadMessages'}">
+                                    <i class="fa fa-eye"></i>
+                                    Read Messages
+                               </a>
+                          </li>
                      </ul>
                   </li>
+                  {{-- Favorite --}}
+                  <li class="dropdown">
+                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                          <i class="fa fa-bell"></i>
+                           <span class="hidden-lg hidden-md">Notification</span>
+                          @php $notification = getAllNotification(Auth::user()->id); @endphp
+                          @if ($notification > 0)
+                              <sup class="label label-primary" style="border-radius: 50%; padding: 3px 6px 4px;"><strong>{{ $notification }}</strong></sup>
+                          @endif
+                          <span class="caret"></span>
+                          <ul class="dropdown-menu" role="menu">
+                              @include('layouts.notifiaction')
+                               <li>
+                                    <a v-link="{path: '/Notification'}">
+                                         <i class="fa fa-bell"></i>
+                                        All Notification
+                                    </a>
+                               </li>
+                           </ul>
+                     </a>
+                  </li>
+
                   {{-- Favorite --}}
                   <li class="dropdown">
                      <a v-link="{path: '/GetMyFavorites'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                           <span class="fa fa-heart"></span>
                           <span class="hidden-lg hidden-md">Favorite</span>
+                          @php $favorite = getFavCounter(Auth::user()->id); @endphp
+                          @if ($favorite > 0)
+                              <sup class="label label-danger" style="border-radius: 50%; padding: 3px 6px 4px;"><strong>{{ $favorite }}</strong></sup>
+                          @endif
                      </a>
+                  </li>
+                  {{-- Purchase Orders --}}
+                  <li class="dropdown">
+                     <a v-link="{path: '/PurchaseOrders'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                          <i class="fa fa-cart-plus"></i>
+                          <span class="hidden-lg hidden-md">Purchase Orders</span>
+                          @php $purchaseOrders = getAllPurchesOrderCounter(Auth::user()->id); @endphp
+                          @if ($purchaseOrders > 0)
+                              <sup class="label label-warning" style="border-radius: 50%; padding: 3px 6px 4px;"><strong>{{ $purchaseOrders }}</strong></sup>
+                          @endif
+                     </a>
+                  </li>
+                  {{-- unReadMessages --}}
+                  <li class="dropdown">
+                     <a v-link="{path: '/GetUnReadMessages'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                          <i class="fa fa-eye-slash"></i>
+                          <span class="hidden-lg hidden-md">Unread Messages</span>
+                          @php $unreadMessages = getUnReadMessages(Auth::user()->id); @endphp
+                          @if ($unreadMessages > 0)
+                              <sup class="label label-success" style="border-radius: 50%; padding: 3px 6px 4px;"><strong>{{ $unreadMessages }}</strong></sup>
+                          @endif
+                     </a>
+                  </li>
+                  {{-- User Section --}}
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                          <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">{{ Auth::user()->name }}</span> <span class="caret"></span>
+                      </a>
+
+                      <ul class="dropdown-menu" role="menu">
+                          <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-edit"></i> My Information</a></li>
+                          <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
+                      </ul>
                   </li>
               @endif
           </ul>

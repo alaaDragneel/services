@@ -23,14 +23,24 @@
                                                     user_id => User Who Add the Service
                                                     -->
                                                     <span v-if="authUser.id == user_id.id">
-                                                        <!-- 2 => accept -->
-                                                        <button @click="changeStatus(2)" type="button" class="label btn btn-success">
-                                                            <i class="fa fa-check"></i> Accept
-                                                        </button>
-                                                        <!-- 3 => desline -->
-                                                        <button @click="changeStatus(3)" type="button" class="label btn btn-danger ">
-                                                            <i class="fa fa-close"></i> Decline
-                                                        </button>
+                                                        <span v-if="order.status == 1">
+                                                            <!-- 2 => accept -->
+                                                            <button @click="changeStatus(2)" type="button" class="label btn btn-success">
+                                                                <i class="fa fa-check"></i> Accept
+                                                            </button>
+                                                            <!-- 3 => desline -->
+                                                            <button @click="changeStatus(3)" type="button" class="label btn btn-danger ">
+                                                                <i class="fa fa-close"></i> Decline
+                                                            </button>
+                                                        </span>
+                                                    </span>
+                                                    <span v-if="authUser.id == user_order.id">
+                                                            <!-- 4 => accept -->
+                                                            <span v-if="order.status == 2">
+                                                                <button @click="finishOrder()" type="button" class="label btn btn-primary">
+                                                                    <i class="fa fa-check"></i> Finish
+                                                                </button>
+                                                            </span>
                                                     </span>
                                                 </strong>
                                             </span>
@@ -44,19 +54,45 @@
                                         </div>
                                         <hr>
                                         <div class="col-md-12">
-                                            <div class=" text-center">
-
-                                                <img class="img-responsive" id="item-display" v-bind:src="order.services.image" alt="{{order.services.name}}">
+                                            <div class="text-center">
+                                                <div class="mdl-card__media">
+                                                    <div class="over">
+                                                        <div class="container">
+                                                            <div class="row">
+                                                              <div class="col-md-12 col-sm-6 col-xs-6">
+                                                                  <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 7px;">
+                                                                      <div class="label label-info">Price: $ {{ order.services.price }}</div>
+                                                                  </div>
+                                                                  <div class="col-md-6 col-sm-6 col-xs-6">
+                                                                      <div class="product-stock">{{ ordersCount }} Order/s</div>
+                                                                  </div>
+                                                              </div>
+                                                              <div class="col-md-12 col-sm-6 col-xs-6" style="margin-top: 8px;">
+                                                                  <!-- buy Order -->
+                                                                  <!-- <buy_btn :service="service"></buy_btn> -->
+                                                                  <!-- Favorite -->
+                                                                  <!-- <fav_btn :service="service"></fav_btn> -->
+                                                              </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <img class="img-responsive" id="item-display" v-bind:src="order.services.image" alt="{{order.services.name}}">
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-md-12">
-                                            <p class="product-desc">
-                                                {{ order.services.description }}
-                                            </p>
-                                            <div class="product-price pull-left">$ {{ order.services.price }}</div>
-                                            <div class="product-stock pull-right">{{ ordersCount }} Order/s</div>
-                                            <div class="clearfix"></div>
+                                        <div class="col-md-12 product-info">
+                                            <ul id="myTab" class="nav nav-tabs nav_tabs">
+                                                <li class="active"><a href="#service-one" data-toggle="tab">Details</a></li>
+                                            </ul>
+                                            <div id="myTabContent" class="tab-content">
+                                                <div class="tab-pane fade in active" id="service-one">
+                                                    <br>
+                                                    <p class="product-desc">
+                                                        {{ order.services.description }}
+                                                    </p>
+                                                </div>
+                                            </div>
                                             <hr>
                                         </div>
                                     </div>
@@ -115,7 +151,7 @@
                     this.user_order = res.body['order_user'];
                     this.ordersCount = res.body['ordersCount'];
                     this.authUser = res.body['authUser'];
-                    if (this.order.status != 2 && this.order.status != 3) {
+                    if (this.order.status != 3 && this.order.status != 4) {
                         this.showControll = true;
                     }
                     if (this.order.status == 3) {
@@ -139,6 +175,20 @@
                     this.showControll = false;
                     this.$refs.spinner.hide();
                     alertify.success('Order Status Has been Changed Successfully');
+                }, function (res) {
+                    this.$refs.spinner.hide();
+                    alertify.error('There are Some Erros Try Again later');
+                });
+            },
+            finishOrder: function () {
+                this.$refs.spinner.show();
+                this.$http.get('finishOrder/' + this.$route.params.orderId).then(function (res) {
+
+                    this.$dispatch('DisabledAdCommentSection', 'true');
+
+                    this.showControll = false;
+                    this.$refs.spinner.hide();
+                    alertify.success('Order Status Has been Finished Successfully');
                 }, function (res) {
                     this.$refs.spinner.hide();
                     alertify.error('There are Some Erros Try Again later');

@@ -24503,6 +24503,26 @@ setTimeout(function () {
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"_process":21}],29:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],30:[function(require,module,exports){
 'use strict';
 
 var Vue = require('vue');
@@ -24542,6 +24562,11 @@ var ReadMessages = require('./components/messages/oldMessage.vue');
 var favorite = require('./components/favorite/favorite.vue');
 var category = require('./components/category/category.vue');
 var addCredit = require('./components/credit/add.vue');
+var ShowAllCharge = require('./components/credit/allCharge.vue');
+var ShowAllPayment = require('./components/credit/allPayment.vue');
+var ShowAllProfit = require('./components/credit/allProfit.vue');
+var ShowAllBalance = require('./components/credit/allBalance.vue');
+var ShowAllNotification = require('./components/notification/allNotifications.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -24616,6 +24641,21 @@ route.map({
     },
     '/AddCredit': {
         component: addCredit
+    },
+    '/AllCharge': {
+        component: ShowAllCharge
+    },
+    '/AllPayment': {
+        component: ShowAllPayment
+    },
+    '/AllProfit': {
+        component: ShowAllProfit
+    },
+    '/AllBalance': {
+        component: ShowAllBalance
+    },
+    '/Notification': {
+        component: ShowAllNotification
     }
 });
 
@@ -24624,7 +24664,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/category/category.vue":34,"./components/credit/add.vue":37,"./components/favorite/favorite.vue":39,"./components/messages/incomingMessage.vue":40,"./components/messages/messageDetails.vue":41,"./components/messages/newMessage.vue":44,"./components/messages/oldMessage.vue":45,"./components/messages/send.vue":46,"./components/messages/sendMessage.vue":47,"./components/orders/incomingOrders.vue":48,"./components/orders/purchaseOrders.vue":50,"./components/orders/singleOrder.vue":51,"./components/pages/mainPage.vue":53,"./components/services/addServices.vue":56,"./components/services/myServices.vue":57,"./components/services/service_details.vue":58,"./components/users/UserServices.vue":61,"vue":28,"vue-moment":23,"vue-resource":24,"vue-router":25,"vue-validator":27}],30:[function(require,module,exports){
+},{"./components/category/category.vue":35,"./components/credit/add.vue":38,"./components/credit/allBalance.vue":39,"./components/credit/allCharge.vue":40,"./components/credit/allPayment.vue":41,"./components/credit/allProfit.vue":42,"./components/favorite/favorite.vue":44,"./components/messages/incomingMessage.vue":45,"./components/messages/messageDetails.vue":46,"./components/messages/newMessage.vue":49,"./components/messages/oldMessage.vue":50,"./components/messages/send.vue":51,"./components/messages/sendMessage.vue":52,"./components/notification/allNotifications.vue":53,"./components/orders/incomingOrders.vue":54,"./components/orders/purchaseOrders.vue":56,"./components/orders/singleOrder.vue":57,"./components/pages/mainPage.vue":59,"./components/services/addServices.vue":62,"./components/services/myServices.vue":63,"./components/services/service_details.vue":64,"./components/users/UserServices.vue":67,"vue":28,"vue-moment":23,"vue-resource":24,"vue-router":25,"vue-validator":27}],31:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24643,24 +24683,33 @@ exports.default = {
     data: function data() {
         return {
             disabled: false,
-            done: false,
-            error: false
+            error: ''
         };
     },
     methods: {
         addOrder: function addOrder() {
             this.disabled = true;
             this.$http.get('Orders/' + this.service.id).then(function (res) {
-                this.done = true;
+                alertify.success('The Service Added Successfully Waiting The Approvment!');
             }, function (res) {
-                this.error = true;
+                this.error = "Something Goes Wrong You can't order this Service For The Next Resons!\
+                <p>\
+                    1 - This Service Added By You\
+                    <br>\
+                    2 - This Service You Order It Before\
+                    <br>\
+                    3 - This Service not Found\
+                    <br>\
+                    4 - You Have No Enough Money\
+                </p>";
+                alertify.error(this.error);
             });
             this.disabled = false;
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<success_message :show.sync=\"done\" placement=\"top-right\" duration=\"3000\" type=\"success\" width=\"400px\" dismissable>\n    <span class=\"icon-ok-circled alert-icon-float-left\"></span>\n    <strong>Success!</strong>\n    <p>\n        Waiting For Approved.\n        <a v-link=\"{path: '/PurchaseOrders'}\"> See It Here.</a>\n    </p>\n</success_message>\n\n<error_message :show.sync=\"error\" placement=\"top-right\" duration=\"3000\" type=\"danger\" width=\"400px\" dismissable>\n    <span class=\"icon-info-circled alert-icon-float-left\"></span>\n    <strong>Something Goes Wrong You can't order this Service For The Next Resons!</strong>\n    <p>\n        1 - This Service Added By You\n        <br>\n        2 - This Service You Order It Before\n        <br>\n        3 - This Service not Found\n    </p>\n</error_message>\n\n<a @click.prevent=\"addOrder()\" v-bind:disabled=\"disabled\" class=\"btn btn-success btn-sm\">\n    <i class=\"fa fa-shopping-cart\"></i> Buy\n</a>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a @click.prevent=\"addOrder()\" v-bind:disabled=\"disabled\" class=\"btn btn-success btn-sm\">\n    <i class=\"fa fa-shopping-cart\"></i> Buy\n</a>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24671,7 +24720,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-79b12258", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],31:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],32:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24710,7 +24759,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2afedc6d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],32:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24754,7 +24803,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36b0873b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],33:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24775,7 +24824,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6e5119e0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],34:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24871,7 +24920,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-md-12\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-folder-open\"></i> {{ singleCat.name }} Section\n            <br>\n            <small><strong> {{ singleCat.description }} </strong></small>\n            <br>\n            <small><strong> <i class=\"fa fa-cart-plus\"></i> {{ services.length }} service/s</strong></small>\n        </h2>\n        <hr>\n    </div>\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <side_bar :category=\"cat\" :section1=\"section1\" :section2=\"section2\" :section3=\"section3\"></side_bar>\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <div class=\"col-md-11\">\n                    <form class=\"form-horizontal\">\n                        <div class=\"form-group\">\n                            <label for=\"serviceName\"></label>\n                            <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                        </div>\n                    </form>\n                </div>\n            </div>\n            <div class=\"col-md-6 text-right \">\n                <div class=\"btn-group\">\n                    <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                    <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                    <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                    <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                </div>\n            </div>\n\n        </div>\n        <hr>\n        <div class=\"row\">\n            <span v-if=\"services.length > 0\">\n                <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                    <single_services :service=\"service\"></single_services>\n                </div>\n                <div v-if=\"services.length >= 6\">\n                    <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                    <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services In This Category</div>\n                    <div class=\"clearfix\"></div>\n                    <br>\n                </div>\n            </span>\n            <span v-else>\n                <div class=\"alert alert-warning\">\n                    {{ cat.name }} Category Doesn't have Any Services Currently\n                </div>\n            </span>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <div class=\"col-md-12\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-folder-open\"></i> {{ singleCat.name }} Section\n            <br>\n            <small class=\"text-danger\"><strong> {{ singleCat.description }} </strong></small>\n            <br>\n            <small class=\"text-primary\"><strong> <i class=\"fa fa-cart-plus\"></i> {{ services.length }} service/s</strong></small>\n        </h2>\n        <hr>\n    </div>\n    <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n        <side_bar :category=\"cat\" :section1=\"section1\" :section2=\"section2\" :section3=\"section3\"></side_bar>\n    </div>\n    <div class=\"col-lg-9 col-md-9 col-sm-12 col-xs-12\">\n        <div class=\"row\">\n            <div class=\"col-md-6\">\n                <div class=\"col-md-11\">\n                    <form class=\"form-horizontal\">\n                        <div class=\"form-group\">\n                            <label for=\"serviceName\"></label>\n                            <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                        </div>\n                    </form>\n                </div>\n            </div>\n            <div class=\"col-md-6 text-right \">\n                <div class=\"btn-group\">\n                    <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  Price</button>\n                    <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> Name</button>\n                    <button type=\"button\" class=\"btn btn-info\" @click=\"sort('votes_sum')\"><i class=\"fa fa-clock-o\"></i>  Most Rating</button>\n                    <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  Order</button>\n                </div>\n            </div>\n\n        </div>\n        <hr>\n        <div class=\"row\">\n            <span v-if=\"services.length > 0\">\n                <div class=\"col-sm-4 col-md-4\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                    <single_services :service=\"service\"></single_services>\n                </div>\n                <div v-if=\"services.length >= 6\">\n                    <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                    <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services In This Category</div>\n                    <div class=\"clearfix\"></div>\n                    <br>\n                </div>\n            </span>\n            <span v-else>\n                <div class=\"alert alert-warning\">\n                    {{ cat.name }} Category Doesn't have Any Services Currently\n                </div>\n            </span>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24882,7 +24931,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c0766cd6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../pages/sidebar.vue":54,"../users/SingleServices.vue":60,"babel-runtime/helpers/defineProperty":2,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],35:[function(require,module,exports){
+},{"../pages/sidebar.vue":60,"../users/SingleServices.vue":66,"babel-runtime/helpers/defineProperty":2,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24938,7 +24987,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7d98639f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],36:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24996,7 +25045,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"showCommentSection\">\n    <add_comment :order=\"order\"></add_comment>\n</span>\n\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <h2 class=\"page-header\">\n                <span class=\"pull-left\">Comments</span>\n                <small class=\"pull-right\"><strong><i class=\"fa fa-comments\"></i> {{ comments.length }} comment/s</strong></small>\n                <div class=\"clearfix\"></div>\n            </h2>\n            <div class=\"row\">\n                <div class=\"col-md-6\">\n                    <div class=\"col-md-11\">\n                        <form class=\"form-horizontal\">\n                            <div class=\"form-group\">\n                                <label for=\"serviceName\"></label>\n                                <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Member name\" v-model=\"userName\">\n                            </div>\n                        </form>\n                    </div>\n                </div>\n                <div class=\"col-md-6 text-right \">\n                    <div class=\"btn-group\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('id')\">\n                            <i class=\"fa fa-sort-numeric-desc\"></i>  By Order\n                        </button>\n                        <button type=\"button\" class=\"btn btn-success\" @click=\"sort('created_at')\">\n                            <i class=\"fa fa-calendar\"></i> By Date\n                        </button>\n\n                    </div>\n                </div>\n\n            </div>\n            <hr>\n            <div v-if=\"comments.length > 0\">\n                <section v-for=\"comment in comments | orderBy sortKey reverse | | filterBy userName in 'user.name'\" track-by=\"$index\" class=\"comment-list\">\n                    <article class=\"row\">\n                        <div class=\"col-md-2 col-sm-2 col-xs-2\">\n                            <figure>\n                                <img class=\"img-responsive img-circle\" src=\"http://www.keita-gaming.com/assets/profile/default-avatar-c5d8ec086224cb6fc4e395f4ba3018c2.jpg\" />\n                            </figure>\n                        </div>\n                        <div class=\"col-md-10 col-sm-10 col-xs-10\">\n                            <div class=\"panel panel-default arrow left\">\n                                <div class=\"panel-body\">\n                                    <header class=\"text-left\">\n                                        <div class=\"comment-user pull-left\">\n                                            <a v-link=\"{name: '/User', params: {userId: comment.user.id, userName: comment.user.name}}\">\n                                                <i class=\"fa fa-user\"></i>\n                                                {{ comment.user.name }}\n                                            </a>\n                                        </div>\n                                        <time class=\"comment-date pull-right\" datetime=\"{{ comment.created_at }}\">\n                                            <i class=\"fa fa-clock-o\"></i>\n                                            {{ comment.created_at | moment 'calendar' }}\n                                        </time>\n                                        <div class=\"clearfix\"></div>\n                                    </header>\n                                    <div class=\"comment-post\">\n                                        <p>\n                                            {{ comment.comment }}\n                                        </p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </article>\n                </section>\n            </div>\n            <div v-else>\n                <div class=\"alert alert-info text-center\">No Comments On This Service Yet!</div>\n            </div>\n        </div>\n    </div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"showCommentSection\">\n    <add_comment :order=\"order\"></add_comment>\n</span>\n\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <h2 class=\"page-header\">\n                <span class=\"pull-left\">Comments</span>\n                <small class=\"pull-right text-primary\"><strong><i class=\"fa fa-comments\"></i> {{ comments.length }} comment/s</strong></small>\n                <div class=\"clearfix\"></div>\n            </h2>\n            <div class=\"row\">\n                <div class=\"col-md-6\">\n                    <div class=\"col-md-11\">\n                        <form class=\"form-horizontal\">\n                            <div class=\"form-group\">\n                                <label for=\"serviceName\"></label>\n                                <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Member name\" v-model=\"userName\">\n                            </div>\n                        </form>\n                    </div>\n                </div>\n                <div class=\"col-md-6 text-right \">\n                    <div class=\"btn-group\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('id')\">\n                            <i class=\"fa fa-sort-numeric-desc\"></i>  By Order\n                        </button>\n                        <button type=\"button\" class=\"btn btn-success\" @click=\"sort('created_at')\">\n                            <i class=\"fa fa-calendar\"></i> By Date\n                        </button>\n\n                    </div>\n                </div>\n\n            </div>\n            <hr>\n            <div v-if=\"comments.length > 0\">\n                <section v-for=\"comment in comments | orderBy sortKey reverse | | filterBy userName in 'user.name'\" track-by=\"$index\" class=\"comment-list\">\n                    <article class=\"row\">\n                        <div class=\"col-md-2 col-sm-2 col-xs-2\">\n                            <figure>\n                                <img class=\"img-responsive img-circle\" src=\"http://www.keita-gaming.com/assets/profile/default-avatar-c5d8ec086224cb6fc4e395f4ba3018c2.jpg\" />\n                            </figure>\n                        </div>\n                        <div class=\"col-md-10 col-sm-10 col-xs-10\">\n                            <div class=\"panel panel-default arrow left\">\n                                <div class=\"panel-body\">\n                                    <header class=\"text-left\">\n                                        <div class=\"comment-user pull-left\">\n                                            <a v-link=\"{name: '/User', params: {userId: comment.user.id, userName: comment.user.name}}\">\n                                                <i class=\"fa fa-user\"></i>\n                                                {{ comment.user.name }}\n                                            </a>\n                                        </div>\n                                        <time class=\"comment-date pull-right\" datetime=\"{{ comment.created_at }}\">\n                                            <i class=\"fa fa-clock-o\"></i>\n                                            {{ comment.created_at | moment 'calendar' }}\n                                        </time>\n                                        <div class=\"clearfix\"></div>\n                                    </header>\n                                    <div class=\"comment-post\">\n                                        <p>\n                                            {{ comment.comment }}\n                                        </p>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </article>\n                </section>\n            </div>\n            <div v-else>\n                <div class=\"alert alert-info text-center\">No Comments On This Service Yet!</div>\n            </div>\n        </div>\n    </div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25007,7 +25056,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-87b39b38", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../comments/addComment.vue":35,"vue":28,"vue-hot-reload-api":22}],37:[function(require,module,exports){
+},{"../comments/addComment.vue":36,"vue":28,"vue-hot-reload-api":22}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25025,13 +25074,13 @@ exports.default = {
         return {
             isLoading: false,
             user: '',
-            email: '',
             price: '',
             err: false,
-            message: false,
+            message: '',
             disable: true
         };
     },
+
     ready: function ready() {
         this.$refs.spinner.show();
         this.GetAuthUser();
@@ -25040,14 +25089,27 @@ exports.default = {
         GetAuthUser: function GetAuthUser() {
             this.$http.get('/GetAuthUser').then(function (res) {
                 this.user = res.body;
-                this.email = this.user.email;
                 this.$refs.spinner.hide();
                 this.isLoading = true;
-            }, function (res) {});
+            }, function (res) {
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
         },
         AddCredit: function AddCredit() {
             this.$refs.spinner.show();
             this.disable = true;
+            var formData = new FormData();
+            formData.append('price', this.price);
+            this.$http.post('/AddCredit', formData).then(function (res) {
+                swal('Success', 'You Charges Successfully Now See It in The All Charges Operations', 'success');
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+                this.$router.go({
+                    path: '/AllCharge'
+                });
+            }, function (res) {
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
         }
     },
     route: {
@@ -25055,39 +25117,24 @@ exports.default = {
     },
     computed: {
         disable: function disable() {
-            if (this.email != '') {
-                if (this.email.length >= 6) {
-                    if (this.email.length <= 100) {
-                        this.err = false;
-                        this.message = '';
-                        return false;
-                    } else {
-                        this.message = 'This Field Must Not Be Greater Than 100 charecters';
-                        this.err = true;
-                        return true;
-                    }
-                    this.err = false;
-                    this.message = '';
-                    return false;
-                } else {
-                    this.message = 'This Field Must Be At Lest More Than 6 charecters';
-                    this.err = true;
-                    return true;
-                }
+            if (this.price == '') {
+                this.err = true;
+                this.message = 'The Price Value Must Not Be Empty Choose Your Mount';
+                return true;
+            } else if (this.price == 5 || this.price == 10 || this.price == 20 || this.price == 30 || this.price == 40 || this.price == 50 || this.price == 60 || this.price == 70 || this.price == 80 || this.price == 90 || this.price == 100) {
                 this.err = false;
                 this.message = '';
                 return false;
             } else {
-                this.message = 'This Field Is Required';
                 this.err = true;
+                this.message = 'Don\'t miss With The Price Value';
                 return true;
             }
         }
-
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-user\"></i> {{ user.name }} Add Credit Section\n            <br>\n            <small>\n\t            <strong>\n\t               Now You Add Credit To Member {{ user.name }} \n\t            </strong>\n            </small>\n        </h2>\n         <div class=\"row\">\n        <div class=\"col-md-10 col-md-offset-1\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <h3 class=\"panel-title\">Add Credit</h3>\n                </div>\n                <div class=\"panel-body\">\n                    <form>\n                        <div class=\"form-group\">\n                            <label for=\"email\">E-mail</label>\n                            <input type=\"email\" class=\"form-control\" id=\"email\" name=\"email\" v-model=\"email\" placeholder=\"Enter your email\">\n                            <p class=\"help-block alert alert-danger text-center\" v-if=\"err\">{{ message }}</p>\n                        </div>\n                         <div class=\"form-group\">\n                            <label for=\"price\">Credite</label>\n                            <select class=\"form-control\" id=\"price\" name=\"price\" v-model=\"price\">\n                                <option selected disabled>Choose Mount</option>\n                                <option value=\"5\">5</option>\n                                <option value=\"10\">10</option>\n                                <option value=\"20\">20</option>\n                                <option value=\"30\">30</option>\n                                <option value=\"40\">40</option>\n                                <option value=\"50\">50</option>\n                            </select>\n                        </div>\n\n                        <div class=\"form-group\">\n                            <button type=\"button\" class=\"btn btn-primary\" v-bind:disabled=\"disable\" @click=\"AddCredit\">\n                                <i class=\"fa fa-plus\"></i> Add Credit\n                            </button>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>\n                \n    </span>\n    <spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <h2 class=\"text-center\">\n            <i class=\"fa fa-plus\"></i> {{ user.name }} Add Credit Section\n            <br>\n            <small class=\"text-danger\">\n\t            <strong>\n\t               Now You Add Credit To Member {{ user.name }}\n\t            </strong>\n            </small>\n        </h2>\n         <div class=\"row\">\n        <div class=\"col-md-10 col-md-offset-1\">\n            <div class=\"panel panel-primary\">\n                <div class=\"panel-heading\">\n                    <h3 class=\"panel-title\"><i class=\"fa fa-plus\"></i> Add Credit</h3>\n                </div>\n                <div class=\"panel-body\">\n                    <form>\n                         <div class=\"form-group\">\n                            <label for=\"price\">Credite</label>\n                            <select class=\"form-control\" id=\"price\" name=\"price\" v-model=\"price\">\n                                <option value=\"\" selected disabled>Choose Mount</option>\n                                <option value=\"5\">5</option>\n                                <option value=\"10\">10</option>\n                                <option value=\"20\">20</option>\n                                <option value=\"30\">30</option>\n                                <option value=\"40\">40</option>\n                                <option value=\"50\">50</option>\n                                <option value=\"60\">60</option>\n                                <option value=\"70\">70</option>\n                                <option value=\"80\">80</option>\n                                <option value=\"90\">90</option>\n                                <option value=\"100\">100</option>\n                            </select>\n                            <p class=\"help-block alert alert-danger text-center\" v-if=\"err\">{{ message }}</p>\n                        </div>\n\n                        <div class=\"form-group\">\n                            <button type=\"button\" class=\"btn btn-primary\" v-bind:disabled=\"disable\" @click=\"AddCredit\">\n                                <i class=\"fa fa-plus\"></i> Add Credit\n                            </button>\n                        </div>\n\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>\n    </span>\n    <spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25098,7 +25145,237 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c90fe456", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],38:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],39:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+
+exports.default = {
+    components: {
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            user: '',
+            userCharge: 0,
+            userPays: 0,
+            userProfits: 0
+
+        };
+    },
+
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetAllBalance();
+    },
+    methods: {
+        GetAllBalance: function GetAllBalance() {
+            this.$http.get('/GetAllBalanceOperation').then(function (res) {
+                this.user = res.body['user'];
+                this.userCharge = res.body['userCharge'] == null ? 0 : res.body['userCharge'];
+                this.userPays = res.body['userPays'] == null ? 0 : res.body['userPays'];
+                this.userProfits = res.body['userProfits'] == null ? 0 : res.body['userProfits'];
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <i class=\"fa fa-money\"></i> {{ user.name }} Balances Section\n            </div>\n            <div class=\"col-md-12\">\n                <small class=\"text-danger\"><strong>Here All Balances Of Member {{ user.name }} Will Appear</strong></small>\n            </div>\n        </div>\n    </h2>\n     <div class=\"row\">\n         <div class=\"col-lg-3 col-xs-6\">\n             <!-- small box -->\n             <div class=\"small-box bg-blue\">\n                 <div class=\"inner\">\n                     <h3>${{ userCharge - userPays }}</h3>\n\n                     <p>Balance</p>\n                 </div>\n                 <div class=\"icon\">\n                     <i class=\"fa fa-money\"></i>\n                 </div>\n                 <a @click.prevent class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n             </div>\n         </div>\n         <!-- ./col -->\n         <div class=\"col-lg-3 col-xs-6\">\n             <!-- small box -->\n             <div class=\"small-box bg-red\">\n                 <div class=\"inner\">\n                     <h3>${{ userCharge }}</h3>\n\n                     <p>Charges</p>\n                 </div>\n                 <div class=\"icon\">\n                     <i class=\"fa fa-btn fa-gear fa-spin\"></i>\n                 </div>\n                 <a v-link=\"{path: '/AllCharge'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n             </div>\n         </div>\n         <!-- ./col -->\n         <div class=\"col-lg-3 col-xs-6\">\n             <!-- small box -->\n             <div class=\"small-box bg-yellow\">\n                 <div class=\"inner\">\n                     <h3>${{ userPays }}</h3>\n\n                     <p>Payments</p>\n                 </div>\n                 <div class=\"icon\">\n                     <i class=\"fa fa-minus-circle\"></i>\n                 </div>\n                 <a v-link=\"{path: '/AllPayment'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n             </div>\n         </div>\n         <!-- ./col -->\n         <div class=\"col-lg-3 col-xs-6\">\n             <!-- small box -->\n             <div class=\"small-box bg-green\">\n                 <div class=\"inner\">\n                     <h3>${{ userProfits }}</h3>\n\n                     <p>Profits</p>\n                 </div>\n                 <div class=\"icon\">\n                     <i class=\"fa fa-briefcase\"></i>\n                 </div>\n                 <a v-link=\"{path: '/AllProfit'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n             </div>\n         </div>\n         <!-- ./col -->\n     </div>\n </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-6f855f12", module.exports)
+  } else {
+    hotAPI.update("_v-6f855f12", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],40:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+
+exports.default = {
+    components: {
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            user: '',
+            pays: '',
+            sumPrice: 0
+
+        };
+    },
+
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetAllCharge();
+    },
+    methods: {
+        GetAllCharge: function GetAllCharge() {
+            this.$http.get('/GetAllChargeOperation').then(function (res) {
+                this.user = res.body['user'];
+                this.pays = res.body['pays'];
+                this.sumPrice = res.body['sumPrice'] == null ? 0 : res.body['sumPrice'];
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n                <i class=\"fa fa-btn fa-gear fa-spin\"></i> {{ user.name }} Charge Section\n            </div>\n            <div class=\"col-md-12\">\n                <small class=\"text-danger\"><strong>Here All Charge Of Member {{ user.name }} Will Appear</strong></small>\n            </div>\n            <div class=\"col-md-6 col-sm-12\">\n                <small class=\"text-primary\"><strong><i class=\"fa fa-gear fa-spin\"></i> {{ pays.length }} Charge/s</strong></small>\n            </div>\n            <div class=\"col-md-6 col-sm-12\">\n                <small class=\"text-success\"><strong><i class=\"fa fa-money\"></i> {{ sumPrice }} Total Charges </strong></small>\n            </div>\n        </div>\n    </h2>\n     <div class=\"row\">\n         <table class=\"table table-bordered table-hover table-responsive table-striped\">\n             <thead>\n                 <th>Charge Number</th>\n                 <th>Charge Method</th>\n                 <th>Charge State</th>\n                 <th>Charge Value</th>\n                 <th>Charge Date</th>\n             </thead>\n             <tbody v-if=\"pays.length > 0\">\n                <tr v-for=\"pay in pays\" track-by=\"$index\">\n                    <td>{{ pay.id }}</td>\n                    <td>{{ pay.payment_method }}</td>\n                    <td>{{ pay.state }}</td>\n                    <td>${{ pay.price }}</td>\n                    <td>{{ pay.created_at | moment \"calendar\" }}</td>\n                </tr>\n             </tbody>\n             <tbody v-else>\n                 <tr>\n                     <td colspan=\"6\"><div class=\"alert alert-danger text-center\">No Charge  Happend!</div></td>\n                 </tr>\n             </tbody>\n         </table>\n     </div>\n </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1ef19c2e", module.exports)
+  } else {
+    hotAPI.update("_v-1ef19c2e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],41:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+
+exports.default = {
+    components: {
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            user: '',
+            buys: '',
+            sumPrice: 0
+
+        };
+    },
+
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetAllPayment();
+    },
+    methods: {
+        GetAllPayment: function GetAllPayment() {
+            this.$http.get('/GetAllPaymentOperation').then(function (res) {
+                this.user = res.body['user'];
+                this.buys = res.body['buys'];
+                this.sumPrice = res.body['sumPrice'] == null ? 0 : res.body['sumPrice'];
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n\n                <i class=\"fa fa-minus-circle\"></i> {{ user.name }} Payment Section\n            </div>\n            <div class=\"col-md-12\">\n                <small class=\"text-danger\"><strong>Here All Payments Of Member {{ user.name }} Will Appear</strong></small>\n            </div>\n            <div class=\"col-md-6 col-sm-12\">\n                <small class=\"text-primary\"><strong><i class=\"fa fa-gear fa-spin\"></i> {{ buys.length }} Payment/s</strong></small>\n            </div>\n            <div class=\"col-md-6 col-sm-12\">\n                <small class=\"text-success\"><strong><i class=\"fa fa-money\"></i> {{ sumPrice }} Total Payments</strong></small>\n            </div>\n        </div>\n    </h2>\n     <div class=\"row\">\n         <table class=\"table table-bordered table-hover table-responsive table-striped\">\n             <thead>\n                 <th>Payment Number</th>\n                 <th>Payment Order</th>\n                 <th>Payment State</th>\n                 <th>payment Value</th>\n                 <th>Payment Date</th>\n             </thead>\n             <tbody v-if=\"buys.length > 0\">\n                <tr v-for=\"buy in buys\" track-by=\"$index\">\n                    <td>{{ buy.id }}</td>\n                    <td><a v-link=\"{name: '/Order', params:{orderId: buy.order_id}}\">Order Number #{{ buy.order_id }}</a></td>\n                    <td>\n                        <span class=\"label label-primary\" v-if=\"buy.finish == 0\">UnPayed Yet</span>\n                        <span class=\"label label-success\" v-if=\"buy.finish == 1\">Payed</span>\n                        <span class=\"label label-danger\" v-if=\"buy.finish == 2\">Rejected</span>\n                    </td>\n                    <td>${{ buy.buy_price }}</td>\n                    <td>{{ buy.created_at | moment \"calendar\" }}</td>\n                </tr>\n             </tbody>\n             <tbody v-else>\n                 <tr>\n                     <td colspan=\"6\"><div class=\"alert alert-danger text-center\">No Payment Operations Happend!</div></td>\n                 </tr>\n             </tbody>\n         </table>\n     </div>\n </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-eb7122be", module.exports)
+  } else {
+    hotAPI.update("_v-eb7122be", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],42:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+
+exports.default = {
+    components: {
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            user: '',
+            profits: '',
+            sumPrice: 0
+
+        };
+    },
+
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetAllProfit();
+    },
+    methods: {
+        GetAllProfit: function GetAllProfit() {
+            this.$http.get('/GetAllProfitOperation').then(function (res) {
+                this.user = res.body['user'];
+                this.profits = res.body['profits'];
+                this.sumPrice = res.body['sumPrice'] == null ? 0 : res.body['sumPrice'];
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <div class=\"row\">\n            <div class=\"col-md-12\">\n\n                <i class=\"fa fa-briefcase\"></i> {{ user.name }} Profits Section\n            </div>\n            <div class=\"col-md-12\">\n                <small class=\"text-danger\"><strong>Here All Profits Of Member {{ user.name }} Will Appear</strong></small>\n            </div>\n            <div class=\"col-md-6 col-sm-12\">\n                <small class=\"text-primary\"><strong><i class=\"fa fa-gear fa-spin\"></i> {{ profits.length }} Profit/s</strong></small>\n            </div>\n            <div class=\"col-md-6 col-sm-12\">\n                <small class=\"text-success\"><strong><i class=\"fa fa-money\"></i> {{ sumPrice }} Total Profit</strong></small>\n            </div>\n        </div>\n    </h2>\n     <div class=\"row\">\n         <table class=\"table table-bordered table-hover table-responsive table-striped\">\n             <thead>\n                 <th>Profit Number</th>\n                 <th>Profit Order</th>\n                 <th>Profit State</th>\n                 <th>Profit Value</th>\n                 <th>Profit Date</th>\n             </thead>\n             <tbody v-if=\"profits.length > 0\">\n                <tr v-for=\"profit in profits\" track-by=\"$index\">\n                    <td>{{ profit.id }}</td>\n                    <td><a v-link=\"{name: '/Order', params:{orderId: profit.order_id}}\">Order Number #{{ profit.order_id }}</a></td>\n                    <td>\n                        <span class=\"label label-success\">Payed</span>\n                    </td>\n                    <td>${{ profit.buy_price }}</td>\n                    <td>{{ profit.created_at | moment \"calendar\" }}</td>\n                </tr>\n             </tbody>\n             <tbody v-else>\n                 <tr>\n                     <td colspan=\"6\"><div class=\"alert alert-danger text-center\">No Profit Operations Happend!</div></td>\n                 </tr>\n             </tbody>\n         </table>\n     </div>\n </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5ab10579", module.exports)
+  } else {
+    hotAPI.update("_v-5ab10579", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25143,7 +25420,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li>\n          <a v-link=\"{path: '/GetMyFavorites'}\">My Favorite</a>\n      </li>\n      <li>\n          Favorites ({{ favorites.length }})\n      </li>\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Service name And Price\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>\n        Service Provider\n    </th>\n    <th>Service Name</th>\n    <th>Service Price</th>\n    <th>On</th>\n    <th>Delete</th>\n\n</thead>\n<tbody v-if=\"favorites.length > 0\">\n    <tr v-for=\"favorite in favorites | orderBy sortKey reverse | filterBy title in 'service.name' 'service.price'\" track-by=\"$index\">\n        <td>\n\n                    <a v-link=\"{name: '/User', params:{userId:favorite.get_own_user_service.id, userName: favorite.get_own_user_service.name}}\">\n\n                        {{ favorite.get_own_user_service.name }}\n                    </a>\n\n        </td>\n        <td style=\"width: 20%;\">\n            <a v-link=\"{name: '/ServicesDetails', params: {serviceId: favorite.service.id, serviceName: favorite.service.name}}\">\n                {{ favorite.service.name }}\n            </a>\n        </td>\n        <td style=\"width: 20%;\">\n                {{ favorite.service.price }}\n        </td>\n        <td>{{ favorite.created_at | moment 'calendar' }}</td>\n\n        <td>\n            <a @click.prevent=\"deleteFav(favorite.id, $index)\" class=\"btn btn-danger btn-block\" v-link=\"\">\n                <i class=\"fa fa-trash\"></i>\n            </a>\n        </td>\n    </tr>\n</tbody>\n<tbody v-else>\n    <tr>\n        <td colspan=\"6\"><div class=\"alert alert-info text-center\">No Favorite Services!</div></td>\n    </tr>\n</tbody>\n</table>\n    <div  class=\"list-group\">\n\n    </div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ol class=\"breadcrumb\">\n\n    <li>\n        <a v-link=\"{path: '/GetMyFavorites'}\">My Favorite</a>\n    </li>\n    <li>\n        Favorites ({{ favorites.length }})\n    </li>\n\n</ol>\n<div class=\"row\">\n    <div class=\"col-md-6\">\n        <div class=\"col-md-11\">\n            <form class=\"form-horizontal\">\n                <div class=\"form-group\">\n                    <label for=\"serviceName\"></label>\n                    <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Service name And Price\" v-model=\"title\">\n                </div>\n            </form>\n        </div>\n    </div>\n    <div class=\"col-md-6 text-right \">\n        <div class=\"btn-group\">\n            <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n        </div>\n    </div>\n\n</div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n    <thead>\n        <th>Service Provider</th>\n        <th>Service Name</th>\n        <th>Service Price</th>\n        <th>On</th>\n        <th>Delete</th>\n\n    </thead>\n    <tbody v-if=\"favorites.length > 0\">\n        <tr v-for=\"favorite in favorites | orderBy sortKey reverse | filterBy title in 'service.name' 'service.price'\" track-by=\"$index\">\n            <td>\n\n                <a v-link=\"{name: '/User', params:{userId:favorite.get_own_user_service.id, userName: favorite.get_own_user_service.name}}\">\n\n                    {{ favorite.get_own_user_service.name }}\n                </a>\n\n            </td>\n            <td style=\"width: 20%;\">\n                <a v-link=\"{name: '/ServicesDetails', params: {serviceId: favorite.service.id, serviceName: favorite.service.name}}\">\n                    {{ favorite.service.name }}\n                </a>\n            </td>\n            <td style=\"width: 20%;\">\n                {{ favorite.service.price }}\n            </td>\n            <td>{{ favorite.created_at | moment 'calendar' }}</td>\n\n            <td>\n                <a @click.prevent=\"deleteFav(favorite.id, $index)\" class=\"btn btn-danger btn-block\" v-link=\"\">\n                    <i class=\"fa fa-trash\"></i>\n                </a>\n            </td>\n        </tr>\n    </tbody>\n    <tbody v-else>\n        <tr>\n            <td colspan=\"6\"><div class=\"alert alert-danger text-center\">No Favorite Services!</div></td>\n        </tr>\n    </tbody>\n</table>\n<div  class=\"list-group\">\n\n</div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25154,7 +25431,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4e04f330", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],39:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25218,7 +25495,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-50c73b55", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../messages/messageMenu.vue":42,"./favList.vue":38,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],40:[function(require,module,exports){
+},{"../messages/messageMenu.vue":47,"./favList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],45:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25282,7 +25559,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2cc14e88", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":42,"./messagesList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],41:[function(require,module,exports){
+},{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25344,7 +25621,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ca2307f8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":42,"./messagesList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],42:[function(require,module,exports){
+},{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],47:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25391,7 +25668,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3aab388d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],43:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],48:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25430,7 +25707,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-20905eda", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],44:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25494,7 +25771,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5ac2a6e0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":42,"./messagesList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],45:[function(require,module,exports){
+},{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],50:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25558,7 +25835,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-b03b44ae", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":42,"./messagesList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],46:[function(require,module,exports){
+},{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],51:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25633,7 +25910,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-60249211", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":42,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],47:[function(require,module,exports){
+},{"./messageMenu.vue":47,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],52:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25697,7 +25974,32 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-56257566", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":42,"./messagesList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],48:[function(require,module,exports){
+},{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],53:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n")
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\nallNotifications\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-6028a5de", module.exports)
+  } else {
+    hotAPI.update("_v-6028a5de", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":28,"vue-hot-reload-api":22,"vueify/lib/insert-css":29}],54:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25772,7 +26074,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Incoming Orders Section\n            <br>\n            <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Incoming Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Requester</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_my_orders.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_my_orders\"></purchase_orders>\n            </div>\n            <div v-if=\"orders.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Incoming Orders</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-truck\"></i> {{ user.name }} Incoming Orders Section\n            <br>\n            <small class=\"text-danger\"><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small class=\"text-primary\"><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Incoming Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Requester</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_my_orders.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_my_orders\"></purchase_orders>\n            </div>\n            <div v-if=\"orders.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Incoming Orders</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25783,7 +26085,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5b9d1bbb", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":49,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],49:[function(require,module,exports){
+},{"./orderStructure.vue":55,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],55:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25814,7 +26116,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-755509d5", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":33,"vue":28,"vue-hot-reload-api":22}],50:[function(require,module,exports){
+},{"../btns/status.vue":34,"vue":28,"vue-hot-reload-api":22}],56:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25888,7 +26190,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Purchase Orders Section\n            <br>\n            <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Purchase Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Provider</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_user_add_service.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_user_add_service\"></purchase_orders>\n            </div>\n            <div v-if=\"orders.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Purchase Orders</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n\n        <h2 class=\"text-center\"><i class=\"fa fa-cart-plus\"></i> {{ user.name }} Purchase Orders Section\n            <br>\n            <small class=\"text-danger\"><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n            <br>\n            <small class=\"text-primary\"><strong><i class=\"fa fa-cart-plus\"></i> {{ orders.length }} Purchase Order/s</strong></small>\n        </h2>\n        <hr>\n        <div class=\"row\">\n        <div class=\"col-md-4\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service provider\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-8 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-default\" @click=\"filter('')\"><i class=\"fa fa-list-ol\"></i>  All Order</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"filter('0')\"><i class=\"fa fa-pagelines\"></i>  New Order</button>\n                <button type=\"button\" class=\"btn btn-warning\" @click=\"filter('1')\"><i class=\"fa fa-history\"></i> Old Order</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"filter('2')\"><i class=\"fa fa-spinner fa-spin\"></i>  In Prograss Order</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"filter('3')\"><i class=\"fa fa-close\"></i>  Cancelled</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"filter('4')\"><i class=\"fa fa-check\"></i>  Finished</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"container\">\n        <div class=\"row\" id=\"head\">\n            <div class=\"col-lg-1 col-md-1 col-sm-1 col-xs-1\">#</div>\n            <div class=\"col-lg-5 col-md-5 col-sm-2 col-xs-2\">Service Number</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Service Provider</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Ordered On</div>\n            <div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-2\">Order Status</div>\n        </div>\n        <hr>\n\n        <div v-if=\"orders.length > 0\">\n            <div v-for=\"order in orders | filterBy filterData in 'status' | filterBy serviceName in 'services.name' 'get_user_add_service.name'\" track-by=\"$index\">\n                <purchase_orders :order=\"order\" :user_to_show=\"order.get_user_add_service\"></purchase_orders>\n            </div>\n            <div v-if=\"orders.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Purchase Orders</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n\n        </div>\n        <div v-else=\"\">\n            <div class=\"alert alert-info\">You Have No Orders!</div>\n        </div>\n    </div>\n\n\n\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25899,7 +26201,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-10c412d6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":49,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],51:[function(require,module,exports){
+},{"./orderStructure.vue":55,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],57:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25953,7 +26255,7 @@ exports.default = {
                 this.user_order = res.body['order_user'];
                 this.ordersCount = res.body['ordersCount'];
                 this.authUser = res.body['authUser'];
-                if (this.order.status != 2 && this.order.status != 3) {
+                if (this.order.status != 3 && this.order.status != 4) {
                     this.showControll = true;
                 }
                 if (this.order.status == 3) {
@@ -25981,6 +26283,20 @@ exports.default = {
                 this.$refs.spinner.hide();
                 alertify.error('There are Some Erros Try Again later');
             });
+        },
+        finishOrder: function finishOrder() {
+            this.$refs.spinner.show();
+            this.$http.get('finishOrder/' + this.$route.params.orderId).then(function (res) {
+
+                this.$dispatch('DisabledAdCommentSection', 'true');
+
+                this.showControll = false;
+                this.$refs.spinner.hide();
+                alertify.success('Order Status Has been Finished Successfully');
+            }, function (res) {
+                this.$refs.spinner.hide();
+                alertify.error('There are Some Erros Try Again later');
+            });
         }
     },
     route: {
@@ -25988,7 +26304,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n            <div class=\"col-md-9\">\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n\n                    <div class=\"container-fluid\">\n                        <div class=\"content-wrapper\">\n                            <div class=\"item-container\">\n                                <div class=\"container\">\n                                    <div class=\"col-md-12\">\n                                        <h3 class=\"product-title\">{{ order.services.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ order.services.created_at | moment \"calendar\" }}</strong></span> </h3>\n                                        <span class=\"small\">\n                                            <strong>\n                                                <status :status=\"order.status\"></status>\n                                            </strong>\n                                            <strong v-if=\"showControll\">\n                                                <!--\n                                                authUser => User who Login\n                                                user_order => User Who Order the Service\n                                                user_id => User Who Add the Service\n                                                -->\n                                                <span v-if=\"authUser.id == user_id.id\">\n                                                    <!-- 2 => accept -->\n                                                    <button @click=\"changeStatus(2)\" type=\"button\" class=\"label btn btn-success\">\n                                                        <i class=\"fa fa-check\"></i> Accept\n                                                    </button>\n                                                    <!-- 3 => desline -->\n                                                    <button @click=\"changeStatus(3)\" type=\"button\" class=\"label btn btn-danger \">\n                                                        <i class=\"fa fa-close\"></i> Decline\n                                                    </button>\n                                                </span>\n                                            </strong>\n                                        </span>\n                                        <div class=\"product-rating\">\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star-o\"></i>\n                                        </div>\n                                    </div>\n                                    <hr>\n                                    <div class=\"col-md-12\">\n                                        <div class=\" text-center\">\n\n                                            <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"order.services.image\" alt=\"{{order.services.name}}\">\n                                        </div>\n                                    </div>\n\n                                    <div class=\"col-md-12\">\n                                        <p class=\"product-desc\">\n                                            {{ order.services.description }}\n                                        </p>\n                                        <div class=\"product-price pull-left\">$ {{ order.services.price }}</div>\n                                        <div class=\"product-stock pull-right\">{{ ordersCount }} Order/s</div>\n                                        <div class=\"clearfix\"></div>\n                                        <hr>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <all_comments :order=\"order\"></all_comments>\n                </div>\n            </div>\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <user_id :user=\"user_id\"></user_id>\n                <user_id :user=\"user_order\"></user_id>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n            <div class=\"col-md-9\">\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n\n                    <div class=\"container-fluid\">\n                        <div class=\"content-wrapper\">\n                            <div class=\"item-container\">\n                                <div class=\"container\">\n                                    <div class=\"col-md-12\">\n                                        <h3 class=\"product-title\">{{ order.services.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ order.services.created_at | moment \"calendar\" }}</strong></span> </h3>\n                                        <span class=\"small\">\n                                            <strong>\n                                                <status :status=\"order.status\"></status>\n                                            </strong>\n                                            <strong v-if=\"showControll\">\n                                                <!--\n                                                authUser => User who Login\n                                                user_order => User Who Order the Service\n                                                user_id => User Who Add the Service\n                                                -->\n                                                <span v-if=\"authUser.id == user_id.id\">\n                                                    <span v-if=\"order.status == 1\">\n                                                        <!-- 2 => accept -->\n                                                        <button @click=\"changeStatus(2)\" type=\"button\" class=\"label btn btn-success\">\n                                                            <i class=\"fa fa-check\"></i> Accept\n                                                        </button>\n                                                        <!-- 3 => desline -->\n                                                        <button @click=\"changeStatus(3)\" type=\"button\" class=\"label btn btn-danger \">\n                                                            <i class=\"fa fa-close\"></i> Decline\n                                                        </button>\n                                                    </span>\n                                                </span>\n                                                <span v-if=\"authUser.id == user_order.id\">\n                                                        <!-- 4 => accept -->\n                                                        <span v-if=\"order.status == 2\">\n                                                            <button @click=\"finishOrder()\" type=\"button\" class=\"label btn btn-primary\">\n                                                                <i class=\"fa fa-check\"></i> Finish\n                                                            </button>\n                                                        </span>\n                                                </span>\n                                            </strong>\n                                        </span>\n                                        <div class=\"product-rating\">\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star-o\"></i>\n                                        </div>\n                                    </div>\n                                    <hr>\n                                    <div class=\"col-md-12\">\n                                        <div class=\"text-center\">\n                                            <div class=\"mdl-card__media\">\n                                                <div class=\"over\">\n                                                    <div class=\"container\">\n                                                        <div class=\"row\">\n                                                          <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                              <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                                  <div class=\"label label-info\">Price: $ {{ order.services.price }}</div>\n                                                              </div>\n                                                              <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                                  <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n                                                              </div>\n                                                          </div>\n                                                          <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                              <!-- buy Order -->\n                                                              <!-- <buy_btn :service=\"service\"></buy_btn> -->\n                                                              <!-- Favorite -->\n                                                              <!-- <fav_btn :service=\"service\"></fav_btn> -->\n                                                          </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"order.services.image\" alt=\"{{order.services.name}}\">\n                                            </div>\n                                        </div>\n                                    </div>\n\n                                    <div class=\"col-md-12 product-info\">\n                                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n                                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                                        </ul>\n                                        <div id=\"myTabContent\" class=\"tab-content\">\n                                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                                <br>\n                                                <p class=\"product-desc\">\n                                                    {{ order.services.description }}\n                                                </p>\n                                            </div>\n                                        </div>\n                                        <hr>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <all_comments :order=\"order\"></all_comments>\n                </div>\n            </div>\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <user_id :user=\"user_id\"></user_id>\n                <user_id :user=\"user_order\"></user_id>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25999,7 +26315,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-567b22f4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":33,"../comments/allComments.vue":36,"./usersidebar.vue":52,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],52:[function(require,module,exports){
+},{"../btns/status.vue":34,"../comments/allComments.vue":37,"./usersidebar.vue":58,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],58:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26009,7 +26325,7 @@ exports.default = {
     props: ['user']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<ul class=\"nav nav-sidebar sidebar\">\n    <li>\n        <a v-link=\"{name: '/User', params: {userId: user.id, userName: user.name}}\">\n            <i class=\"fa fa-user\"></i> {{ user.name }}\n        </a>\n    </li>\n    <li class=\"divider\"></li>\n    <li v-for=\"service in user.services\">\n        <a  v-link=\"{name: '/ServicesDetails', params: {serviceId: service.id, serviceName: service.name}}\">\n            {{ service.name }}\n        </a>\n    </li>\n</ul>\n<br>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <a v-link=\"{name: '/User', params: {userId: user.id, userName: user.name}}\" style=\"color: #FFF;\">\n                      <i class=\"fa fa-user\"></i> {{ user.name }}\n                  </a>\n              </h5>\n          </li>\n          <li class=\"list-group-item \" v-for=\"service in user.services\">\n              <a  v-link=\"{name: '/ServicesDetails', params: {serviceId: service.id, serviceName: service.name}}\">\n                  {{ service.name }}\n              </a>\n          </li>\n    </ul>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26020,7 +26336,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-b9c2b35e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],53:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],59:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26124,7 +26440,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1994abc6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../users/SingleServices.vue":60,"./sidebar.vue":54,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],54:[function(require,module,exports){
+},{"../users/SingleServices.vue":66,"./sidebar.vue":60,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],60:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26145,7 +26461,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3b2c74b7", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],55:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],61:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26171,7 +26487,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4c480add", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],56:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],62:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26225,7 +26541,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<h2 class=\"text-center\">Add Services Section</h2>\n<hr>\n<div class=\"row\">\n    <div class=\"col-md-10 col-md-offset-1\">\n        <div class=\"panel panel-primary\">\n            <div class=\"panel-heading\">\n                <h3 class=\"panel-title\">Add Services</h3>\n            </div>\n            <div class=\"panel-body\">\n                <form>\n                    <div class=\"form-group\">\n                        <label for=\"name\">Service Name</label>\n                        <input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" v-model=\"name\" placeholder=\"Enter the Service Name\">\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"description\">Service Description</label>\n                        <textarea class=\"form-control\" id=\"description\" name=\"description\" v-model=\"description\" rows=\"10\" placeholder=\"Enter the Service description\"></textarea>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"category_id\">Service Category</label>\n                        <select class=\"form-control\" id=\"category_id\" name=\"category_id\" v-model=\"category_id\">\n                            <option value=\"1\">Category 1</option>\n                        </select>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"price\">Service Price</label>\n                        <select class=\"form-control\" id=\"price\" name=\"price\" v-model=\"price\">\n                            <option value=\"5\">5</option>\n                            <option value=\"10\">10</option>\n                            <option value=\"15\">15</option>\n                            <option value=\"20\">20</option>\n                            <option value=\"25\">25</option>\n                            <option value=\"30\">30</option>\n                            <option value=\"35\">35</option>\n                            <option value=\"40\">40</option>\n                            <option value=\"45\">45</option>\n                            <option value=\"50\">50</option>\n                        </select>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"image\">Service image</label>\n                        <input type=\"file\" class=\"form-control\" v-el:image=\"\">\n                        <p class=\"help-block\">The Image Must Be More Than 300px x 300px and less than 1000px x 1000px</p>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"AddThisService\">\n                            <i class=\"fa fa-plus\"></i> Add Service\n                        </button>\n                    </div>\n                </form>\n            </div>\n        </div>\n    </div>\n</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<h2 class=\"text-center\"><i class=\"fa fa-plus\"></i> Add Services Section</h2>\n<hr>\n<div class=\"row\">\n    <div class=\"col-md-10 col-md-offset-1\">\n        <div class=\"panel panel-primary\">\n            <div class=\"panel-heading\">\n                <h3 class=\"panel-title\"><i class=\"fa fa-plus\"></i> Add Services</h3>\n            </div>\n            <div class=\"panel-body\">\n                <form>\n                    <div class=\"form-group\">\n                        <label for=\"name\">Service Name</label>\n                        <input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" v-model=\"name\" placeholder=\"Enter the Service Name\">\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"description\">Service Description</label>\n                        <textarea class=\"form-control\" id=\"description\" name=\"description\" v-model=\"description\" rows=\"10\" placeholder=\"Enter the Service description\"></textarea>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"category_id\">Service Category</label>\n                        <select class=\"form-control\" id=\"category_id\" name=\"category_id\" v-model=\"category_id\">\n                            <option value=\"1\">Category 1</option>\n                        </select>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"price\">Service Price</label>\n                        <select class=\"form-control\" id=\"price\" name=\"price\" v-model=\"price\">\n                            <option value=\"5\">5</option>\n                            <option value=\"10\">10</option>\n                            <option value=\"15\">15</option>\n                            <option value=\"20\">20</option>\n                            <option value=\"25\">25</option>\n                            <option value=\"30\">30</option>\n                            <option value=\"35\">35</option>\n                            <option value=\"40\">40</option>\n                            <option value=\"45\">45</option>\n                            <option value=\"50\">50</option>\n                        </select>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <label for=\"image\">Service image</label>\n                        <input type=\"file\" class=\"form-control\" v-el:image=\"\">\n                        <p class=\"help-block\">The Image Must Be More Than 300px x 300px and less than 1000px x 1000px</p>\n                    </div>\n\n                    <div class=\"form-group\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"AddThisService\">\n                            <i class=\"fa fa-plus\"></i> Add Service\n                        </button>\n                    </div>\n                </form>\n            </div>\n        </div>\n    </div>\n</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26236,7 +26552,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4ef8bd38", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],57:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],63:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26313,7 +26629,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n        <br>\n        <small><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n    <span v-if=\"services.length > 0\">\n        <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n            <single_services :service=\"service\"></single_services>\n        </div>\n        <div v-if=\"services.length >= 6\">\n            <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n            <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services</div>\n            <div class=\"clearfix\"></div>\n            <br>\n        </div>\n    </span>\n    <span v-else=\"\">\n        <div class=\"alert alert-warning\">\n            You Do'nt Have Any Services Current Now Please Add One\n            <a v-link=\"{path: '/AddServices'}\">\n                <i class=\"fa fa-plus\"></i>\n                Add Service\n            </a>\n        </div>\n    </span>\n</div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\"><i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small class=\"text-danger\"><i class=\"fa fa-clock-o\"></i> {{ user.created_at | moment \"calendar\" }}</small>\n        <br>\n        <small class=\"text-primary\"><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n    <span v-if=\"services.length > 0\">\n        <div class=\"col-sm-4 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n            <single_services :service=\"service\"></single_services>\n        </div>\n        <div v-if=\"services.length >= 6\">\n            <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n            <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services</div>\n            <div class=\"clearfix\"></div>\n            <br>\n        </div>\n    </span>\n    <span v-else=\"\">\n        <div class=\"alert alert-warning\">\n            You Do'nt Have Any Services Current Now Please Add One\n            <a v-link=\"{path: '/AddServices'}\">\n                <i class=\"fa fa-plus\"></i>\n                Add Service\n            </a>\n        </div>\n    </span>\n</div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26324,7 +26640,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a4e2cbe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":55,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],58:[function(require,module,exports){
+},{"./SingleServices.vue":61,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],64:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26432,7 +26748,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ccefed1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":30,"../btns/fav.vue":31,"../btns/rating.vue":32,"../users/SingleServices.vue":60,"./SingleServices.vue":55,"./sidebar.vue":59,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],59:[function(require,module,exports){
+},{"../btns/buy.vue":31,"../btns/fav.vue":32,"../btns/rating.vue":33,"../users/SingleServices.vue":66,"./SingleServices.vue":61,"./sidebar.vue":65,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],65:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26453,7 +26769,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-edbd6316", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":28,"vue-hot-reload-api":22}],60:[function(require,module,exports){
+},{"vue":28,"vue-hot-reload-api":22}],66:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26502,7 +26818,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36d14997", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":30,"../btns/fav.vue":31,"../btns/rating.vue":32,"vue":28,"vue-hot-reload-api":22}],61:[function(require,module,exports){
+},{"../btns/buy.vue":31,"../btns/fav.vue":32,"../btns/rating.vue":33,"vue":28,"vue-hot-reload-api":22}],67:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26583,7 +26899,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n        <span v-if=\"services.length > 0\">\n            <div class=\"col-sm-3 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                <single_services :service=\"service\"></single_services>\n            </div>\n            <div v-if=\"services.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n        </span>\n        <span v-else>\n            <div class=\"alert alert-warning\">\n                {{ user.name }} Don't have Any Servicess Currently\n            </div>\n        </span>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"isLoading\">\n    <h2 class=\"text-center\">\n        <i class=\"fa fa-user\"></i> {{ user.name }} Services Section\n        <br>\n        <small class=\"text-primary\"><strong><i class=\"fa fa-cart-plus\"></i> {{ services.length }} Service/s</strong></small>\n    </h2>\n    <hr>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By  Service name or Service Price\" v-model=\"serviceName\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('price')\"><i class=\"fa fa-dollar\"></i>  By Price</button>\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('name')\"><i class=\"fa fa-sort-alpha-asc\"></i> By Name</button>\n                <button type=\"button\" class=\"btn btn-info\" @click=\"sort('status')\"><i class=\"fa fa-clock-o\"></i>  waiting</button>\n                <button type=\"button\" class=\"btn btn-danger\" @click=\"sort('id')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Add Order</button>\n            </div>\n        </div>\n\n    </div>\n    <hr>\n    <div class=\"row\">\n        <span v-if=\"services.length > 0\">\n            <div class=\"col-sm-3 col-md-3\" v-for=\"service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'\" track-by=\"$index\">\n                <single_services :service=\"service\"></single_services>\n            </div>\n            <div v-if=\"services.length >= 6\">\n                <div class=\"col-lg-12 btn btn-info\" v-if=\"moreServices\" @click=\"showMore()\">Show More</div>\n                <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreServices\">NO More Services</div>\n                <div class=\"clearfix\"></div>\n                <br>\n            </div>\n        </span>\n        <span v-else>\n            <div class=\"alert alert-warning\">\n                {{ user.name }} Don't have Any Servicess Currently\n            </div>\n        </span>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26594,6 +26910,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-448f024c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":60,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}]},{},[29]);
+},{"./SingleServices.vue":66,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}]},{},[30]);
 
 //# sourceMappingURL=app.js.map

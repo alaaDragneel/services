@@ -3,7 +3,7 @@
         <h2 class="text-center">
             <i class="fa fa-user"></i> {{ user.name }} Services Section
             <br>
-            <small><strong><i class="fa fa-cart-plus"></i> {{ services.length }} Service/s</strong></small>
+            <small class="text-primary"><strong><i class="fa fa-cart-plus"></i> {{ services.length }} Service/s</strong></small>
         </h2>
         <hr>
         <div class="row">

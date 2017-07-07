@@ -36,6 +36,11 @@ var ReadMessages = require('./components/messages/oldMessage.vue');
 var favorite = require('./components/favorite/favorite.vue');
 var category = require('./components/category/category.vue');
 var addCredit = require('./components/credit/add.vue');
+var ShowAllCharge = require('./components/credit/allCharge.vue');
+var ShowAllPayment = require('./components/credit/allPayment.vue');
+var ShowAllProfit = require('./components/credit/allProfit.vue');
+var ShowAllBalance = require('./components/credit/allBalance.vue');
+var ShowAllNotification = require('./components/notification/allNotifications.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -111,6 +116,21 @@ route.map({
     },
     '/AddCredit': {
         component: addCredit
+    },
+    '/AllCharge': {
+        component: ShowAllCharge
+    },
+    '/AllPayment': {
+        component: ShowAllPayment
+    },
+    '/AllProfit': {
+        component: ShowAllProfit
+    },
+    '/AllBalance': {
+        component: ShowAllBalance
+    },
+    '/Notification': {
+        component: ShowAllNotification
     },
 });
 

@@ -1,11 +1,11 @@
 <template>
     <span v-if="isLoading">
 
-        <h2 class="text-center"><i class="fa fa-user"></i> {{ user.name }} Incoming Orders Section
+        <h2 class="text-center"><i class="fa fa-truck"></i> {{ user.name }} Incoming Orders Section
             <br>
-            <small><i class="fa fa-clock-o"></i> {{ user.created_at | moment "calendar" }}</small>
+            <small class="text-danger"><i class="fa fa-clock-o"></i> {{ user.created_at | moment "calendar" }}</small>
             <br>
-            <small><strong><i class="fa fa-cart-plus"></i> {{ orders.length }} Incoming Order/s</strong></small>
+            <small class="text-primary"><strong><i class="fa fa-cart-plus"></i> {{ orders.length }} Incoming Order/s</strong></small>
         </h2>
         <hr>
         <div class="row">

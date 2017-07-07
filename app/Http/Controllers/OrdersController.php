@@ -18,45 +18,51 @@ use App\Order;
 
 use Auth;
 
+use App\Pay;
+
+use App\Buy;
+
+use App\Notification as Note;
+
 class OrdersController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    * Display a listing of the resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
     public function index()
     {
         //
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    * Show the form for creating a new resource.
+    *
+    * @return \Illuminate\Http\Response
+    */
     public function create()
     {
         //
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    * Store a newly created resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @return \Illuminate\Http\Response
+    */
     public function store(Request $request)
     {
         //
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    * Display the specified resource.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
     public function show($id) // NOTE For Save new Order Not Recommended Here by alaaDragneel
     {
         /**
@@ -73,18 +79,80 @@ class OrdersController extends Controller
             if ($user->id != $service->user_id) {
                 $orderdItBefore = Order::where(function ($q) use ($user, $service) {
                     $q->where('user_order', $user->id);
+                    // if the status == 4 that's mean it is finish and can order again
+                    $q->whereIn('status', [0, 1, 2]);
                     $q->where('service_id', $service->id);
                 })->count();
                 if ($orderdItBefore == 0) {
-                    $orders = new Order();
-                    $orders->service_id = $service->id;
-                    $orders->user_order = $user->id;
-                    $orders->user_id = $service->user_id;
-                    $orders->status = 0;
-                    $orders->type = 0;
+                    /*
+                    | --------------------------------------------------------------------------------------------------------------
+                    | Check If the Money Of The User Can Buy the Order With Check If The Order Rejected OR Not Rejected Staus == 2
+                    | --------------------------------------------------------------------------------------------------------------
+                    | Get the Real Money If The Order Is New Or Old Or in Progrees The Money Will Be[معلقه]!
+                    | If the Order Is Cancled The Money Goes Back To The User Who Make The Order [اللي عامل الخدمه]
+                    | If the Order Is Finished The Money Goes To The Owner Of Service Of The Order [اللي عمل الخدمه]
+                    */
+                    $buyCheck = Buy::where(function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                        $q->where('finish', '!=', 2);
+                    })->sum('buy_price');
+                    /*
+                    | -------------------------------------------------
+                    | Check If the Money Of The User Can Buy the Order
+                    | -------------------------------------------------
+                    |
+                    */
+                    $pay = Pay::where('user_id', $user->id)->sum('price');
 
-                    if($orders->save()) {
-                        return 'true';
+                    $ifUserHaveMoney = $pay - $buyCheck;
+                    if ($ifUserHaveMoney >= $service->price) {
+
+                        /*
+                        | -------------------------------------------------
+                        | Add New Order
+                        | -------------------------------------------------
+                        |
+                        */
+                        $orders = new Order();
+                        $orders->service_id = $service->id;
+                        $orders->user_order = $user->id;
+                        $orders->user_id = $service->user_id;
+                        $orders->status = 0;
+                        $orders->type = 0;
+
+                        if($orders->save()) {
+
+                            /*
+                            | -------------------------------------------------
+                            | make New Payment
+                            | -------------------------------------------------
+                            */
+
+                            $buy = new Buy();
+                            $buy->user_id = $user->id;
+                            $buy->recive_id = $orders->user_id;
+                            $buy->order_id = $orders->id;
+                            $buy->buy_price = $service->price;
+                            $buy->finish = 0;
+                            $buy->save();
+
+                            /*
+                            | -------------------------------------------------
+                            | make New Notification For The Recived User[Not Auth User]
+                            | -------------------------------------------------
+                            */
+
+                            $note = new Note();
+                            $note->notify_id = $orders->id;
+                            $note->user_id = $orders->user_id;
+                            $note->user_notify_you = $user->id;
+                            $note->type = 'ReviceOrders';
+                            $note->seen = 0;
+                            $note->save();
+
+                            return 'true';
+                        }
+                        App::abort(403);
                     }
                     App::abort(403);
                 }
@@ -97,34 +165,34 @@ class OrdersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    * Show the form for editing the specified resource.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
     public function edit($id)
     {
         //
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    * Update the specified resource in storage.
+    *
+    * @param  \Illuminate\Http\Request  $request
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
     public function update(Request $request, $id)
     {
         //
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    * Remove the specified resource from storage.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
     public function destroy($id)
     {
         //
@@ -139,11 +207,11 @@ class OrdersController extends Controller
         }
         $user = Auth::user();
         $orders = Order::where('user_order', $user->id)
-            ->with('services', 'getUserAddService')
-            ->skip($skipLengthOfServices)
-            ->take(env('LIMIT_SERVICES'))
-            ->orderBy('id', 'DESC')
-            ->get();
+        ->with('services', 'getUserAddService')
+        ->skip($skipLengthOfServices)
+        ->take(env('LIMIT_SERVICES'))
+        ->orderBy('id', 'DESC')
+        ->get();
 
         return Response::json(['user' => $user, 'orders' => $orders], 200);
     }
@@ -158,11 +226,11 @@ class OrdersController extends Controller
 
         $user = Auth::user();
         $orders = Order::where('user_id', $user->id)
-            ->with('services', 'getMyOrders')
-            ->skip($skipLengthOfServices)
-            ->take(env('LIMIT_SERVICES'))
-            ->orderBy('id', 'DESC')
-            ->get();
+        ->with('services', 'getMyOrders')
+        ->skip($skipLengthOfServices)
+        ->take(env('LIMIT_SERVICES'))
+        ->orderBy('id', 'DESC')
+        ->get();
 
         return Response::json(['user' => $user, 'orders' => $orders], 200);
     }
@@ -197,13 +265,30 @@ class OrdersController extends Controller
                     $q->where('service_id', $order->service_id);
                     $q->whereIn('status', [0, 1, 2, 4]); // status => 0 => New, 1 => Old, 2 => inprogress, 4 => finished
                 })->count();
-                return Response::json([
+
+                /*
+                | ----------------------------------------
+                | Seen Notification
+                | ----------------------------------------
+                |
+                */
+                $notify = Note::where(function ($q) use ($orderId, $authUser) {
+                    $q->where('notify_id', $orderId)->where('type', 'ReviceOrders');
+                    $q->where('seen', 0)->where('user_id', $authUser->id);
+                })->first();
+                if ($notify) {
+                    $notify->seen = 1;
+                    $notify->update();
+                }
+
+                $array = [
                     'user_id' => $user_id,
                     'order_user' => $order_user,
                     'order' => $order,
                     'ordersCount' => $orderCount,
                     'authUser' => $authUser
-                ], 200);
+                ];
+                return Response::json($array, 200);
             }
             App::abort(403);
         }
@@ -214,15 +299,75 @@ class OrdersController extends Controller
     {
         $order = Order::findOrFail(intval($order_id));
         if ($order) {
-            $statusCheck = [2, 3];
+            $statusCheck = [2, 3, 4];
             if (in_array($status, $statusCheck)) {
                 if ($status != $order->status) {
                     $order->status = intval($status);
+
+                    /*
+                    | -----------------------------------------------------
+                    | Update The Buy Order If The Owner Rrejected The Order
+                    | -----------------------------------------------------
+                    |
+                    */
+                    if ($status == 3) {
+                        $buy = Buy::where('order_id', $order_id)->first();
+                        $buy->finish = 2;
+                        $buy->update();
+                    }
+
+                    /*
+                    | -------------------------------------
+                    | Update The Order
+                    | -------------------------------------
+                    |
+                    */
+
                     if ($order->update()) {
                         return 'success';
                     }
                     App::abort(403);
                 }
+                App::abort(403);
+            }
+            App::abort(403);
+        }
+        App::abort(403);
+    }
+
+    public function finishOrder($order_id)
+    {
+        $user = Auth::user();
+        $order = Order::findOrFail(intval($order_id));
+        if ($order) {
+
+            if ($user->id == $order->user_order) {
+                if ($order->status == 2) {
+                    $order->status = 4;
+
+                    /*
+                    | -----------------------------------------------------------
+                    | Update The Buy Order If The User Who Order Finish The Order
+                    | -----------------------------------------------------------
+                    |
+                    */
+
+                    $buy = Buy::where('order_id', $order_id)->first();
+                    $buy->finish = 1;
+                    $buy->update();
+
+                    /*
+                    | -------------------------------------
+                    | Update The Order
+                    | -------------------------------------
+                    |
+                    */
+
+                    if ($order->update()) {
+                        return 'success';
+                    }
+                }
+
                 App::abort(403);
             }
             App::abort(403);

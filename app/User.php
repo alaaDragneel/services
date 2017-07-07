@@ -73,4 +73,16 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Comment');
     }
+
+    // payment Relation
+    public function pays()
+    {
+        return $this->hasMany('App\Pay');
+    }
+
+    // buy Relation
+    public function buys()
+    {
+        return $this->hasMany('App\Buy');
+    }
 }

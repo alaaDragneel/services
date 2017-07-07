@@ -10,13 +10,4 @@ $(document).ready(function(){
         }
     );
 
-    $(".catFolder").hover(
-        function() {
-            $(this).children('i').removeClass('fa-folder').addClass('fa-folder-open');
-        },
-        function() {
-            $(this).children('i').addClass('fa-folder').removeClass('fa-folder-open');
-        }
-    );
-
 });
