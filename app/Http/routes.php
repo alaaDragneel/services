@@ -36,7 +36,6 @@ Route::get('/finishOrder/{order_id}', 'OrdersController@finishOrder');
 Route::resource('/Comments', 'CommentsController');
 // Message
 Route::resource('/Messages', 'MessagesController');
-Route::get('/getMessagesCount', 'MessagesController@getMessagesCount');
 Route::get('/GetRecivedMessages', 'MessagesController@GetRecivedMessages');
 Route::get('/GetUnReadMessages', 'MessagesController@GetUnReadMessages');
 Route::get('/GetReadMessages', 'MessagesController@GetReadMessages');
@@ -56,3 +55,6 @@ Route::get('/GetAllProfitOperation', 'UsersController@GetAllProfitOperation');
 Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
 // Payment
 Route::post('/AddCredit', 'PayController@AddCredit');
+// Notifications
+Route::get('/GetMyNotifications', 'NotificationController@GetMyNotifications');
+Route::get('/GetMyUnReadNotifications', 'NotificationController@GetMyUnReadNotifications');

@@ -1,19 +1,18 @@
 <template lang="html">
     <ol class="breadcrumb">
-
       <li v-if="pathUrl == '/GetMyRecivedMessages'">
-          <a v-link="{path: '/GetMyRecivedMessages'}">Inbox Messages</a>
+          <a v-link="{path: '/GetMyRecivedMessages'}"><i class="fa fa-inbox"></i> Inbox Messages</a>
       </li>
 
       <li v-if="pathUrl == '/GetMySendMessages'">
-          <a v-link="{path: '/GetMySendMessages'}">Send Messages</a>
+          <a v-link="{path: '/GetMySendMessages'}"><i class="fa fa-send"></i> Send Messages</a>
       </li>
 
       <li v-if="pathUrl == '/GetUnReadMessages'">
-          <a v-link="{path: '/GetUnReadMessages'}">UnRead Messages</a>
+          <a v-link="{path: '/GetUnReadMessages'}"><i class="fa fa-eye-slash"></i> UnRead Messages</a>
       </li>
       <li v-if="pathUrl == '/GetReadMessages'">
-          <a v-link="{path: '/GetReadMessages'}">Read Messages</a>
+          <a v-link="{path: '/GetReadMessages'}"><i class="fa fa-eye"></i> Read Messages</a>
       </li>
 
       <li v-if="pathUrl == '/GetMyRecivedMessages'">

@@ -1,38 +1,44 @@
 <template lang="html">
-        <ul class="nav nav-pills nav-stacked">
-            <li v-bind:class="{'active': checkRoute('/GetMyRecivedMessages')}"><a v-link="{path: '/GetMyRecivedMessages'}">Inbox Messages <span class="badge">{{ incoming }}</span></a>
+        <ul class="list-group" style="padding:0px;" id="menuSide">
+            <li class="list-group-item">
+                <h5>
+                    <i class="fa fa-envelope"></i>
+                    Messages
+                </h5>
             </li>
-            <li v-bind:class="{'active': checkRoute('/GetMySendMessages')}"><a v-link="{path: '/GetMySendMessages'}">Send Messages <span class="badge">{{ send }}</span></a></li>
-            <li v-bind:class="{'active': checkRoute('/GetUnReadMessages')}"><a  v-link="{path: '/GetUnReadMessages'}">UnRead Messages <span class="badge">{{ unRead }}</span></a></li>
-            <li v-bind:class="{'active': checkRoute('/GetReadMessages')}"><a  v-link="{path: '/GetReadMessages'}">Read Messages <span class="badge">{{ read }}</span></a></li>
-            <li v-bind:class="{'active': checkRoute('/GetMyFavorites')}"><a  v-link="{path: '/GetMyFavorites'}">Favorites </a></li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/GetMyRecivedMessages')}]">
+                <a v-link="{path: '/GetMyRecivedMessages'}"><i class="fa fa-inbox"></i> Inbox Messages</a>
+            </li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/GetMySendMessages')}]">
+                <i class="fa fa-send"></i>
+                <a v-link="{path: '/GetMySendMessages'}">Send Messages </a>
+            </li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/GetUnReadMessages')}]">
+                <i class="fa fa-eye-slash"></i>
+                <a  v-link="{path: '/GetUnReadMessages'}">UnRead Messages </a>
+            </li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/GetReadMessages')}]">
+                <i class="fa fa-eye"></i>
+                <a  v-link="{path: '/GetReadMessages'}">Read Messages </a>
+            </li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/GetMyFavorites')}]">
+                <i class="fa fa-heart"></i>
+                <a  v-link="{path: '/GetMyFavorites'}">Favorites </a>
+            </li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/Notification')}]">
+                <i class="fa fa-bell"></i>
+                <a  v-link="{path: '/Notification'}">Notification </a>
+            </li>
+            <li v-bind:class="['list-group-item', {'active': checkRoute('/UnReadNotification')}]">
+                <i class="fa fa-bell-o"></i>
+                <a  v-link="{path: '/UnReadNotification'}">UnRead Notification </a>
+            </li>
         </ul>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            incoming: '',
-            send: '',
-            unRead: '',
-            read: ''
-        }
-    },
-    ready: function () {
-        this.getMessagesCount();
-    },
     methods: {
-        getMessagesCount: function () {
-            this.$http.get('getMessagesCount').then(function (res) {
-                this.incoming = res.body['incoming'];
-                this.send = res.body['send'];
-                this.unRead = res.body['unRead'];
-                this.read = res.body['read'];
-            },function (res) {
-                alertify.error('Error Happend Try Again Later');
-            });
-        },
         checkRoute: function (value) {
             return this.$route.path == value;
         }

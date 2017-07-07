@@ -41,6 +41,7 @@ var ShowAllPayment = require('./components/credit/allPayment.vue');
 var ShowAllProfit = require('./components/credit/allProfit.vue');
 var ShowAllBalance = require('./components/credit/allBalance.vue');
 var ShowAllNotification = require('./components/notification/allNotifications.vue');
+var ShowAllUnReadNotification = require('./components/notification/unReadNotifications.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -131,6 +132,9 @@ route.map({
     },
     '/Notification': {
         component: ShowAllNotification
+    },
+    '/UnReadNotification': {
+        component: ShowAllUnReadNotification
     },
 });
 

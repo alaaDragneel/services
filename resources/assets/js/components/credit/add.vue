@@ -1,52 +1,53 @@
 <template lang="html">
+
     <span v-if="isLoading">
         <h2 class="text-center">
             <i class="fa fa-plus"></i> {{ user.name }} Add Credit Section
             <br>
             <small class="text-danger">
-	            <strong>
-	               Now You Add Credit To Member {{ user.name }}
-	            </strong>
+                <strong>
+                    Now You Add Credit To Member {{ user.name }}
+                </strong>
             </small>
         </h2>
-         <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h3 class="panel-title"><i class="fa fa-plus"></i> Add Credit</h3>
-                </div>
-                <div class="panel-body">
-                    <form>
-                         <div class="form-group">
-                            <label for="price">Credite</label>
-                            <select class="form-control" id="price" name="price" v-model="price">
-                                <option value="" selected disabled>Choose Mount</option>
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="20">20</option>
-                                <option value="30">30</option>
-                                <option value="40">40</option>
-                                <option value="50">50</option>
-                                <option value="60">60</option>
-                                <option value="70">70</option>
-                                <option value="80">80</option>
-                                <option value="90">90</option>
-                                <option value="100">100</option>
-                            </select>
-                            <p class="help-block alert alert-danger text-center" v-if="err">{{ message }}</p>
-                        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-plus"></i> Add Credit</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="price">Credite</label>
+                                <select class="form-control" id="price" name="price" v-model="price">
+                                    <option value="" selected disabled>Choose Mount</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                    <option value="60">60</option>
+                                    <option value="70">70</option>
+                                    <option value="80">80</option>
+                                    <option value="90">90</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <p class="help-block alert alert-danger text-center" v-if="err">{{ message }}</p>
+                            </div>
 
-                        <div class="form-group">
-                            <button type="button" class="btn btn-primary" v-bind:disabled="disable" @click="AddCredit">
-                                <i class="fa fa-plus"></i> Add Credit
-                            </button>
-                        </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-primary" v-bind:disabled="disable" @click="AddCredit">
+                                    <i class="fa fa-plus"></i> Add Credit
+                                </button>
+                            </div>
 
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </span>
     <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>

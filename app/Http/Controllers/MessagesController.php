@@ -36,38 +36,6 @@ class MessagesController extends Controller
         $user = Auth::user();
         return Message::where('user_message_you', $user->id)->with('getReceivedUser')->orderBy('id', 'DESC')->get();
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getMessagesCount()
-    { // My Count Messages
-        $user = Auth::user();
-        $incoming = Message::where(function ($q) use ($user) {
-            $q->where('user_id', $user->id);
-            $q->where('seen', 1);
-        })->count();
-        $send = Message::where(function ($q) use ($user) {
-            $q->where('user_message_you', $user->id);
-            $q->where('seen', 1);
-        })->count();
-        $unRead = Message::where(function ($q) use ($user) {
-            $q->where('user_id', $user->id);
-            $q->where('seen', 0);
-        })->count();
-        $read = Message::where(function ($q) use ($user) {
-            $q->where('user_id', $user->id);
-            $q->where('seen', 1);
-        })->count();
-
-        return Response::json([
-            'incoming' =>  $incoming,
-            'send' =>  $send,
-            'unRead' =>  $unRead,
-            'read' =>  $read
-        ], 200);
-    }
 
     /**
      * Display a listing of the resource.

@@ -1,5 +1,4 @@
 <template lang="html">
-
     <span v-if="isLoading">
         <div class="container">
             <div class="row">
@@ -12,7 +11,7 @@
             </div>
         </div>
     </span>
-    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
+<spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 
 <script>
@@ -27,7 +26,7 @@ export default {
     },
     ready: function () {
         this.$refs.spinner.show();
-        this.GetMyNotifications();
+        this.GetMyUnReadNotifications();
     },
     data () {
         return {
@@ -37,8 +36,8 @@ export default {
         }
     },
     methods: {
-        GetMyNotifications: function () {
-            this.$http.get('/GetMyNotifications').then(function (res) {
+        GetMyUnReadNotifications: function () {
+            this.$http.get('/GetMyUnReadNotifications').then(function (res) {
                 this.user = res.body['user'];
                 this.notifications = res.body['notify'];
                 this.$refs.spinner.hide();

@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="container">
-        <ul v-if="section3" class="list-group" style="padding:0px;">
+        <ul v-if="section3.length > 0" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
                       <i class="fa fa-shopping-cart"></i>
@@ -15,7 +15,7 @@
                   </a>
               </li>
         </ul>
-        <ul v-if="section2" class="list-group" style="padding:0px;">
+        <ul v-if="section2.length > 0" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
                       <i class="fa fa-heart"></i>
@@ -41,7 +41,7 @@
                   </a>
               </li>
         </ul>
-        <ul v-if="section1" class="list-group" style="padding:0px;">
+        <ul v-if="section1.length > 0" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
                       <i class="fa fa-eye-slash"></i>

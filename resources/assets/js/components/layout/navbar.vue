@@ -1,21 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{-- Custome meta For laravel Requests --}}
-    <meta id="_token" value="{{ csrf_token() }}">
-    {{-- Custome meta laravel Requests --}}
-    <title>Services Site</title>
-
-    <!-- Styles -->
-    {{ Html::style('css/style.css') }}
-
-</head>
-<body id="app-layout">
-
-    {{-- Nav Bar --}}
+<template lang="html">
+    <!-- Nav Bar -->
     <nav class="navbar navbar-inverse">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
@@ -35,7 +19,7 @@
                         <i class="fa fa-folder"></i> Categories <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu mega-dropdown-menu">
-                        @foreach (\App\Category::get(['id', 'name'])->chunk(6) as $category)
+                        <!-- @foreach (\App\Category::get(['id', 'name'])->chunk(6) as $category)
                             <li class="col-sm-3">
                                 <ul>
                                     @foreach ($category as $cat)
@@ -47,11 +31,11 @@
                                     @endforeach
                                 </ul>
                             </li>
-                        @endforeach
+                        @endforeach -->
                     </ul>
                 </li>
-                @if (Auth::check())
-                    {{-- Orders Section --}}
+                <!--NOTE @if (Auth::check()) -->
+                    <!-- Orders Section -->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-first-order"></i>
@@ -74,7 +58,7 @@
                             </li>
                         </ul>
                     </li>
-                    {{-- Services Section --}}
+                    <!-- Services Section -->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-server"></i>
@@ -97,18 +81,18 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                <!--NOTE @endif -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                @if (Auth::guest())
-                    <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
-                @else
+                <!-- NOTE@if (Auth::guest()) -->
+                    <!-- <li><a href="{{ url('/login') }}">Login</a></li> -->
+                    <!-- <li><a href="{{ url('/register') }}">Register</a></li> -->
+                <!-- NOTE@else -->
 
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
-                            {{-- Credit Section --}}
+                            <!-- Credit Section -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-money"></i> <span class="hidden-lg hidden-md">Payments</span> <span class="caret"></span>
@@ -123,7 +107,7 @@
                                 </ul>
                             </li>
 
-                            {{-- Messages Section --}}
+                            <!-- Messages Section -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-envelope"></i> <span class="hidden-lg hidden-md">Messages</span> <span class="caret"></span>
@@ -155,65 +139,65 @@
                                     </li>
                                 </ul>
                             </li>
-                            {{-- Notification --}}
+                            <!-- Notification -->
                             <li class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
-                                    @php $notification = getAllNotification(Auth::user()->id); @endphp
+                                    <!-- @php $notification = getAllNotification(Auth::user()->id); @endphp -->
                                     <span class="hidden-lg hidden-md">Notification</span>
-                                    @if ($notification > 0)
-                                        <span class="label label-warning">{{ $notification }}</span>
-                                    @endif
+                                    <!-- @if ($notification > 0) -->
+                                        <!-- <span class="label label-warning">{{ $notification }}</span> -->
+                                    <!-- @endif -->
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="header">You have {{ $notification }} notifications</li>
+                                    <!-- <li class="header">You have {{ $notification }} notifications</li> -->
                                     <li>
                                         <!-- inner menu: contains the actual data -->
                                         <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
-                                            @include('layouts.notifiaction')
+                                            <!-- @include('layouts.notifiaction') -->
                                         </ul>
                                     </li>
                                     <li class="footer"><a v-link="{path: '/Notification'}">View all</a></li>
                                 </ul>
                             </li>
-                            {{-- Favorite --}}
+                            <!-- Favorite -->
                             <li class="dropdown">
                                 <a v-link="{path: '/GetMyFavorites'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <span class="fa fa-heart"></span>
                                     <span class="hidden-lg hidden-md">Favorite</span>
-                                    @php $favorite = getFavCounter(Auth::user()->id); @endphp
-                                    @if ($favorite > 0)
-                                        <span class="label label-danger">{{ $favorite }}</span>
-                                    @endif
+                                    <!-- @php $favorite = getFavCounter(Auth::user()->id); @endphp -->
+                                    <!-- @if ($favorite > 0) -->
+                                        <!-- <span class="label label-danger">{{ $favorite }}</span> -->
+                                    <!-- @endif -->
                                 </a>
                             </li>
-                            {{-- Purchase Orders --}}
+                            <!-- Purchase Orders -->
                             <li class="dropdown">
                                 <a v-link="{path: '/PurchaseOrders'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-cart-plus"></i>
                                     <span class="hidden-lg hidden-md">Purchase Orders</span>
-                                    @php $purchaseOrders = getAllPurchesOrderCounter(Auth::user()->id); @endphp
-                                    @if ($purchaseOrders > 0)
-                                        <span class="label label-primary" >{{ $purchaseOrders }}</span>
-                                    @endif
+                                    <!-- @php $purchaseOrders = getAllPurchesOrderCounter(Auth::user()->id); @endphp -->
+                                    <!-- @if ($purchaseOrders > 0) -->
+                                        <!-- <span class="label label-primary" >{{ $purchaseOrders }}</span> -->
+                                    <!-- @endif -->
                                 </a>
                             </li>
-                            {{-- unReadMessages --}}
+                            <!-- unReadMessages -->
                             <li class="dropdown">
                                 <a v-link="{path: '/GetUnReadMessages'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-eye-slash"></i>
                                     <span class="hidden-lg hidden-md">Unread Messages</span>
-                                    @php $unreadMessages = getUnReadMessages(Auth::user()->id); @endphp
-                                    @if ($unreadMessages > 0)
-                                        <span class="label label-info" >{{ $unreadMessages }}</span>
-                                    @endif
+                                    <!-- @php $unreadMessages = getUnReadMessages(Auth::user()->id); @endphp -->
+                                    <!-- @if ($unreadMessages > 0) -->
+                                        <!-- <span class="label label-info" >{{ $unreadMessages }}</span> -->
+                                    <!-- @endif -->
                                 </a>
                             </li>
-                            {{-- User Section --}}
+                            <!-- User Section -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">{{ Auth::user()->name }}</span> <span class="caret"></span>
+                                    alaaDragneel<!-- <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">{{ Auth::user()->name }}</span> <span class="caret"></span> -->
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
@@ -223,7 +207,7 @@
                             </li>
                         </ul>
                     </div>
-                @endif
+                <!-- NOTE@endif -->
             </ul>
             <form class="navbar-form navbar-left">
                 <input type="text" class="form-control" placeholder="Search...">
@@ -235,14 +219,10 @@
 
         </div><!-- /.nav-collapse -->
     </nav>
-    {{-- Nav Bar --}}
+    <!-- Nav Bar -->
+</template>
 
-
-
-    @yield('content')
-
-    <!-- JavaScripts -->
-    {{ Html::script('js/main.js') }}
-    {{ Html::script('js/app.js') }}
-</body>
-</html>
+<script>
+export default {
+}
+</script>

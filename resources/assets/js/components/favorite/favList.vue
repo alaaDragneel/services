@@ -1,8 +1,8 @@
 <template lang="html">
     <ol class="breadcrumb">
-
         <li>
-            <a v-link="{path: '/GetMyFavorites'}">My Favorite</a>
+            <a v-link="{path: '/GetMyFavorites'}"> <i class="fa fa-heart"></i> My Favorite</a>
+
         </li>
         <li>
             Favorites ({{ favorites.length }})

@@ -32,6 +32,27 @@ li.list-group-item a {
     text-decoration: none;
  }
 
+#menuSide li.list-group-item a {
+    color: #333;
+    display: inline-block;
+    text-decoration: none;
+ }
+
+#menuSide li.list-group-item a:last-of-type {
+    font-size: 13px;
+ }
+
+#menuSide li.active a {
+    color: #FFF;
+
+}
+
+li.active a {
+    color: #FFF;
+    display: block;
+    text-decoration: none;
+ }
+
 .badge-success {
     background-color: #5cb85c;
 }
