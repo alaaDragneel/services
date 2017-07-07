@@ -56,5 +56,6 @@ Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
 // Payment
 Route::post('/AddCredit', 'PayController@AddCredit');
 // Notifications
-Route::get('/GetMyNotifications', 'NotificationController@GetMyNotifications');
-Route::get('/GetMyUnReadNotifications', 'NotificationController@GetMyUnReadNotifications');
+Route::get('/GetMyNotifications/{length?}', 'NotificationController@GetMyNotifications');
+Route::get('/GetMyUnReadNotifications/{length?}', 'NotificationController@GetMyUnReadNotifications');
+Route::get('/GetMyNotificationsWithAjax', 'NotificationController@GetMyNotificationsWithAjax');

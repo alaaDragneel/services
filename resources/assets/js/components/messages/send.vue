@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <button type="button" class="btn btn-success btn-block" v-bind:disabled="disabled" @click.prevent="sendMessage">
-                                <i class="fa fa-comment"></i> Add Comment
+                                <i class="fa fa-send"></i> Send Message
                             </button>
                         </div>
                     </form>

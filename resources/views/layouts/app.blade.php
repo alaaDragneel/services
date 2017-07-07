@@ -156,22 +156,18 @@
                                 </ul>
                             </li>
                             {{-- Notification --}}
-                            <li class="dropdown notifications-menu">
+                            <li class="dropdown notifications-menu" id="notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
-                                    @php $notification = getAllNotification(Auth::user()->id); @endphp
-                                    <span class="hidden-lg hidden-md">Notification</span>
-                                    @if ($notification > 0)
-                                        <span class="label label-warning">{{ $notification }}</span>
-                                    @endif
+                                    <span id="counter" class="label label-warning"></span>
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="header">You have {{ $notification }} notifications</li>
+                                    <li class="header">You have <span id="counter-header"></span> notifications</li>
                                     <li>
                                         <!-- inner menu: contains the actual data -->
                                         <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
-                                            @include('layouts.notifiaction')
+                                            <li id="loading" style="position: absolute; top: 50%; left: 44%; font-size: 30px; color: #999;"><i class="fa fa-spinner fa-spin"></i></li>
                                         </ul>
                                     </li>
                                     <li class="footer"><a v-link="{path: '/Notification'}">View all</a></li>

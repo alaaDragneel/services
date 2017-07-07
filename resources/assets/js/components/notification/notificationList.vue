@@ -104,11 +104,6 @@
         </td>
     </tr>
 </tbody>
-<tbody v-else>
-    <tr>
-        <td colspan="7"><div class="alert alert-danger text-center">No Notification Right Now!</div></td>
-    </tr>
-</tbody>
 </table>
 </template>
 

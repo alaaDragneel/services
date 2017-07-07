@@ -2086,6 +2086,9 @@ textarea#description {
 /* Add Service Section */
 
 /* Customize */
+li.seen a {
+    color: #999 !important;
+}
 li.list-group-item:hover {
     color: #555;
     text-decoration: none;

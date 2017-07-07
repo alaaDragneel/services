@@ -3617,6 +3617,37 @@ WebkitBorderRadius:a.borderRadius,zIndex:99}),h="right"==a.position?{right:a.dis
 function(a){a.stopPropagation();a.preventDefault();return!1});m.hover(function(){w()},function(){p()});c.hover(function(){y=!0},function(){y=!1});b.hover(function(){r=!0;w();p()},function(){r=!1;p()});b.bind("touchstart",function(a,b){a.originalEvent.touches.length&&(A=a.originalEvent.touches[0].pageY)});b.bind("touchmove",function(b){k||b.originalEvent.preventDefault();b.originalEvent.touches.length&&(n((A-b.originalEvent.touches[0].pageY)/a.touchScrollStep,!0),A=b.originalEvent.touches[0].pageY)});
 x();"bottom"===a.start?(c.css({top:b.outerHeight()-c.outerHeight()}),n(0,!0)):"top"!==a.start&&(n(e(a.start).position().top,null,!0),a.alwaysVisible||c.hide());window.addEventListener?(this.addEventListener("DOMMouseScroll",v,!1),this.addEventListener("mousewheel",v,!1)):document.attachEvent("onmousewheel",v)}});return this}});e.fn.extend({slimscroll:e.fn.slimScroll})})(jQuery);
 $(document).ready(function(){
+    var li = $('.notification-real-li');
+    var counter = $('#counter');
+    var header = $('#counter-header');
+
+    li.on('click', function(event) {
+        if (!$(this).hasClass('seen')) {
+                $(this).addClass('seen')
+                if (counter.html() > 0 && header.html() > 0) {
+                    counter.html((counter.html() - 1));
+                    header.html((header.html() - 1));
+                }
+        }
+    });
+    $( document ).ajaxStart(function() {
+        $('#loading').css('display', 'block');
+    });
+
+    $( document ).ajaxStop(function() {
+        $('#loading').css('display', 'none');
+    });
+    $('#notifications-menu').on('click', function(event) {
+        $.ajax({
+            method: 'GET',
+            url: 'GetMyNotificationsWithAjax',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            counter.html(res['notifeCount']);
+            header.html(res['notifeCount']);
+            $('ul.menu').html(res['notife']);
+        });
+    });
     //trigger nice scrool
    $(".menu").slimscroll({
       height: '200px',

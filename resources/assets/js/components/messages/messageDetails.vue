@@ -128,6 +128,9 @@ export default {
                 alertify.error('Error Happend Try Again Later');
             });
         }
+    },
+    route: {
+        canReuse: false // force relode the data
     }
 
 }

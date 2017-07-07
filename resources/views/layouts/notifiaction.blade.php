@@ -1,7 +1,7 @@
 @php $notifications = getAllNotificationObjects(Auth::user()->id); @endphp
 @if ($notifications->count() > 0)
     @foreach ($notifications as $notify)
-        <li>
+        <li class="notification-real-li">
             @if ($notify->type == 'ReviceOrders')
                 <a v-link="{name: '/Order', params:{orderId: {{ $notify->notify_id }}}}"
                     title="New Buying Order From {{ $notify->userWhoSendNotification->name }}
@@ -12,10 +12,11 @@
                 </a>
             @endif
             @if ($notify->type == 'ReviceMessage')
-                <a v-link="{name: '/messageDetails', params:{message_id: {{ $notify->notify_id }}, viewType: 'income'}}"
+                {{-- <a v-link="{name: '/messageDetails', params:{message_id: {{ $notify->notify_id }}, viewType: 'income'}}"
                     title="New Message From {{ $notify->userWhoSendNotification->name }}">
                     <i class="fa fa-envelope"></i> New Message From {{ $notify->userWhoSendNotification->name }}
-                </a>
+                </a> --}}
+                <a href="#">test</a>
             @endif
             @if ($notify->type == 'AcceptedOrder')
                 <a v-link="{name: '/Order', params:{orderId: {{ $notify->notify_id }}}}"

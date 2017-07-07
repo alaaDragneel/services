@@ -25590,6 +25590,9 @@ exports.default = {
                 alertify.error('Error Happend Try Again Later');
             });
         }
+    },
+    route: {
+        canReuse: false // force relode the data
     }
 
 };
@@ -25861,7 +25864,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n        <div class=\"container\">\n        <div class=\"row\">\n\n        </div>\n        <hr />\n        <div class=\"row\">\n            <div class=\"col-sm-3 col-md-2\">\n                <message_menu></message_menu>\n            </div>\n            <div class=\"col-sm-9 col-md-10\">\n                <!-- Tab panes -->\n                <validator name=\"validation1\">\n                    <form novalidate>\n\n                        <div class=\"form-group\">\n                          <label for=\"title\">Message Title</label>\n                          <input type=\"text\" class=\"form-control\" id=\"title\" placeholder=\"Write Message Title\" v-model=\"title\" @valid=\"showTitle = false\" @invalid=\"showTitle = true\" v-validate:title=\"{ required: true, minlength: 10, maxlength: 50 }\">\n                        </div>\n                        <div class=\"form-group alert alert-danger text-center\" v-if=\"showTitle\">\n                            <p v-if=\"$validation1.title.required\">This Viled Is Requires</p>\n                            <p v-if=\"$validation1.title.minlength\">Your Message Must Be More Than 10 Charachters</p>\n                            <p v-if=\"$validation1.title.maxlength\">Your Message Must Be Less Than 50 Charachters</p>\n                        </div>\n                        <div class=\"form-group\">\n                            <label for=\"message\">Message</label>\n                          <textarea class=\"form-control\" id=\"message\" rows=\"3\" placeholder=\"Write Your Message\" v-model=\"message\" @valid=\"showMessage = false\" @invalid=\"showMessage = true\" v-validate:message=\"{ required: true, minlength: 20, maxlength: 500 }\"></textarea>\n                        </div>\n                        <div class=\"form-group alert alert-danger text-center\" v-if=\"showMessage\">\n                            <p v-if=\"$validation1.message.required\">This Viled Is Requires</p>\n                            <p v-if=\"$validation1.message.minlength\">Your Message Must Be More Than 20 Charachters</p>\n                            <p v-if=\"$validation1.message.maxlength\">Your Message Must Be Less Than 500 Charachters</p>\n                        </div>\n                        <div class=\"form-group\">\n                            <button type=\"button\" class=\"btn btn-success btn-block\" v-bind:disabled=\"disabled\" @click.prevent=\"sendMessage\">\n                                <i class=\"fa fa-comment\"></i> Add Comment\n                            </button>\n                        </div>\n                    </form>\n                </validator>\n            </div>\n        </div>\n    </div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n        <div class=\"container\">\n        <div class=\"row\">\n\n        </div>\n        <hr />\n        <div class=\"row\">\n            <div class=\"col-sm-3 col-md-2\">\n                <message_menu></message_menu>\n            </div>\n            <div class=\"col-sm-9 col-md-10\">\n                <!-- Tab panes -->\n                <validator name=\"validation1\">\n                    <form novalidate>\n\n                        <div class=\"form-group\">\n                          <label for=\"title\">Message Title</label>\n                          <input type=\"text\" class=\"form-control\" id=\"title\" placeholder=\"Write Message Title\" v-model=\"title\" @valid=\"showTitle = false\" @invalid=\"showTitle = true\" v-validate:title=\"{ required: true, minlength: 10, maxlength: 50 }\">\n                        </div>\n                        <div class=\"form-group alert alert-danger text-center\" v-if=\"showTitle\">\n                            <p v-if=\"$validation1.title.required\">This Viled Is Requires</p>\n                            <p v-if=\"$validation1.title.minlength\">Your Message Must Be More Than 10 Charachters</p>\n                            <p v-if=\"$validation1.title.maxlength\">Your Message Must Be Less Than 50 Charachters</p>\n                        </div>\n                        <div class=\"form-group\">\n                            <label for=\"message\">Message</label>\n                          <textarea class=\"form-control\" id=\"message\" rows=\"3\" placeholder=\"Write Your Message\" v-model=\"message\" @valid=\"showMessage = false\" @invalid=\"showMessage = true\" v-validate:message=\"{ required: true, minlength: 20, maxlength: 500 }\"></textarea>\n                        </div>\n                        <div class=\"form-group alert alert-danger text-center\" v-if=\"showMessage\">\n                            <p v-if=\"$validation1.message.required\">This Viled Is Requires</p>\n                            <p v-if=\"$validation1.message.minlength\">Your Message Must Be More Than 20 Charachters</p>\n                            <p v-if=\"$validation1.message.maxlength\">Your Message Must Be Less Than 500 Charachters</p>\n                        </div>\n                        <div class=\"form-group\">\n                            <button type=\"button\" class=\"btn btn-success btn-block\" v-bind:disabled=\"disabled\" @click.prevent=\"sendMessage\">\n                                <i class=\"fa fa-send\"></i> Send Message\n                            </button>\n                        </div>\n                    </form>\n                </validator>\n            </div>\n        </div>\n    </div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25968,20 +25971,46 @@ exports.default = {
         return {
             notifications: [],
             isLoading: false,
-            user: []
+            user: [],
+            moreOrders: true
         };
     },
 
     methods: {
-        GetMyNotifications: function GetMyNotifications() {
-            this.$http.get('/GetMyNotifications').then(function (res) {
-                this.user = res.body['user'];
-                this.notifications = res.body['notify'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        GetMyNotifications: function GetMyNotifications(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+
+            this.$http.get('/GetMyNotifications' + sendLen).then(function (res) {
+                if (length !== undefined) {
+                    if (res.body['notify'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['notify'] return as array
+                        this.notifications = this.notifications.concat(res.body['notify']);
+                    } else {
+                        this.moreOrders = false;
+                        alertify.error('No More Notifications');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+
+                    this.user = res.body['user'];
+                    this.notifications = res.body['notify'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
                 alertify.error('Error Happend Try Again Later');
             });
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.notifications.length;
+            this.GetMyNotifications(length);
         }
     },
     route: {
@@ -25990,7 +26019,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-sm-3 col-md-2\">\n                <notification_menu></notification_menu>\n            </div>\n            <div class=\"col-sm-9 col-md-10\">\n                <notification_list :notifications=\"notifications\"></notification_list>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container\">\n        <div class=\"row\">\n            <div class=\"col-sm-3 col-md-2\">\n                <notification_menu></notification_menu>\n            </div>\n            <div class=\"col-sm-9 col-md-10\">\n                <notification_list :notifications=\"notifications\"></notification_list>\n                <div v-if=\"notifications.length >= 6\">\n                    <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                    <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Notifications</div>\n                    <div class=\"clearfix\"></div>\n                    <br>\n                </div>\n                <div v-else>\n                    <div class=\"alert alert-danger text-center\">You Have No Notifications!</div>\n                </div>\n\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26029,7 +26058,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li v-if=\"pathUrl == '/Notification'\">\n          <a v-link=\"{path: '/Notification'}\"><i class=\"fa fa-bell\"></i> Notification</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/Notification'\">\n          Notification ({{ notifications.length }})\n      </li>\n\n      <li v-if=\"pathUrl == '/UnReadNotification'\">\n          <a v-link=\"{path: '/UnReadNotification'}\"><i class=\"fa fa-bell\"></i> UnReadNotification</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/UnReadNotification'\">\n          UnNotification ({{ notifications.length }})\n      </li>\n\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Message title\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('seen')\"><i class=\"fa fa-eye\"></i>  Seen</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>Recived From</th>\n    <th>Notification</th>\n    <th>On</th>\n    <th>See</th>\n</thead>\n<tbody v-if=\"notifications.length > 0\">\n    <tr v-for=\"notification in notifications | orderBy sortKey reverse\" track-by=\"$index\">\n\n        <td>\n            <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n                    <a v-link=\"{name: '/User', params:{userId:notification.user_who_send_notification.id, userName: notification.user_who_send_notification.name}}\">\n                        {{ notification.user_who_send_notification.name }}\n                    </a>\n            </span>\n        </td>\n        <td v-if=\"notification.type == 'ReviceOrders'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"New Buying Order From {{ notification.user_who_send_notification.name }}\n            Order #{{notification.notify_id}}\">\n                    New Buying Order From {{ notification.user_who_send_notification.name }}\n                    Order #{{notification.notify_id}}\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'ReviceMessage'\">\n            <a v-link=\"{name: '/messageDetails', params:{message_id: notification.notify_id, viewType: 'income'}}\"\n                title=\"New Message From {{ notification.user_who_send_notification.name }}\">\n                New Message From {{ notification.user_who_send_notification.name }}\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'AcceptedOrder'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Accepted Your Order #{{notification.notify_id}}!\">\n                {{ notification.user_who_send_notification.name }} Accepted Your Order #{{notification.notify_id}}!\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'RejectedOrder'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Rejected Your Order #{{notification.notify_id}}!\">\n                {{ notification.user_who_send_notification.name }} Rejected Your Order #{{notification.notify_id}}!\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'CompeleteOrder'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Finished Order #{{notification.notify_id}} Check Your Profit!\">\n                {{ notification.user_who_send_notification.name }} Finished Order #{{notification.notify_id}} Check Your Profit!\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'RecivedComment'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Commented On Order #{{notification.notify_id}}!\">\n                {{ notification.user_who_send_notification.name }} Commented On Order #{{notification.notify_id}}!\n            </a>\n        </td>\n        <td>{{ notification.created_at | moment 'calendar' }}</td>\n        <td>\n            <span v-if=\"notification.seen == 1\">\n                <span class=\"badge badge-success\">seen</span>\n            </span>\n            <span v-else>\n                <span class=\"badge\">New</span>\n            </span>\n        </td>\n    </tr>\n</tbody>\n<tbody v-else>\n    <tr>\n        <td colspan=\"7\"><div class=\"alert alert-danger text-center\">No Notification Right Now!</div></td>\n    </tr>\n</tbody>\n</table>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <ol class=\"breadcrumb\">\n\n      <li v-if=\"pathUrl == '/Notification'\">\n          <a v-link=\"{path: '/Notification'}\"><i class=\"fa fa-bell\"></i> Notification</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/Notification'\">\n          Notification ({{ notifications.length }})\n      </li>\n\n      <li v-if=\"pathUrl == '/UnReadNotification'\">\n          <a v-link=\"{path: '/UnReadNotification'}\"><i class=\"fa fa-bell\"></i> UnReadNotification</a>\n      </li>\n\n      <li v-if=\"pathUrl == '/UnReadNotification'\">\n          UnNotification ({{ notifications.length }})\n      </li>\n\n\n    </ol>\n    <div class=\"row\">\n        <div class=\"col-md-6\">\n            <div class=\"col-md-11\">\n                <form class=\"form-horizontal\">\n                    <div class=\"form-group\">\n                        <label for=\"serviceName\"></label>\n                        <input type=\"text\" class=\"form-control\" id=\"serviceName\" placeholder=\"Search By Message title\" v-model=\"title\">\n                    </div>\n                </form>\n            </div>\n        </div>\n        <div class=\"col-md-6 text-right \">\n            <div class=\"btn-group\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"sort('seen')\"><i class=\"fa fa-eye\"></i>  Seen</button>\n                <button type=\"button\" class=\"btn btn-primary\" @click=\"sort('created_at')\"><i class=\"fa fa-sort-numeric-desc\"></i>  By Adding Time </button>\n            </div>\n        </div>\n\n    </div>\n<table class=\"table table-bordered table-hover table-responsive table-striped\">\n<thead>\n    <th>Recived From</th>\n    <th>Notification</th>\n    <th>On</th>\n    <th>See</th>\n</thead>\n<tbody v-if=\"notifications.length > 0\">\n    <tr v-for=\"notification in notifications | orderBy sortKey reverse\" track-by=\"$index\">\n\n        <td>\n            <span class=\"name\" style=\"min-width: 120px; display: inline-block;\">\n                    <a v-link=\"{name: '/User', params:{userId:notification.user_who_send_notification.id, userName: notification.user_who_send_notification.name}}\">\n                        {{ notification.user_who_send_notification.name }}\n                    </a>\n            </span>\n        </td>\n        <td v-if=\"notification.type == 'ReviceOrders'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"New Buying Order From {{ notification.user_who_send_notification.name }}\n            Order #{{notification.notify_id}}\">\n                    New Buying Order From {{ notification.user_who_send_notification.name }}\n                    Order #{{notification.notify_id}}\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'ReviceMessage'\">\n            <a v-link=\"{name: '/messageDetails', params:{message_id: notification.notify_id, viewType: 'income'}}\"\n                title=\"New Message From {{ notification.user_who_send_notification.name }}\">\n                New Message From {{ notification.user_who_send_notification.name }}\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'AcceptedOrder'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Accepted Your Order #{{notification.notify_id}}!\">\n                {{ notification.user_who_send_notification.name }} Accepted Your Order #{{notification.notify_id}}!\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'RejectedOrder'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Rejected Your Order #{{notification.notify_id}}!\">\n                {{ notification.user_who_send_notification.name }} Rejected Your Order #{{notification.notify_id}}!\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'CompeleteOrder'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Finished Order #{{notification.notify_id}} Check Your Profit!\">\n                {{ notification.user_who_send_notification.name }} Finished Order #{{notification.notify_id}} Check Your Profit!\n            </a>\n        </td>\n        <td v-if=\"notification.type == 'RecivedComment'\">\n            <a v-link=\"{name: '/Order', params:{orderId: notification.notify_id}}\"\n                title=\"{{ notification.user_who_send_notification.name }} Commented On Order #{{notification.notify_id}}!\">\n                {{ notification.user_who_send_notification.name }} Commented On Order #{{notification.notify_id}}!\n            </a>\n        </td>\n        <td>{{ notification.created_at | moment 'calendar' }}</td>\n        <td>\n            <span v-if=\"notification.seen == 1\">\n                <span class=\"badge badge-success\">seen</span>\n            </span>\n            <span v-else>\n                <span class=\"badge\">New</span>\n            </span>\n        </td>\n    </tr>\n</tbody>\n</table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -26072,20 +26101,46 @@ exports.default = {
         return {
             notifications: [],
             isLoading: false,
-            user: []
+            user: [],
+            moreOrders: true
         };
     },
 
     methods: {
-        GetMyUnReadNotifications: function GetMyUnReadNotifications() {
-            this.$http.get('/GetMyUnReadNotifications').then(function (res) {
-                this.user = res.body['user'];
-                this.notifications = res.body['notify'];
-                this.$refs.spinner.hide();
-                this.isLoading = true;
+        GetMyUnReadNotifications: function GetMyUnReadNotifications(length) {
+            if (length !== undefined) {
+                var sendLen = '/' + length;
+            } else {
+                sendLen = '';
+            }
+
+            this.$http.get('/GetMyUnReadNotifications' + sendLen).then(function (res) {
+                if (length !== undefined) {
+                    if (res.body['notify'].length > 0) {
+                        // use push if the result to add object in the array
+                        // use concat because res.body['notify'] return as array
+                        this.notifications = this.notifications.concat(res.body['notify']);
+                    } else {
+                        this.moreOrders = false;
+                        alertify.error('No More Notifications');
+                    }
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                } else {
+
+                    this.user = res.body['user'];
+                    this.notifications = res.body['notify'];
+                    this.$refs.spinner.hide();
+                    this.isLoading = true;
+                }
             }, function (res) {
                 alertify.error('Error Happend Try Again Later');
             });
+        },
+        showMore: function showMore() {
+            this.$refs.spinner.show();
+            var length = this.notifications.length;
+            this.GetMyUnReadNotifications(length);
         }
     },
     route: {
@@ -26094,7 +26149,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <notification_menu></notification_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <notification_list :notifications=\"notifications\"></notification_list>\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <span v-if=\"isLoading\">\n        <div class=\"container\">\n            <div class=\"row\">\n                <div class=\"col-sm-3 col-md-2\">\n                    <notification_menu></notification_menu>\n                </div>\n                <div class=\"col-sm-9 col-md-10\">\n                    <notification_list :notifications=\"notifications\"></notification_list>\n                    <div v-if=\"notifications.length >= 6\">\n                        <div class=\"col-lg-12 btn btn-info\" v-if=\"moreOrders\" @click=\"showMore()\">Show More</div>\n                        <div class=\"col-lg-12 alert alert-danger text-center\" v-if=\"!moreOrders\">NO More Notifications</div>\n                        <div class=\"clearfix\"></div>\n                        <br>\n                    </div>\n                    <div v-else>\n                        <div class=\"alert alert-danger text-center\">You Have No Notifications!</div>\n                    </div>\n\n                </div>\n            </div>\n        </div>\n    </span>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
