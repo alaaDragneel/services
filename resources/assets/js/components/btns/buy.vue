@@ -1,11 +1,10 @@
 <template lang="html">
-    <a @click.prevent="addOrder()" v-bind:disabled="disabled" class="btn btn-success btn-sm">
+    <a @click.prevent="addOrder()" v-bind:disabled="disabled" class="btn btn-success btn-sm buyBtn">
         <i class="fa fa-shopping-cart"></i> Buy
     </a>
 </template>
 
 <script>
-
 var Alert = require('vue-strap/dist/vue-strap.min').alert;
 
 export default {

@@ -16,6 +16,8 @@ use App\Service;
 
 use App\User;
 
+use Response;
+
 class FavoriteController extends Controller
 {
     // add to fivorites
@@ -67,5 +69,11 @@ class FavoriteController extends Controller
         }
         App::abort(403);
 
+    }
+    public function checkFavorites()
+    {
+        $user = Auth::user();
+        $favorite = getFavCounter($user->id);
+        return Response::json(['favorite' => $favorite]);
     }
 }

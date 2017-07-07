@@ -24693,7 +24693,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a @click.prevent=\"addOrder()\" v-bind:disabled=\"disabled\" class=\"btn btn-success btn-sm\">\n    <i class=\"fa fa-shopping-cart\"></i> Buy\n</a>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<a @click.prevent=\"addOrder()\" v-bind:disabled=\"disabled\" class=\"btn btn-success btn-sm buyBtn\">\n    <i class=\"fa fa-shopping-cart\"></i> Buy\n</a>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24767,6 +24767,10 @@ exports.default = {
             this.$http.post('addNewVote', formData).then(function (res) {
                 this.rating = false;
                 this.ratingValue = vote;
+                /*
+                | NOTE use $dispatch From Childeren To Parent
+                | NOTE use $broadcast From Parent To Childeren
+                */
                 this.$dispatch('AddNewRate', vote);
                 alertify.success("Service Has Been Rated By " + vote + " Star/s");
             }, function (res) {

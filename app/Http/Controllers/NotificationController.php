@@ -124,4 +124,10 @@ class NotificationController extends Controller
 
     }
 
+    public function checkNotification()
+    {
+        $user = Auth::user();
+        $notificationsCount = getAllNotification($user->id);
+        return Response::json(['count' => $notificationsCount]);
+    }
 }

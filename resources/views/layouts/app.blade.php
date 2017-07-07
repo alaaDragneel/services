@@ -180,7 +180,7 @@
                                     <span class="hidden-lg hidden-md">Favorite</span>
                                     @php $favorite = getFavCounter(Auth::user()->id); @endphp
                                     @if ($favorite > 0)
-                                        <span class="label label-danger">{{ $favorite }}</span>
+                                        <span class="label label-danger"><span id="favoriteCount">{{ $favorite }}</span></span>
                                     @endif
                                 </a>
                             </li>
@@ -191,7 +191,7 @@
                                     <span class="hidden-lg hidden-md">Purchase Orders</span>
                                     @php $purchaseOrders = getAllPurchesOrderCounter(Auth::user()->id); @endphp
                                     @if ($purchaseOrders > 0)
-                                        <span class="label label-primary" >{{ $purchaseOrders }}</span>
+                                        <span class="label label-primary" > <span id="orderCount">{{ $purchaseOrders }}</span></span>
                                     @endif
                                 </a>
                             </li>
@@ -202,7 +202,7 @@
                                     <span class="hidden-lg hidden-md">Unread Messages</span>
                                     @php $unreadMessages = getUnReadMessages(Auth::user()->id); @endphp
                                     @if ($unreadMessages > 0)
-                                        <span class="label label-info" >{{ $unreadMessages }}</span>
+                                        <span class="label label-info" ><span id="messageCount">{{ $unreadMessages }}</span></span>
                                     @endif
                                 </a>
                             </li>

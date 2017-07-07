@@ -1,4 +1,9 @@
 $(document).ready(function(){
+/*
+| ------------------------------------------------
+|  Notification
+| ----------------------------------------------
+*/
     var li = $('.notification-real-li');
     var counter = $('#counter');
     var header = $('#counter-header');
@@ -25,11 +30,67 @@ $(document).ready(function(){
             url: 'GetMyNotificationsWithAjax',
             data: {_token: $('meta#_token').attr('value')}
         }).done(function (res) {
-            counter.html(res['notifeCount']);
-            header.html(res['notifeCount']);
             $('ul.menu').html(res['notife']);
         });
     });
+
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkNotification',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            counter.html(res['count']);
+            header.html(res['count']);
+        });
+    }, 5000);
+
+
+    /*
+    | ------------------------------------------------
+    |  Orders
+    | ----------------------------------------------
+    */
+
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkOrders',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            $('#orderCount').html(res['orders']);
+        });
+    }, 6000);
+
+    /*
+    | ------------------------------------------------
+    |  Favorites
+    | ----------------------------------------------
+    */
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkFavorites',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            $('#favoriteCount').html(res['favorite']);
+        });
+    }, 7000);
+
+    /*
+    | ------------------------------------------------
+    |  unreadMessages
+    | ----------------------------------------------
+    */
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkMessages',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            $('#messageCount').html(res['countMessages']);
+        });
+    }, 8000);
     //trigger nice scrool
    $(".menu").slimscroll({
       height: '200px',

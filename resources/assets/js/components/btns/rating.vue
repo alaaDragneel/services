@@ -37,6 +37,10 @@ export default {
             this.$http.post('addNewVote', formData).then(function (res) {
                 this.rating = false;
                 this.ratingValue = vote;
+                /*
+                | NOTE use $dispatch From Childeren To Parent
+                | NOTE use $broadcast From Parent To Childeren
+                */
                 this.$dispatch('AddNewRate', vote);
                 alertify.success("Service Has Been Rated By "+ vote +" Star/s");
             }, function (res) {

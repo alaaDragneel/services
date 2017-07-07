@@ -387,4 +387,11 @@ class OrdersController extends Controller
         }
         App::abort(403);
     }
+
+    public function checkOrders()
+    {
+        $user = Auth::user();
+        $purchaseOrders = getAllPurchesOrderCounter($user->id);
+        return Response::json(['orders' => $purchaseOrders]);
+    }
 }

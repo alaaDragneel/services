@@ -3617,6 +3617,11 @@ WebkitBorderRadius:a.borderRadius,zIndex:99}),h="right"==a.position?{right:a.dis
 function(a){a.stopPropagation();a.preventDefault();return!1});m.hover(function(){w()},function(){p()});c.hover(function(){y=!0},function(){y=!1});b.hover(function(){r=!0;w();p()},function(){r=!1;p()});b.bind("touchstart",function(a,b){a.originalEvent.touches.length&&(A=a.originalEvent.touches[0].pageY)});b.bind("touchmove",function(b){k||b.originalEvent.preventDefault();b.originalEvent.touches.length&&(n((A-b.originalEvent.touches[0].pageY)/a.touchScrollStep,!0),A=b.originalEvent.touches[0].pageY)});
 x();"bottom"===a.start?(c.css({top:b.outerHeight()-c.outerHeight()}),n(0,!0)):"top"!==a.start&&(n(e(a.start).position().top,null,!0),a.alwaysVisible||c.hide());window.addEventListener?(this.addEventListener("DOMMouseScroll",v,!1),this.addEventListener("mousewheel",v,!1)):document.attachEvent("onmousewheel",v)}});return this}});e.fn.extend({slimscroll:e.fn.slimScroll})})(jQuery);
 $(document).ready(function(){
+/*
+| ------------------------------------------------
+|  Notification
+| ----------------------------------------------
+*/
     var li = $('.notification-real-li');
     var counter = $('#counter');
     var header = $('#counter-header');
@@ -3643,11 +3648,67 @@ $(document).ready(function(){
             url: 'GetMyNotificationsWithAjax',
             data: {_token: $('meta#_token').attr('value')}
         }).done(function (res) {
-            counter.html(res['notifeCount']);
-            header.html(res['notifeCount']);
             $('ul.menu').html(res['notife']);
         });
     });
+
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkNotification',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            counter.html(res['count']);
+            header.html(res['count']);
+        });
+    }, 5000);
+
+
+    /*
+    | ------------------------------------------------
+    |  Orders
+    | ----------------------------------------------
+    */
+
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkOrders',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            $('#orderCount').html(res['orders']);
+        });
+    }, 6000);
+
+    /*
+    | ------------------------------------------------
+    |  Favorites
+    | ----------------------------------------------
+    */
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkFavorites',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            $('#favoriteCount').html(res['favorite']);
+        });
+    }, 7000);
+
+    /*
+    | ------------------------------------------------
+    |  unreadMessages
+    | ----------------------------------------------
+    */
+    setInterval(function () {
+        $.ajax({
+            method: 'GET',
+            url: 'checkMessages',
+            data: {_token: $('meta#_token').attr('value')}
+        }).done(function (res) {
+            $('#messageCount').html(res['countMessages']);
+        });
+    }, 8000);
     //trigger nice scrool
    $(".menu").slimscroll({
       height: '200px',
