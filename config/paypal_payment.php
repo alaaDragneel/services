@@ -14,8 +14,8 @@ return [
     */
 
     'Account' => [
-        'ClientId' => '',
-        'ClientSecret' => ''
+        'ClientId' => 'Ac025TxJ6DvFXnD6BQ1YocsCYZDrJ7XC-idKOQIJyGToovy92y0S27fKfIplODwlHHg5hmnlgnfD6nGB',
+        'ClientSecret' => 'EKHWAy3AERWAdpcsFT59M9Hq2Fr1ovQGv-Fw85-nRLgWTy2K_52z0fjyBnA2ujbDxfU7tBsEUjjIQSSk'
     ],
 
     /*

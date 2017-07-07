@@ -18,6 +18,12 @@ use App\User;
 
 use App\Message;
 
+use App\Events\CreateNotification as CreateNotify;
+
+use App\Events\ReadNotification as ReadNotify;
+
+use Event;
+
 class MessagesController extends Controller
 {
     /**
@@ -38,8 +44,14 @@ class MessagesController extends Controller
     public function getMessagesCount()
     { // My Count Messages
         $user = Auth::user();
-        $incoming = Message::where('user_id', $user->id)->count();
-        $send = Message::where('user_message_you', $user->id)->count();
+        $incoming = Message::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('seen', 1);
+        })->count();
+        $send = Message::where(function ($q) use ($user) {
+            $q->where('user_message_you', $user->id);
+            $q->where('seen', 1);
+        })->count();
         $unRead = Message::where(function ($q) use ($user) {
             $q->where('user_id', $user->id);
             $q->where('seen', 0);
@@ -123,6 +135,13 @@ class MessagesController extends Controller
                 $message->title = strip_tags($request->title);
                 $message->message = strip_tags($request->message);
                 if ($message->save()) {
+                    /*
+                    | -------------------------------------------------
+                    | make New Message For The Recived User[Not Auth User]
+                    | -------------------------------------------------
+                    */
+
+                    Event::fire(new CreateNotify($message->id, $user->id, $recivedUser->id, 'ReviceMessage'));
                     return 'success';
                 }
                 App::abort(403);
@@ -148,6 +167,16 @@ class MessagesController extends Controller
                     $message->seen = 1;
                     $message->save();
                 }
+
+                /*
+                | ----------------------------------------
+                | Seen Notification
+                | ----------------------------------------
+                |
+                */
+
+                Event::fire(new ReadNotify($message_id, ['ReviceMessage']));
+
                 return Message::where('id', $message_id)->with('getReceivedUser', 'getSendUser')->first();
             }
             App::abort(403);

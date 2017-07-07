@@ -22,7 +22,11 @@ use App\Pay;
 
 use App\Buy;
 
-use App\Notification as Note;
+use App\Events\CreateNotification as CreateNotify;
+
+use App\Events\ReadNotification as ReadNotify;
+
+use Event;
 
 class OrdersController extends Controller
 {
@@ -142,13 +146,7 @@ class OrdersController extends Controller
                             | -------------------------------------------------
                             */
 
-                            $note = new Note();
-                            $note->notify_id = $orders->id;
-                            $note->user_id = $orders->user_id;
-                            $note->user_notify_you = $user->id;
-                            $note->type = 'ReviceOrders';
-                            $note->seen = 0;
-                            $note->save();
+                            Event::fire(new CreateNotify($orders->id, $user->id, $orders->user_id, 'ReviceOrders'));
 
                             return 'true';
                         }
@@ -272,14 +270,8 @@ class OrdersController extends Controller
                 | ----------------------------------------
                 |
                 */
-                $notify = Note::where(function ($q) use ($orderId, $authUser) {
-                    $q->where('notify_id', $orderId)->where('type', 'ReviceOrders');
-                    $q->where('seen', 0)->where('user_id', $authUser->id);
-                })->first();
-                if ($notify) {
-                    $notify->seen = 1;
-                    $notify->update();
-                }
+
+                Event::fire(new ReadNotify($orderId, ['ReviceOrders', 'AcceptedOrder', 'RejectedOrder', 'CompeleteOrder', 'RecivedComment']));
 
                 $array = [
                     'user_id' => $user_id,
@@ -299,7 +291,7 @@ class OrdersController extends Controller
     {
         $order = Order::findOrFail(intval($order_id));
         if ($order) {
-            $statusCheck = [2, 3, 4];
+            $statusCheck = [2, 3];
             if (in_array($status, $statusCheck)) {
                 if ($status != $order->status) {
                     $order->status = intval($status);
@@ -324,6 +316,17 @@ class OrdersController extends Controller
                     */
 
                     if ($order->update()) {
+                        /*
+                        | -----------------------------------------------------
+                        | make New Notification For The User Who Make The Order
+                        | -----------------------------------------------------
+                        */
+                        $userId = Auth::user()->id;
+
+                        $noteType = $status == 2 ? 'AcceptedOrder' :  'RejectedOrder';
+
+                        Event::fire(new CreateNotify($order->id, $userId, $order->user_order, $noteType));
+
                         return 'success';
                     }
                     App::abort(403);
@@ -364,6 +367,16 @@ class OrdersController extends Controller
                     */
 
                     if ($order->update()) {
+
+                        /*
+                        | -------------------------------------------------------
+                        | make New Notification For The User Who Accept The Order
+                        | -------------------------------------------------------
+                        */
+
+                        Event::fire(new CreateNotify($order->id, $user->id, $order->user_id, 'CompeleteOrder'));
+
+
                         return 'success';
                     }
                 }

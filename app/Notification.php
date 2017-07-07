@@ -31,13 +31,13 @@ class Notification extends Model
     |
     */
     // User Relations
-    public function getUserSendNotification()
+    public function userWhoSendNotification()
     {
         return $this->belongsTo('App\User', 'user_notify_you');
     }
 
-    public function getUserReceiveNotify()
+    public function userWhoReceiveNotify()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'user_id');
     }
 }

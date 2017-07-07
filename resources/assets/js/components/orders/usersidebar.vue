@@ -1,5 +1,5 @@
 <template lang="html">
-          <div class="container">
+
               <ul class="list-group" style="padding:0px;">
                     <li class="list-group-item active">
                         <h5>
@@ -14,7 +14,6 @@
                         </a>
                     </li>
               </ul>
-          </div>
 
 </template>
 

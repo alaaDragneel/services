@@ -77,11 +77,11 @@ class PayController extends Controller
         // set Amount
         $transaction->setAmount($amount);
         // Base Url
-// NOTE        $baseUrl = url('/');
+        $baseUrl = url('/');
         // TO Redirect
-// NOTE        $redirectUrls = new RedirectUrls();
+        $redirectUrls = new RedirectUrls();
         // set setReturnUrl [success] && set setCancelUrl[Fail]
-// NOTE        $redirectUrls->setReturnUrl()->setCancelUrl();
+        $redirectUrls->setReturnUrl($baseUrl)->setCancelUrl($baseUrl);
         // make New Payment
         $payment = new Payment();
         // config the info TO Make the new Payment
@@ -89,7 +89,7 @@ class PayController extends Controller
             // Set Payer
             ->setPayer($payer)
             // Set RedirectUrls
-// NOTE            ->setRedirectUrls($redirectUrls)
+            ->setRedirectUrls($redirectUrls)
             // Set Transactions
             ->setTransactions(array($transaction));
 

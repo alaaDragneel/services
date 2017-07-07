@@ -28,9 +28,11 @@ elixir(function(mix) {
     mix.scripts([
         'main/jquery-1.12.4.min.js',
         'main/bootstrap.min.js',
-        'main/custom.js',
         'sweetalert.min.js',
-        'alertify.js'
+        'alertify.js',
+        'jquery.nicescroll.min.js',
+        'jquery.slimscroll.min.js',
+        'main/custom.js',
     ], 'public/js/main.js');
 
     mix.browserify([

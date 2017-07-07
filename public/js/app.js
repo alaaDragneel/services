@@ -24715,9 +24715,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-79b12258", module.exports)
+    hotAPI.createRecord("_v-5cc9747a", module.exports)
   } else {
-    hotAPI.update("_v-79b12258", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-5cc9747a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],32:[function(require,module,exports){
@@ -24754,9 +24754,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-2afedc6d", module.exports)
+    hotAPI.createRecord("_v-0e172e8f", module.exports)
   } else {
-    hotAPI.update("_v-2afedc6d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-0e172e8f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],33:[function(require,module,exports){
@@ -24798,9 +24798,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-36b0873b", module.exports)
+    hotAPI.createRecord("_v-fc232c4e", module.exports)
   } else {
-    hotAPI.update("_v-36b0873b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-fc232c4e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],34:[function(require,module,exports){
@@ -24819,9 +24819,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-6e5119e0", module.exports)
+    hotAPI.createRecord("_v-141555ae", module.exports)
   } else {
-    hotAPI.update("_v-6e5119e0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-141555ae", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],35:[function(require,module,exports){
@@ -24926,9 +24926,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-c0766cd6", module.exports)
+    hotAPI.createRecord("_v-a0ac849a", module.exports)
   } else {
-    hotAPI.update("_v-c0766cd6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-a0ac849a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../pages/sidebar.vue":60,"../users/SingleServices.vue":66,"babel-runtime/helpers/defineProperty":2,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],36:[function(require,module,exports){
@@ -24982,9 +24982,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-7d98639f", module.exports)
+    hotAPI.createRecord("_v-2810c83d", module.exports)
   } else {
-    hotAPI.update("_v-7d98639f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-2810c83d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],37:[function(require,module,exports){
@@ -25051,9 +25051,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-87b39b38", module.exports)
+    hotAPI.createRecord("_v-60ba6186", module.exports)
   } else {
-    hotAPI.update("_v-87b39b38", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-60ba6186", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../comments/addComment.vue":36,"vue":28,"vue-hot-reload-api":22}],38:[function(require,module,exports){
@@ -25140,9 +25140,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-c90fe456", module.exports)
+    hotAPI.createRecord("_v-19c45f77", module.exports)
   } else {
-    hotAPI.update("_v-c90fe456", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-19c45f77", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],39:[function(require,module,exports){
@@ -25199,9 +25199,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-6f855f12", module.exports)
+    hotAPI.createRecord("_v-4fbb76d6", module.exports)
   } else {
-    hotAPI.update("_v-6f855f12", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-4fbb76d6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],40:[function(require,module,exports){
@@ -25256,9 +25256,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-1ef19c2e", module.exports)
+    hotAPI.createRecord("_v-4f777bea", module.exports)
   } else {
-    hotAPI.update("_v-1ef19c2e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-4f777bea", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],41:[function(require,module,exports){
@@ -25313,9 +25313,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-eb7122be", module.exports)
+    hotAPI.createRecord("_v-cba73a82", module.exports)
   } else {
-    hotAPI.update("_v-eb7122be", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-cba73a82", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],42:[function(require,module,exports){
@@ -25370,9 +25370,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-5ab10579", module.exports)
+    hotAPI.createRecord("_v-426e159b", module.exports)
   } else {
-    hotAPI.update("_v-5ab10579", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-426e159b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],43:[function(require,module,exports){
@@ -25426,9 +25426,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-4e04f330", module.exports)
+    hotAPI.createRecord("_v-35c20352", module.exports)
   } else {
-    hotAPI.update("_v-4e04f330", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-35c20352", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],44:[function(require,module,exports){
@@ -25490,9 +25490,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-50c73b55", module.exports)
+    hotAPI.createRecord("_v-60ac2f73", module.exports)
   } else {
-    hotAPI.update("_v-50c73b55", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-60ac2f73", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../messages/messageMenu.vue":47,"./favList.vue":43,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],45:[function(require,module,exports){
@@ -25554,9 +25554,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-2cc14e88", module.exports)
+    hotAPI.createRecord("_v-00f5c6ac", module.exports)
   } else {
-    hotAPI.update("_v-2cc14e88", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-00f5c6ac", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],46:[function(require,module,exports){
@@ -25616,9 +25616,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-ca2307f8", module.exports)
+    hotAPI.createRecord("_v-59713cbc", module.exports)
   } else {
-    hotAPI.update("_v-ca2307f8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-59713cbc", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],47:[function(require,module,exports){
@@ -25663,9 +25663,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-3aab388d", module.exports)
+    hotAPI.createRecord("_v-418130a2", module.exports)
   } else {
-    hotAPI.update("_v-3aab388d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-418130a2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],48:[function(require,module,exports){
@@ -25702,9 +25702,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-20905eda", module.exports)
+    hotAPI.createRecord("_v-44acf49e", module.exports)
   } else {
-    hotAPI.update("_v-20905eda", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-44acf49e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],49:[function(require,module,exports){
@@ -25766,9 +25766,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-5ac2a6e0", module.exports)
+    hotAPI.createRecord("_v-7d17112e", module.exports)
   } else {
-    hotAPI.update("_v-5ac2a6e0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-7d17112e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],50:[function(require,module,exports){
@@ -25830,9 +25830,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-b03b44ae", module.exports)
+    hotAPI.createRecord("_v-525ac247", module.exports)
   } else {
-    hotAPI.update("_v-b03b44ae", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-525ac247", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],51:[function(require,module,exports){
@@ -25905,9 +25905,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-60249211", module.exports)
+    hotAPI.createRecord("_v-591775a2", module.exports)
   } else {
-    hotAPI.update("_v-60249211", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-591775a2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./messageMenu.vue":47,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],52:[function(require,module,exports){
@@ -25969,9 +25969,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-56257566", module.exports)
+    hotAPI.createRecord("_v-0a8cb6f0", module.exports)
   } else {
-    hotAPI.update("_v-56257566", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-0a8cb6f0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./messageMenu.vue":47,"./messagesList.vue":48,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],53:[function(require,module,exports){
@@ -25994,9 +25994,9 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-6028a5de", module.exports)
+    hotAPI.createRecord("_v-014537a2", module.exports)
   } else {
-    hotAPI.update("_v-6028a5de", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-014537a2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22,"vueify/lib/insert-css":29}],54:[function(require,module,exports){
@@ -26080,9 +26080,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-5b9d1bbb", module.exports)
+    hotAPI.createRecord("_v-498ed0d9", module.exports)
   } else {
-    hotAPI.update("_v-5b9d1bbb", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-498ed0d9", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./orderStructure.vue":55,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],55:[function(require,module,exports){
@@ -26111,9 +26111,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-755509d5", module.exports)
+    hotAPI.createRecord("_v-6346bef3", module.exports)
   } else {
-    hotAPI.update("_v-755509d5", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-6346bef3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../btns/status.vue":34,"vue":28,"vue-hot-reload-api":22}],56:[function(require,module,exports){
@@ -26196,9 +26196,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-10c412d6", module.exports)
+    hotAPI.createRecord("_v-02947018", module.exports)
   } else {
-    hotAPI.update("_v-10c412d6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-02947018", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./orderStructure.vue":55,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],57:[function(require,module,exports){
@@ -26304,15 +26304,15 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n            <div class=\"col-md-9\">\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n\n                    <div class=\"container-fluid\">\n                        <div class=\"content-wrapper\">\n                            <div class=\"item-container\">\n                                <div class=\"container\">\n                                    <div class=\"col-md-12\">\n                                        <h3 class=\"product-title\">{{ order.services.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ order.services.created_at | moment \"calendar\" }}</strong></span> </h3>\n                                        <span class=\"small\">\n                                            <strong>\n                                                <status :status=\"order.status\"></status>\n                                            </strong>\n                                            <strong v-if=\"showControll\">\n                                                <!--\n                                                authUser => User who Login\n                                                user_order => User Who Order the Service\n                                                user_id => User Who Add the Service\n                                                -->\n                                                <span v-if=\"authUser.id == user_id.id\">\n                                                    <span v-if=\"order.status == 1\">\n                                                        <!-- 2 => accept -->\n                                                        <button @click=\"changeStatus(2)\" type=\"button\" class=\"label btn btn-success\">\n                                                            <i class=\"fa fa-check\"></i> Accept\n                                                        </button>\n                                                        <!-- 3 => desline -->\n                                                        <button @click=\"changeStatus(3)\" type=\"button\" class=\"label btn btn-danger \">\n                                                            <i class=\"fa fa-close\"></i> Decline\n                                                        </button>\n                                                    </span>\n                                                </span>\n                                                <span v-if=\"authUser.id == user_order.id\">\n                                                        <!-- 4 => accept -->\n                                                        <span v-if=\"order.status == 2\">\n                                                            <button @click=\"finishOrder()\" type=\"button\" class=\"label btn btn-primary\">\n                                                                <i class=\"fa fa-check\"></i> Finish\n                                                            </button>\n                                                        </span>\n                                                </span>\n                                            </strong>\n                                        </span>\n                                        <div class=\"product-rating\">\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star-o\"></i>\n                                        </div>\n                                    </div>\n                                    <hr>\n                                    <div class=\"col-md-12\">\n                                        <div class=\"text-center\">\n                                            <div class=\"mdl-card__media\">\n                                                <div class=\"over\">\n                                                    <div class=\"container\">\n                                                        <div class=\"row\">\n                                                          <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                              <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                                  <div class=\"label label-info\">Price: $ {{ order.services.price }}</div>\n                                                              </div>\n                                                              <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                                  <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n                                                              </div>\n                                                          </div>\n                                                          <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                              <!-- buy Order -->\n                                                              <!-- <buy_btn :service=\"service\"></buy_btn> -->\n                                                              <!-- Favorite -->\n                                                              <!-- <fav_btn :service=\"service\"></fav_btn> -->\n                                                          </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"order.services.image\" alt=\"{{order.services.name}}\">\n                                            </div>\n                                        </div>\n                                    </div>\n\n                                    <div class=\"col-md-12 product-info\">\n                                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n                                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                                        </ul>\n                                        <div id=\"myTabContent\" class=\"tab-content\">\n                                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                                <br>\n                                                <p class=\"product-desc\">\n                                                    {{ order.services.description }}\n                                                </p>\n                                            </div>\n                                        </div>\n                                        <hr>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <all_comments :order=\"order\"></all_comments>\n                </div>\n            </div>\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <user_id :user=\"user_id\"></user_id>\n                <user_id :user=\"user_order\"></user_id>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<span v-if=\"isLoading\">\n    <div class=\"container-fluid\">\n        <div class=\"row\">\n            <div class=\"col-md-9\">\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n\n                    <div class=\"container-fluid\">\n                        <div class=\"content-wrapper\">\n                            <div class=\"item-container\">\n                                <div class=\"container\">\n                                    <div class=\"col-md-12\">\n                                        <h3 class=\"product-title\">{{ order.services.name }} <span class=\"small\"><strong><i class=\"fa fa-clock-o\"></i> {{ order.services.created_at | moment \"calendar\" }}</strong></span> </h3>\n                                        <span class=\"small\">\n                                            <strong>\n                                                <status :status=\"order.status\"></status>\n                                            </strong>\n                                        </span>\n                                        <div class=\"product-rating\">\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star gold\"></i>\n                                            <i class=\"fa fa-star-o\"></i>\n                                        </div>\n                                    </div>\n                                    <hr>\n                                    <div class=\"col-md-12\">\n                                        <div class=\"text-center\">\n                                            <div class=\"mdl-card__media\">\n                                                <div class=\"over\">\n                                                    <div class=\"container\">\n                                                        <div class=\"row\">\n                                                          <div class=\"col-md-12 col-sm-6 col-xs-6\">\n                                                              <div class=\"col-md-6 col-sm-6 col-xs-6\" style=\"margin-top: 7px;\">\n                                                                  <div class=\"label label-info\">Price: $ {{ order.services.price }}</div>\n                                                              </div>\n                                                              <div class=\"col-md-6 col-sm-6 col-xs-6\">\n                                                                  <div class=\"product-stock\">{{ ordersCount }} Order/s</div>\n                                                              </div>\n                                                          </div>\n                                                          <div class=\"col-md-12 col-sm-6 col-xs-6\" style=\"margin-top: 8px;\">\n                                                              <!-- buy Order -->\n                                                              <!-- <buy_btn :service=\"service\"></buy_btn> -->\n                                                              <!-- Favorite -->\n                                                              <!-- <fav_btn :service=\"service\"></fav_btn> -->\n                                                          </div>\n                                                        </div>\n                                                    </div>\n                                                </div>\n                                                <img class=\"img-responsive\" id=\"item-display\" v-bind:src=\"order.services.image\" alt=\"{{order.services.name}}\">\n                                            </div>\n                                        </div>\n                                    </div>\n\n                                    <div class=\"col-md-12 product-info\">\n                                        <ul id=\"myTab\" class=\"nav nav-tabs nav_tabs\">\n                                            <li class=\"active\"><a href=\"#service-one\" data-toggle=\"tab\">Details</a></li>\n                                        </ul>\n                                        <div id=\"myTabContent\" class=\"tab-content\">\n                                            <div class=\"tab-pane fade in active\" id=\"service-one\">\n                                                <br>\n                                                <p class=\"product-desc\">\n                                                    {{ order.services.description }}\n                                                </p>\n                                            </div>\n                                        </div>\n                                        <hr>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-md-12 col-md-12 col-sm-12 col-xs-12\">\n                    <all_comments :order=\"order\"></all_comments>\n                </div>\n            </div>\n            <div class=\"col-lg-3 col-md-3 col-sm-12 col-xs-12\">\n                <div class=\"container\">\n                    <ul class=\"list-group\" style=\"padding:0px;\" v-if=\"showControll\">\n                        <!--\n                        authUser => User who Login\n                        user_order => User Who Order the Service\n                        user_id => User Who Add the Service\n                        -->\n\n                        <li class=\"list-group-item active\" v-if=\"authUser.id == user_id.id &amp;&amp; order.status == 1\">\n                            <h5>\n                                <i class=\"fa fa-user\"></i>\n                                Accept Or Reject The Order\n                            </h5>\n                        </li>\n\n                        <li class=\"list-group-item active\" v-if=\"authUser.id == user_order.id &amp;&amp; order.status == 2\">\n                            <h5>\n                                <i class=\"fa fa-user\"></i>\n                                Finish The Order\n                            </h5>\n                        </li>\n                        <li class=\"list-group-item \" v-if=\"authUser.id == user_id.id &amp;&amp; order.status == 1\">\n                            <!-- 2 => accept -->\n                            <button @click=\"changeStatus(2)\" type=\"button\" class=\"btn btn-success btn-block\">\n                                <i class=\"fa fa-check\"></i> Accept\n                            </button>\n\n                        </li>\n                        <li class=\"list-group-item \" v-if=\"authUser.id == user_id.id &amp;&amp; order.status == 1\">\n\n                            <!-- 3 => desline -->\n                            <button @click=\"changeStatus(3)\" type=\"button\" class=\"btn btn-danger btn-block\">\n                                <i class=\"fa fa-close\"></i> Decline\n                            </button>\n                        </li>\n                        <li class=\"list-group-item \" v-if=\"authUser.id == user_order.id &amp;&amp; order.status == 2\">\n                            <!-- 4 => accept -->\n                            <button @click=\"finishOrder()\" type=\"button\" class=\"btn btn-info btn-block\">\n                                <i class=\"fa fa-check\"></i> Finish\n                            </button>\n                        </li>\n                    </ul>\n                    <user_id :user=\"user_id\"></user_id>\n                    <user_id :user=\"user_order\"></user_id>\n                </div>\n            </div>\n        </div>\n    </div>\n</span>\n<spinner v-ref:spinner=\"\" size=\"lg\" fixed=\"\" text=\"Loading....\"></spinner>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-567b22f4", module.exports)
+    hotAPI.createRecord("_v-7d0803b0", module.exports)
   } else {
-    hotAPI.update("_v-567b22f4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-7d0803b0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../btns/status.vue":34,"../comments/allComments.vue":37,"./usersidebar.vue":58,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],58:[function(require,module,exports){
@@ -26325,15 +26325,15 @@ exports.default = {
     props: ['user']
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"container\">\n    <ul class=\"list-group\" style=\"padding:0px;\">\n          <li class=\"list-group-item active\">\n              <h5>\n                  <a v-link=\"{name: '/User', params: {userId: user.id, userName: user.name}}\" style=\"color: #FFF;\">\n                      <i class=\"fa fa-user\"></i> {{ user.name }}\n                  </a>\n              </h5>\n          </li>\n          <li class=\"list-group-item \" v-for=\"service in user.services\">\n              <a  v-link=\"{name: '/ServicesDetails', params: {serviceId: service.id, serviceName: service.name}}\">\n                  {{ service.name }}\n              </a>\n          </li>\n    </ul>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<ul class=\"list-group\" style=\"padding:0px;\">\n      <li class=\"list-group-item active\">\n          <h5>\n              <a v-link=\"{name: '/User', params: {userId: user.id, userName: user.name}}\" style=\"color: #FFF;\">\n                  <i class=\"fa fa-user\"></i> {{ user.name }}\n              </a>\n          </h5>\n      </li>\n      <li class=\"list-group-item \" v-for=\"service in user.services\">\n          <a  v-link=\"{name: '/ServicesDetails', params: {serviceId: service.id, serviceName: service.name}}\">\n              {{ service.name }}\n          </a>\n      </li>\n</ul>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-b9c2b35e", module.exports)
+    hotAPI.createRecord("_v-e04f941a", module.exports)
   } else {
-    hotAPI.update("_v-b9c2b35e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-e04f941a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],59:[function(require,module,exports){
@@ -26435,9 +26435,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-1994abc6", module.exports)
+    hotAPI.createRecord("_v-2c474a82", module.exports)
   } else {
-    hotAPI.update("_v-1994abc6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-2c474a82", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../users/SingleServices.vue":66,"./sidebar.vue":60,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],60:[function(require,module,exports){
@@ -26456,9 +26456,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-3b2c74b7", module.exports)
+    hotAPI.createRecord("_v-a307b056", module.exports)
   } else {
-    hotAPI.update("_v-3b2c74b7", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-a307b056", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],61:[function(require,module,exports){
@@ -26482,9 +26482,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-4c480add", module.exports)
+    hotAPI.createRecord("_v-f6be1f0a", module.exports)
   } else {
-    hotAPI.update("_v-4c480add", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-f6be1f0a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],62:[function(require,module,exports){
@@ -26547,9 +26547,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-4ef8bd38", module.exports)
+    hotAPI.createRecord("_v-18e6274c", module.exports)
   } else {
-    hotAPI.update("_v-4ef8bd38", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-18e6274c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],63:[function(require,module,exports){
@@ -26635,9 +26635,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-9a4e2cbe", module.exports)
+    hotAPI.createRecord("_v-5d514e3f", module.exports)
   } else {
-    hotAPI.update("_v-9a4e2cbe", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-5d514e3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./SingleServices.vue":61,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],64:[function(require,module,exports){
@@ -26743,9 +26743,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-1ccefed1", module.exports)
+    hotAPI.createRecord("_v-20da661a", module.exports)
   } else {
-    hotAPI.update("_v-1ccefed1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-20da661a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../btns/buy.vue":31,"../btns/fav.vue":32,"../btns/rating.vue":33,"../users/SingleServices.vue":66,"./SingleServices.vue":61,"./sidebar.vue":65,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}],65:[function(require,module,exports){
@@ -26764,9 +26764,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-edbd6316", module.exports)
+    hotAPI.createRecord("_v-70de5e97", module.exports)
   } else {
-    hotAPI.update("_v-edbd6316", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-70de5e97", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"vue":28,"vue-hot-reload-api":22}],66:[function(require,module,exports){
@@ -26813,9 +26813,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-36d14997", module.exports)
+    hotAPI.createRecord("_v-49350e8e", module.exports)
   } else {
-    hotAPI.update("_v-36d14997", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-49350e8e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"../btns/buy.vue":31,"../btns/fav.vue":32,"../btns/rating.vue":33,"vue":28,"vue-hot-reload-api":22}],67:[function(require,module,exports){
@@ -26905,9 +26905,9 @@ if (module.hot) {(function () {  module.hot.accept()
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-448f024c", module.exports)
+    hotAPI.createRecord("_v-6b1be308", module.exports)
   } else {
-    hotAPI.update("_v-448f024c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-6b1be308", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"./SingleServices.vue":66,"vue":28,"vue-hot-reload-api":22,"vue-strap/dist/vue-strap.min":26}]},{},[30]);
