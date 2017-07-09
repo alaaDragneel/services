@@ -22,6 +22,7 @@ elixir(function(mix) {
         'alertify.core.css',
         'alertify.default.css',
         'alertify.css',
+        'fontawesome-stars.css',
         'custome.css'
     ], 'public/css/style.css');
 
@@ -30,8 +31,8 @@ elixir(function(mix) {
         'main/bootstrap.min.js',
         'sweetalert.min.js',
         'alertify.js',
-        'jquery.nicescroll.min.js',
         'jquery.slimscroll.min.js',
+        'jquery.barrating.min.js',
         'main/custom.js',
     ], 'public/js/main.js');
 

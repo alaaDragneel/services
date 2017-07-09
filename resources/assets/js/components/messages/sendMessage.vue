@@ -1,17 +1,24 @@
 <template lang="html">
-    <span v-if="isLoading">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3 col-md-2">
-                    <message_menu></message_menu>
-                </div>
-                <div class="col-sm-9 col-md-10">
-                    <message_list :messages="messages" :type="send"></message_list>
+    <navbar></navbar>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <span v-if="isLoading">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-2">
+                                <message_menu></message_menu>
+                            </div>
+                            <div class="col-sm-9 col-md-10">
+                                <message_list :messages="messages" :type="send"></message_list>
 
-                </div>
+                            </div>
+                        </div>
+                    </div>
+                </span>
             </div>
         </div>
-    </span>
+    </div>
 <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 

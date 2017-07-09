@@ -1,4 +1,8 @@
 <template lang="html">
+    <navbar></navbar>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
                 <span v-if="isLoading">
                     <h2 class="text-center">
                         <div class="row">
@@ -45,6 +49,9 @@
                         </table>
                     </div>
                 </span>
+            </div>
+        </div>
+    </div>
     <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 

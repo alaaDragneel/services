@@ -1,27 +1,33 @@
 <template lang="html">
+    <navbar></navbar>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <span v-if="isLoading">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-3 col-md-2">
+                                <notification_menu></notification_menu>
+                            </div>
+                            <div class="col-sm-9 col-md-10">
+                                <notification_list :notifications="notifications"></notification_list>
+                                <div v-if="notifications.length >= 6">
+                                    <div class="col-lg-12 btn btn-info" v-if="moreOrders" @click="showMore()">Show More</div>
+                                    <div class="col-lg-12 alert alert-danger text-center" v-if="!moreOrders">NO More Notifications</div>
+                                    <div class="clearfix"></div>
+                                    <br>
+                                </div>
+                                <div v-else>
+                                    <div class="alert alert-danger text-center">You Have No Notifications!</div>
+                                </div>
 
-    <span v-if="isLoading">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3 col-md-2">
-                    <notification_menu></notification_menu>
-                </div>
-                <div class="col-sm-9 col-md-10">
-                    <notification_list :notifications="notifications"></notification_list>
-                    <div v-if="notifications.length >= 6">
-                        <div class="col-lg-12 btn btn-info" v-if="moreOrders" @click="showMore()">Show More</div>
-                        <div class="col-lg-12 alert alert-danger text-center" v-if="!moreOrders">NO More Notifications</div>
-                        <div class="clearfix"></div>
-                        <br>
+                            </div>
+                        </div>
                     </div>
-                    <div v-else>
-                        <div class="alert alert-danger text-center">You Have No Notifications!</div>
-                    </div>
-
-                </div>
+                </span>
             </div>
         </div>
-    </span>
+    </div>
     <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 

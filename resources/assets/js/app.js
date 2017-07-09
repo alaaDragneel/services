@@ -4,14 +4,25 @@ var VueResource = require('vue-resource');
 Vue.use(VueResource);
 // Vue Router
 var VueRouter = require('vue-router');
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 // Vue Mement
 var VueMoment = require('vue-moment');
 Vue.use(VueMoment);
 // Vue validator
-var VueValidator = require('vue-validator')
-Vue.use(VueValidator)
-
+var VueValidator = require('vue-validator');
+Vue.use(VueValidator);
+//  Spinner
+var PulseLoader= require('vue-spinner/dist/vue-spinner.min').SyncLoader;
+// Register the component globally
+Vue.component('pulse-loader', PulseLoader);
+// Vue Star Rating
+var StarRating = require('./components/btns/rating.vue');
+// Register the component globally
+Vue.component('star-rating', StarRating);
+// Vue navbar
+var navbar = require('./components/header/navbar.vue');
+// Register the component globally
+Vue.component('navbar', navbar);
 
 // Vue Recource init Headers With laravel csrf_token
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementById('_token').getAttribute('value');
