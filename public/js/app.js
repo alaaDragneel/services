@@ -24773,29 +24773,38 @@ exports.default = {
         };
     },
 
-    methods: {
-        AddRate: function AddRate(vote) {
-            var formData = new FormData();
-            formData.append('vote', vote);
-            formData.append('serviceId', this.service.id);
+    ready: function ready() {
+        $('#example').barrating({
+            theme: 'fontawesome-stars',
 
-            this.$http.post('addNewVote', formData).then(function (res) {
-                this.rating = false;
-                this.ratingValue = vote;
-                /*
-                | NOTE use $dispatch From Childeren To Parent
-                | NOTE use $broadcast From Parent To Childeren
-                */
-                this.$dispatch('AddNewRate', vote);
-                alertify.success("Service Has Been Rated By " + vote + " Star/s");
-            }, function (res) {
-                alertify.error('Error: Some Problems occure Try Again Later');
-            });
-        }
+            onSelect: function onSelect(value, text, event) {
+                alert(value + ' ' + text + ' ' + event);
+            }
+        });
     }
+    // methods: {
+    //     AddRate: function (vote) {
+    //         var formData = new FormData();
+    //         formData.append('vote', vote);
+    //         formData.append('serviceId', this.service.id);
+    //
+    //         this.$http.post('addNewVote', formData).then(function (res) {
+    //             this.rating = false;
+    //             this.ratingValue = vote;
+    //             /*
+    //             | NOTE use $dispatch From Childeren To Parent
+    //             | NOTE use $broadcast From Parent To Childeren
+    //             */
+    //             this.$dispatch('AddNewRate', vote);
+    //             alertify.success("Service Has Been Rated By "+ vote +" Star/s");
+    //         }, function (res) {
+    //             alertify.error('Error: Some Problems occure Try Again Later');
+    //         });
+    //     }
+    // }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"rating\" v-if=\"rating\">\n    <input type=\"radio\" id=\"star5\" name=\"rating\" value=\"5\" @click.prevent=\"AddRate(5)\"/>\n    <label for=\"star5\" title=\"Rocks!\">5 stars</label>\n    <input type=\"radio\" id=\"star4\" name=\"rating\" value=\"4\" @click.prevent=\"AddRate(4)\"/>\n    <label for=\"star4\" title=\"Pretty good\">4 stars</label>\n    <input type=\"radio\" id=\"star3\" name=\"rating\" value=\"3\" @click.prevent=\"AddRate(3)\"/>\n    <label for=\"star3\" title=\"Meh\">3 stars</label>\n    <input type=\"radio\" id=\"star2\" name=\"rating\" value=\"2\" @click.prevent=\"AddRate(2)\"/>\n    <label for=\"star2\" title=\"Kinda bad\">2 stars</label>\n    <input type=\"radio\" id=\"star1\" name=\"rating\" value=\"1\" @click.prevent=\"AddRate(1)\"/>\n    <label for=\"star1\" title=\"Sucks big time\">1 star</label>\n</div>\n<div class=\"rating\" v-if=\"!rating\">\n    <label v-for=\"rate in ratingValue\" class=\"fa fa-star ratingStyleActive\"></label>\n</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"rating\" v-if=\"rating\">\n    <select id=\"example\">\n        <option value=\"1\">1</option>\n        <option value=\"2\">2</option>\n        <option value=\"3\">3</option>\n        <option value=\"4\">4</option>\n        <option value=\"5\">5</option>\n    </select>\n</div>\n<div class=\"rating\" v-if=\"!rating\">\n    <select id=\"example\">\n        <option value=\"1\">1</option>\n        <option value=\"2\">2</option>\n        <option value=\"3\">3</option>\n        <option value=\"4\">4</option>\n        <option value=\"5\">5</option>\n    </select>\n</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
