@@ -152,13 +152,6 @@ class MessagesController extends Controller
         App::abort(403);
     }
 
-    public function checkMessages()
-    {
-        $user = Auth::user();
-        $messageCount = getUnReadMessages($user->id);
-        return Response::json(['countMessages' => $messageCount]);
-    }
-
     /**
      * Show the form for editing the specified resource.
      *

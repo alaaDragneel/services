@@ -70,10 +70,4 @@ class FavoriteController extends Controller
         App::abort(403);
 
     }
-    public function checkFavorites()
-    {
-        $user = Auth::user();
-        $favorite = getFavCounter($user->id);
-        return Response::json(['favorite' => $favorite]);
-    }
 }

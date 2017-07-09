@@ -135,14 +135,14 @@
                                 </ul>
                             </li>
                             <!-- Notification -->
-                            <li class="dropdown notifications-menu" id="notifications-menu">
+                            <li class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
-                                    <span id="counter" class="label label-warning"></span>
+                                    <span class="label label-warning">{{ notify }}</span>
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li class="header">You have <span id="counter-header"></span> notifications</li>
+                                    <li class="header">You have {{ notify }} notifications</li>
                                     <li>
                                         <!-- inner menu: contains the actual data -->
                                         <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
@@ -157,10 +157,7 @@
                                 <a v-link="{path: '/GetMyFavorites'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <span class="fa fa-heart"></span>
                                     <span class="hidden-lg hidden-md">Favorite</span>
-                                    <!-- @php $favorite = getFavCounter(Auth::user()->id); @endphp -->
-                                    <!-- @if ($favorite > 0) -->
-                                        <span class="label label-danger"><span id="favoriteCount">5</span></span>
-                                    <!-- @endif -->
+                                        <span class="label label-danger">{{ favorite }}</span>
                                 </a>
                             </li>
                             <!-- Purchase Orders -->
@@ -168,10 +165,7 @@
                                 <a v-link="{path: '/PurchaseOrders'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-cart-plus"></i>
                                     <span class="hidden-lg hidden-md">Purchase Orders</span>
-                                    <!-- @php $purchaseOrders = getAllPurchesOrderCounter(Auth::user()->id); @endphp -->
-                                    <!-- @if ($purchaseOrders > 0) -->
-                                        <span class="label label-primary" > <span id="orderCount">2</span></span>
-                                    <!-- @endif -->
+                                        <span class="label label-primary" >{{ PurchaseOrders }}</span>
                                 </a>
                             </li>
                             <!-- unReadMessages -->
@@ -179,18 +173,14 @@
                                 <a v-link="{path: '/GetUnReadMessages'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <i class="fa fa-eye-slash"></i>
                                     <span class="hidden-lg hidden-md">Unread Messages</span>
-                                    <!-- @php $unreadMessages = getUnReadMessages(Auth::user()->id); @endphp -->
-                                    <!-- @if ($unreadMessages > 0) -->
-                                        <span class="label label-info" ><span id="messageCount">9</span></span>
-                                    <!-- @endif -->
+                                        <span class="label label-info" >{{ unReadMessages }}</span>
                                 </a>
                             </li>
                             <!-- User Section -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">Alaa</span> <span class="caret"></span>
+                                    <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">alaaDragneel</span> <span class="caret"></span>
                                 </a>
-
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="logout"><i class="fa fa-btn fa-edit"></i> My Information</a></li>
                                     <li><a href="logout"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
@@ -215,5 +205,28 @@
 
 <script>
 export default {
+    data() {
+        return {
+            notify: 0,
+            favorite: 0,
+            PurchaseOrders: 0,
+            unReadMessages: 0,
+        }
+    },
+    ready: function () {
+        this.GetNotificationsCount();
+    },
+    methods: {
+        GetNotificationsCount: function () {
+            this.$http.get('/GetNotificationsCount').then(function (res) {
+                this.notify = res.body['notificationsCount'];
+                this.favorite = res.body['favoritesCount'];
+                this.PurchaseOrders = res.body['ordersCount'];
+                this.unReadMessages = res.body['messagesCount'];
+            }, function (res) {
+                alertify.error('Some Errors happends');
+            });
+        }
+    }
 }
 </script>

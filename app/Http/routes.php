@@ -32,7 +32,6 @@ Route::get('/incomingOrders/{length?}', 'OrdersController@getMyIncomingOrders');
 Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
 Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
 Route::get('/finishOrder/{order_id}', 'OrdersController@finishOrder');
-Route::get('/checkOrders', 'OrdersController@checkOrders');
 // Comments
 Route::resource('/Comments', 'CommentsController');
 // Message
@@ -40,12 +39,10 @@ Route::resource('/Messages', 'MessagesController');
 Route::get('/GetRecivedMessages', 'MessagesController@GetRecivedMessages');
 Route::get('/GetUnReadMessages', 'MessagesController@GetUnReadMessages');
 Route::get('/GetReadMessages', 'MessagesController@GetReadMessages');
-Route::get('/checkMessages', 'MessagesController@checkMessages');
 // fevorite
 Route::get('/Addfavorite/{service_id}', 'FavoriteController@Addfavorite');
 Route::get('/userFavorites', 'FavoriteController@userFavorites');
 Route::delete('/deleteFav/{fav_id}', 'FavoriteController@deleteFav');
-Route::get('/checkFavorites', 'FavoriteController@checkFavorites');
 // Rating
 Route::post('/addNewVote', 'VoteController@addNewVote');
 // Category
@@ -62,4 +59,4 @@ Route::post('/AddCredit', 'PayController@AddCredit');
 Route::get('/GetMyNotifications/{length?}', 'NotificationController@GetMyNotifications');
 Route::get('/GetMyUnReadNotifications/{length?}', 'NotificationController@GetMyUnReadNotifications');
 Route::get('/GetMyNotificationsWithAjax', 'NotificationController@GetMyNotificationsWithAjax');
-Route::get('/checkNotification', 'NotificationController@checkNotification');
+Route::get('/GetNotificationsCount', 'NotificationController@GetNotificationsCount');

@@ -124,10 +124,18 @@ class NotificationController extends Controller
 
     }
 
-    public function checkNotification()
+    public function GetNotificationsCount()
     {
         $user = Auth::user();
         $notificationsCount = getAllNotification($user->id);
-        return Response::json(['count' => $notificationsCount]);
+        $favoritesCount = getFavCounter($user->id);
+        $ordersCount = getAllPurchesOrderCounter($user->id);
+        $messagesCount = getUnReadMessages($user->id);
+        return Response::json([
+            'notificationsCount' => $notificationsCount,
+            'favoritesCount' => $favoritesCount,
+            'ordersCount' => $ordersCount,
+            'messagesCount' => $messagesCount
+        ]);
     }
 }
