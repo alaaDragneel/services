@@ -29,19 +29,19 @@
                                                 <span class="pull-left">
                                                     <rating :service="service"></rating>
                                                 </span>
+                                                <!-- Number Of Users Whose Rate -->
+                                                <span class="pull-right label label-danger">
+                                                    <i class="fa fa-user"></i>
+                                                    Number of voters
+                                                    {{ service.votes_count }}
+                                                </span>
+                                                <!-- The Service Rates -->
+                                                <span class="pull-right label label-warning" style="margin-right: 5px;">
+                                                    <i class="fa fa-star"></i>
+                                                    Number of stars
+                                                    {{ sumVotes }}
+                                                </span>
                                                 <span v-if="service.votes_count > 0">
-                                                    <!-- Number Of Users Whose Rate -->
-                                                    <span class="pull-right label label-danger">
-                                                        <i class="fa fa-user"></i>
-                                                        Number of voters
-                                                        {{ service.votes_count }}
-                                                    </span>
-                                                    <!-- The Service Rates -->
-                                                    <span class="pull-right label label-warning" style="margin-right: 5px;">
-                                                        <i class="fa fa-star"></i>
-                                                        Number of stars
-                                                        {{ sumVotes }}
-                                                    </span>
                                                     <span class="pull-right label label-success" style="margin-right: 5px;">
                                                         <!--
                                                         Percent =>
@@ -53,11 +53,11 @@
                                                         NOTE this is the final score
                                                         ]
                                                         0/0 => NaN
-                                                    -->
-                                                    % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}
-                                                    percentage
+                                                        -->
+                                                        % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}
+                                                        percentage
+                                                    </span>
                                                 </span>
-                                            </span>
                                             <!-- Rating run Here -->
                                         </div>
                                         <div class="clearfix"></div>
@@ -211,6 +211,12 @@
             AddNewRate: function (val) {
                 this.service.votes_count += 1; // users count
                 this.sumVotes += val; // stars count
+            },
+            addToParentFavorite: function (value) {
+                this.$broadcast('addToChildFavorite', value);
+            },
+            addToParentBuy: function (value) {
+                this.$broadcast('addToChildBuy', value);
             }
         },
         route: {

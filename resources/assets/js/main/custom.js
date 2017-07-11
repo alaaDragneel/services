@@ -1,9 +1,18 @@
 $(document).ready(function(){
-    //trigger Slim Scroll
-   $(".menu").slimscroll({
-      height: '200px',
-      alwaysVisible: false,
-      size: '3px'
-    }).css("width", "100%");
+    /*
+    | ------------------------------------------------
+    |  Notification
+    | ----------------------------------------------
+    */
+    // var li = $('.notification-real-li');
+    // console.log(li);
+    // li.on('click', function(event) {
+    //     event.preventDefault();
+    //     console.log(event);
+    //     if (!$(this).hasClass('seen')) {
+    //             $(this).addClass('seen')
+    //     }
+    // });
+
 
 });

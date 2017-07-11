@@ -2919,7 +2919,7 @@ h4.text-center {
   color: #00a65a !important;
 }
 .navbar-nav>.notifications-menu>.dropdown-menu {
-    width: 280px;
+    width: 300px;
     padding: 0 0 0 0;
     margin: 0;
     top: 100%;
@@ -2951,7 +2951,7 @@ h4.text-center {
     text-overflow: ellipsis;
     padding: 10px;
 }
-.navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a>.fa {
+.navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a.fa {
     width: 20px;
 }
 .navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a {

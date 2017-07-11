@@ -37,7 +37,7 @@ class FavoriteController extends Controller
                     $fav->user_id = $user->id;
                     $fav->own_user = $service->user_id;
                     if ($fav->save()) {
-                        return 'done';
+                        return Favorite::where('user_id', $user->id)->count();
                     }
                     App::abort(403);
                 }
@@ -61,7 +61,7 @@ class FavoriteController extends Controller
             $user = Auth::user();
             if ($fav->user_id == $user->id) {
                 if ($fav->delete()) {
-                    return 'done';
+                    return Favorite::where('user_id', $user->id)->count();
                 }
                 App::abort(403);
             }

@@ -19,7 +19,7 @@
               </li>
         </ul>
         <!-- SIDEBAR MENU -->
-        <ul v-if="section2" class="list-group" style="padding:0px;">
+        <ul v-if="section2.length > 0" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
                       <i class="fa fa-heart"></i>

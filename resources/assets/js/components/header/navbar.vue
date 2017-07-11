@@ -135,10 +135,10 @@
                                 </ul>
                             </li>
                             <!-- Notification -->
-                            <li class="dropdown notifications-menu">
+                            <li @click="getAllUserNotifications" class="dropdown notifications-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
-                                    <span class="label label-warning">{{ notify }}</span>
+                                    <span class="label label-success">{{ notify }}</span>
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
@@ -146,7 +146,12 @@
                                     <li>
                                         <!-- inner menu: contains the actual data -->
                                         <ul class="menu" style="overflow: hidden; width: 100%; height: 200px;">
-                                            <li id="loading" style="position: absolute; top: 50%; left: 44%; font-size: 30px; color: #999;"><i class="fa fa-spinner fa-spin"></i></li>
+                                            <li v-if="notifyLoading" style="position: absolute; top: 50%; left: 44%; font-size: 30px; color: #999;">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                            </li>
+                                            <li v-if="allNotify.length > 0" v-for="notify in allNotify" :class="['main-li', 'text-center', notify.seen == 1 ? 'seen' : '']" track-by="$index">
+                                                    <notify_list v-if="!notifyLoading" :notify="notify"></notify_list>
+                                            </li>
                                         </ul>
                                     </li>
                                     <li class="footer"><a v-link="{path: '/Notification'}">View all</a></li>
@@ -157,7 +162,7 @@
                                 <a v-link="{path: '/GetMyFavorites'}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <span class="fa fa-heart"></span>
                                     <span class="hidden-lg hidden-md">Favorite</span>
-                                        <span class="label label-danger">{{ favorite }}</span>
+                                    <span class="label label-danger">{{ favorite }}</span>
                                 </a>
                             </li>
                             <!-- Purchase Orders -->
@@ -204,16 +209,29 @@
 </template>
 
 <script>
+import Types from './notificationsType.vue';
 export default {
+    components: {
+        notify_list: Types
+    },
     data() {
         return {
             notify: 0,
             favorite: 0,
             PurchaseOrders: 0,
             unReadMessages: 0,
+            allNotify:  [],
+            notifyLoading: false,
         }
     },
     ready: function () {
+        //trigger Slim Scroll
+       $(".menu").slimscroll({
+          height: '200px',
+          alwaysVisible: false,
+          size: '3px'
+        }).css("width", "100%");
+
         this.GetNotificationsCount();
     },
     methods: {
@@ -224,9 +242,33 @@ export default {
                 this.PurchaseOrders = res.body['ordersCount'];
                 this.unReadMessages = res.body['messagesCount'];
             }, function (res) {
-                alertify.error('Some Errors happends');
+                alertify.error('Some Errors happends, Error Code: 1000');
             });
-        }
+        },
+        getAllUserNotifications: function () {
+            this.notifyLoading = true;
+            this.$http.get('/getAllUserNotifications').then(function (res) {
+                this.allNotify = res.body['notifications'];
+                this.notify = res.body['notificationsCount'];
+                this.notifyLoading = false;
+            }, function (res) {
+                alertify.error('Some Errors happends, Error Code: 1001');
+            });
+        },
+    },
+    events: {
+        // add favorites
+        addToChildFavorite: function (value) {
+            this.favorite = parseInt(value);
+        },
+        // delete favorites
+        deleteFromChild: function (value) {
+            this.favorite = parseInt(value);
+        },
+        // add Purchase Orders
+        addToChildBuy: function (value) {
+            this.PurchaseOrders = parseInt(value);
+        },
     }
 }
 </script>

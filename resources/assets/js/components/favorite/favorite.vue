@@ -2,7 +2,7 @@
     <navbar></navbar>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">            
+            <div class="col-md-12">
                 <span v-if="isLoading">
                     <div class="container">
                         <div class="row">
@@ -52,6 +52,11 @@ export default {
             },function (res) {
                 alertify.error('Error Happend Try Again Later');
             });
+        }
+    },
+    events: {
+        deleteFromParent: function (val) {
+            this.$broadcast('deleteFromChild', val);
         }
     },
     route: {

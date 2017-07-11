@@ -138,4 +138,16 @@ class NotificationController extends Controller
             'messagesCount' => $messagesCount
         ]);
     }
+
+    public function getAllUserNotifications()
+    {
+        $user = Auth::user();
+        $notifications = getAllNotificationObjects($user->id);
+        $notificationsCount = getAllNotification($user->id);
+
+        return Response::json([
+            'notifications' => $notifications,
+            'notificationsCount' => $notificationsCount,
+        ]);
+    }
 }

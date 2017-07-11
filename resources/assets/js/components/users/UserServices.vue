@@ -125,6 +125,14 @@
                 this.getUserServices(length);
             }
         },
+        events: {
+            addToParentFavorite: function (value) {
+                this.$broadcast('addToChildFavorite', value);
+            },
+            addToParentBuy: function (value) {
+                this.$broadcast('addToChildBuy', value);
+            }
+        },
         route: {
             canReuse: false // Force reload data
         }

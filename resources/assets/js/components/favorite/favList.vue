@@ -103,6 +103,7 @@
                 this.$refs.spinner.show();
                 this.$http.delete('deleteFav/' + id).then(function (res) {
                     this.favorites.splice(index, 1);
+                    this.$dispatch('deleteFromParent', res.body);
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 },function (res) {

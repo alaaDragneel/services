@@ -148,7 +148,9 @@ class OrdersController extends Controller
 
                             Event::fire(new CreateNotify($orders->id, $user->id, $orders->user_id, 'ReviceOrders'));
 
-                            return 'true';
+                            return Order::where(function ($q) use ($user) {
+                                $q->where('user_order', $user->id)->where('status', 0);
+                            })->count();
                         }
                         App::abort(403);
                     }

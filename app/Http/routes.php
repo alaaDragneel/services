@@ -58,5 +58,5 @@ Route::post('/AddCredit', 'PayController@AddCredit');
 // Notifications
 Route::get('/GetMyNotifications/{length?}', 'NotificationController@GetMyNotifications');
 Route::get('/GetMyUnReadNotifications/{length?}', 'NotificationController@GetMyUnReadNotifications');
-Route::get('/GetMyNotificationsWithAjax', 'NotificationController@GetMyNotificationsWithAjax');
 Route::get('/GetNotificationsCount', 'NotificationController@GetNotificationsCount');
+Route::get('/getAllUserNotifications', 'NotificationController@getAllUserNotifications');

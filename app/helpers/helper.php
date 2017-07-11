@@ -23,7 +23,7 @@ function getAllNotification($user_id) {
 }
 
 function getAllNotificationObjects($user_id) {
-    return App\Notification::where(function ($q) use ($user_id) {
-        $q->where('user_id', $user_id)->where('seen', 0);
-    })->with('userWhoSendNotification')->orderBy('id', 'DESC')->get();
+    return App\Notification::where('user_id', $user_id)
+    ->with('userWhoSendNotification')
+    ->take(20)->orderBy('id', 'DESC')->get();
 }

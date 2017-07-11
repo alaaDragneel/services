@@ -14,8 +14,8 @@ export default {
     methods: {
         addFavorite: function () {
             this.$http.get('Addfavorite/' + this.service.id).then(function (res) {
-                swal('Success', 'The Service Added TO Fivorite Sucessfully', 'success');
-
+                alertify.success('Success: The Service Added TO Fivorite Sucessfully');
+                this.$dispatch('addToParentFavorite', res.body);
             }, function (res) {
 
                 alertify.error('Error: Some Problems occure Maybe because the Following Resons');

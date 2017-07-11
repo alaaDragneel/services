@@ -23,7 +23,8 @@ export default {
         addOrder: function () {
             this.disabled = true;
             this.$http.get('Orders/' + this.service.id).then(function (res) {
-                alertify.success('The Service Added Successfully Waiting The Approvment!');
+                alertify.success('Success: The Service Added Successfully Waiting The Approvment!');
+                this.$dispatch('addToParentBuy', res.body);
             }, function (res) {
                 this.error = "Something Goes Wrong You can't order this Service For The Next Resons!\
                 <p>\
