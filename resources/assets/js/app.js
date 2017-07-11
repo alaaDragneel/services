@@ -25,7 +25,7 @@ var navbar = require('./components/header/navbar.vue');
 Vue.component('navbar', navbar);
 
 // Vue Recource init Headers With laravel csrf_token
-Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementById('_token').getAttribute('value');
+Vue.http.headers.common['X-CSRF-TOKEN'] = $('#_token').attr('value');
 
 // Vue Router init
 

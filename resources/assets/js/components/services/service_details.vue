@@ -27,7 +27,7 @@
                                             <div class="product-rating">
                                                 <!-- Rating run Here -->
                                                 <span class="pull-left">
-                                                    <rating :service="service"></rating>
+                                                    <rating :service="service" :rate_before="userRate"></rating>
                                                 </span>
                                                 <!-- Number Of Users Whose Rate -->
                                                 <span class="pull-right label label-danger">
@@ -178,7 +178,8 @@
                 sumVotes: 0,
                 mostVoted: [],
                 mostViewd: [],
-                section2: []
+                section2: [],
+                userRate: ''
             }
         },
         ready: function () {
@@ -197,6 +198,7 @@
                     this.mostVoted = res.body['mostVoted'];
                     this.mostViewd = res.body['mostViewd'];
                     this.section2 = res.body['sidebarSection2'];
+                    this.userRate = res.body['userRate'];
                     this.$refs.spinner.hide();
                     this.isLoading = true;
                 }, function (res) {

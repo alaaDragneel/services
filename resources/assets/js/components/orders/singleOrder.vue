@@ -21,119 +21,144 @@
                                                             </strong>
                                                         </span>
                                                         <div class="product-rating">
-                                                            <i class="fa fa-star gold"></i>
-                                                            <i class="fa fa-star gold"></i>
-                                                            <i class="fa fa-star gold"></i>
-                                                            <i class="fa fa-star gold"></i>
-                                                            <i class="fa fa-star-o"></i>
-                                                        </div>
+                                                            <!-- Number Of Users Whose Rate -->
+                                                            <span class="pull-right label label-danger">
+                                                                <i class="fa fa-user"></i>
+                                                                Number of voters
+                                                                {{ service.votes_count }}
+                                                            </span>
+                                                            <!-- The Service Rates -->
+                                                            <span class="pull-right label label-warning" style="margin-right: 5px;">
+                                                                <i class="fa fa-star"></i>
+                                                                Number of stars
+                                                                {{ sumVotes }}
+                                                            </span>
+                                                            <span v-if="service.votes_count > 0">
+                                                                <span class="pull-right label label-success" style="margin-right: 5px;">
+                                                                    <!--
+                                                                    Percent =>
+                                                                    [
+                                                                    NOTE This Is The Service Score
+                                                                    (total votes * 100)
+                                                                    =============================================
+                                                                    (number Of rated users * max rate value[ 5 ])
+                                                                    NOTE this is the final score
+                                                                    ]
+                                                                    0/0 => NaN
+                                                                -->
+                                                                % {{ parseInt((sumVotes * 100) / (service.votes_count * 5)) }}
+                                                                percentage
+                                                            </span>
+                                                        </span>
+                                                        <div class="clearfix"></div>
+                                                        <hr>
                                                     </div>
-                                                    <hr>
-                                                    <div class="col-md-12">
-                                                        <div class="text-center">
-                                                            <div class="mdl-card__media">
-                                                                <div class="over">
-                                                                    <div class="container">
-                                                                        <div class="row">
-                                                                            <div class="col-md-12 col-sm-6 col-xs-6">
-                                                                                <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 7px;">
-                                                                                    <div class="label label-info">Price: $ {{ order.services.price }}</div>
-                                                                                </div>
-                                                                                <div class="col-md-6 col-sm-6 col-xs-6">
-                                                                                    <div class="product-stock">{{ ordersCount }} Order/s</div>
-                                                                                </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="text-center">
+                                                        <div class="mdl-card__media">
+                                                            <div class="over">
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-sm-6 col-xs-6">
+                                                                            <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 7px;">
+                                                                                <div class="label label-info">Price: $ {{ order.services.price }}</div>
                                                                             </div>
-                                                                            <div class="col-md-12 col-sm-6 col-xs-6" style="margin-top: 8px;">
-                                                                                <!-- buy Order -->
-                                                                                <!-- <buy_btn :service="service"></buy_btn> -->
-                                                                                <!-- Favorite -->
-                                                                                <!-- <fav_btn :service="service"></fav_btn> -->
+                                                                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                                                                <div class="product-stock">{{ ordersCount }} Order/s</div>
                                                                             </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 col-sm-6 col-xs-6" style="margin-top: 8px;">
+                                                                            <!-- buy Order -->
+                                                                            <!-- <buy_btn :service="service"></buy_btn> -->
+                                                                            <!-- Favorite -->
+                                                                            <!-- <fav_btn :service="service"></fav_btn> -->
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <img class="img-responsive" id="item-display" v-bind:src="order.services.image" alt="{{order.services.name}}">
                                                             </div>
+                                                            <img class="img-responsive" id="item-display" v-bind:src="order.services.image" alt="{{order.services.name}}">
                                                         </div>
                                                     </div>
+                                                </div>
 
-                                                    <div class="col-md-12 product-info">
-                                                        <ul id="myTab" class="nav nav-tabs nav_tabs">
-                                                            <li class="active"><a href="#service-one" data-toggle="tab">Details</a></li>
-                                                        </ul>
-                                                        <div id="myTabContent" class="tab-content">
-                                                            <div class="tab-pane fade in active" id="service-one">
-                                                                <br>
-                                                                <p class="product-desc">
-                                                                    {{ order.services.description }}
-                                                                </p>
-                                                            </div>
+                                                <div class="col-md-12 product-info">
+                                                    <ul id="myTab" class="nav nav-tabs nav_tabs">
+                                                        <li class="active"><a href="#service-one" data-toggle="tab">Details</a></li>
+                                                    </ul>
+                                                    <div id="myTabContent" class="tab-content">
+                                                        <div class="tab-pane fade in active" id="service-one">
+                                                            <br>
+                                                            <p class="product-desc">
+                                                                {{ order.services.description }}
+                                                            </p>
                                                         </div>
-                                                        <hr>
                                                     </div>
+                                                    <hr>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
-                                    <all_comments :order="order"></all_comments>
-                                </div>
                             </div>
-                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                <div class="container">
-                                    <ul class="list-group" style="padding:0px;" v-if="showControll">
-                                        <!--
-                                        authUser => User who Login
-                                        user_order => User Who Order the Service
-                                        user_id => User Who Add the Service
-                                    -->
-
-                                    <li class="list-group-item active" v-if="authUser.id == user_id.id && order.status == 1">
-                                        <h5>
-                                            <i class="fa fa-user"></i>
-                                            Accept Or Reject The Order
-                                        </h5>
-                                    </li>
-
-                                    <li class="list-group-item active" v-if="authUser.id == user_order.id && order.status == 2">
-                                        <h5>
-                                            <i class="fa fa-user"></i>
-                                            Finish The Order
-                                        </h5>
-                                    </li>
-                                    <li class="list-group-item " v-if="authUser.id == user_id.id && order.status == 1">
-                                        <!-- 2 => accept -->
-                                        <button @click="changeStatus(2)" type="button" class="btn btn-success btn-block">
-                                            <i class="fa fa-check"></i> Accept
-                                        </button>
-
-                                    </li>
-                                    <li class="list-group-item " v-if="authUser.id == user_id.id && order.status == 1">
-
-                                        <!-- 3 => desline -->
-                                        <button @click="changeStatus(3)" type="button" class="btn btn-danger btn-block">
-                                            <i class="fa fa-close"></i> Decline
-                                        </button>
-                                    </li>
-                                    <li class="list-group-item " v-if="authUser.id == user_order.id && order.status == 2">
-                                        <!-- 4 => accept -->
-                                        <button @click="finishOrder()" type="button" class="btn btn-info btn-block">
-                                            <i class="fa fa-check"></i> Finish
-                                        </button>
-                                    </li>
-                                </ul>
-                                <user_id :user="user_id"></user_id>
-                                <user_id :user="user_order"></user_id>
+                            <div class="col-md-12 col-md-12 col-sm-12 col-xs-12">
+                                <all_comments :order="order"></all_comments>
                             </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <div class="container">
+                                <ul class="list-group" style="padding:0px;" v-if="showControll">
+                                    <!--
+                                    authUser => User who Login
+                                    user_order => User Who Order the Service
+                                    user_id => User Who Add the Service
+                                -->
+
+                                <li class="list-group-item active" v-if="authUser.id == user_id.id && order.status == 1">
+                                    <h5>
+                                        <i class="fa fa-user"></i>
+                                        Accept Or Reject The Order
+                                    </h5>
+                                </li>
+
+                                <li class="list-group-item active" v-if="authUser.id == user_order.id && order.status == 2">
+                                    <h5>
+                                        <i class="fa fa-user"></i>
+                                        Finish The Order
+                                    </h5>
+                                </li>
+                                <li class="list-group-item " v-if="authUser.id == user_id.id && order.status == 1">
+                                    <!-- 2 => accept -->
+                                    <button @click="changeStatus(2)" type="button" class="btn btn-success btn-block">
+                                        <i class="fa fa-check"></i> Accept
+                                    </button>
+
+                                </li>
+                                <li class="list-group-item " v-if="authUser.id == user_id.id && order.status == 1">
+
+                                    <!-- 3 => desline -->
+                                    <button @click="changeStatus(3)" type="button" class="btn btn-danger btn-block">
+                                        <i class="fa fa-close"></i> Decline
+                                    </button>
+                                </li>
+                                <li class="list-group-item " v-if="authUser.id == user_order.id && order.status == 2">
+                                    <!-- 4 => accept -->
+                                    <button @click="finishOrder()" type="button" class="btn btn-info btn-block">
+                                        <i class="fa fa-check"></i> Finish
+                                    </button>
+                                </li>
+                            </ul>
+                            <user_id :user="user_id"></user_id>
+                            <user_id :user="user_order"></user_id>
                         </div>
                     </div>
                 </div>
-            </span>
-        </div>
+            </div>
+        </span>
     </div>
 </div>
-    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
+</div>
+<spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 
 </template>
 
@@ -157,7 +182,9 @@
                 isLoading: false,
                 ordersCount: '',
                 authUser: [],
-                showControll: false
+                showControll: false,
+                service: '',
+                sumVotes: 0,
 
             }
         },
@@ -173,6 +200,8 @@
                     this.user_order = res.body['order_user'];
                     this.ordersCount = res.body['ordersCount'];
                     this.authUser = res.body['authUser'];
+                    this.service = res.body['service'];
+                    this.sumVotes = res.body['sumVotes'];
                     if (this.order.status != 3 && this.order.status != 4) {
                         this.showControll = true;
                     }

@@ -202,6 +202,15 @@ class ServicesController extends Controller
             $sidebarSection2 = null;
         }
 
+        // to auto select the stars
+            if (Auth::check()) {
+                $userRate = Vote::select('id', 'vote')->where(function ($q) use ($user, $service) {
+                    $q->where('service_id', $service->id)->where('user_id', $user->id);
+                })->first();
+            }else {
+                $userRate = null;
+            }
+
         return Response::json([
             'service' => $service,
             'myOwnServicesInSameCat' => $myOwnServicesInSameCat,
@@ -211,6 +220,7 @@ class ServicesController extends Controller
             'mostVoted' => $mostVoted,
             'mostViewd' => $mostViewd,
             'sidebarSection2' => $sidebarSection2,
+            'userRate' => $userRate,
         ], 200);
     }
 

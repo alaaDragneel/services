@@ -22,6 +22,8 @@ use App\Pay;
 
 use App\Buy;
 
+use App\Vote;
+
 use App\Events\CreateNotification as CreateNotify;
 
 use App\Events\ReadNotification as ReadNotify;
@@ -240,6 +242,10 @@ class OrdersController extends Controller
         $authUser = Auth::user();
         $order = Order::findOrFail($orderId);
         if ($order) {
+            // votes section
+            $service = Service::where('id', $order->service_id)->with('user')->withCount('votes')->first();
+            $sumVotes = Vote::where('service_id', $order->service_id)->sum('vote');
+
             // who add the services
             $user_id = User::where('id', $order->user_id)
             ->with(['services' => function ($q) {
@@ -280,7 +286,9 @@ class OrdersController extends Controller
                     'order_user' => $order_user,
                     'order' => $order,
                     'ordersCount' => $orderCount,
-                    'authUser' => $authUser
+                    'authUser' => $authUser,
+                    'service' => $service,
+                    'sumVotes' => intval($sumVotes), // because it return the sum as string
                 ];
                 return Response::json($array, 200);
             }
