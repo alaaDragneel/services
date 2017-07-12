@@ -11,6 +11,14 @@
 |
 */
 
+
+/*
+|--------------------------------------------------------------------------
+|                          Front-End Routes                                |
+|--------------------------------------------------------------------------
+|
+*/
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,49 +27,274 @@ Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
+/*
+|--------------------------------------------------------------------------
+| For Auth Users Only
+|--------------------------------------------------------------------------
+|
+*/
+
 Route::group(['middleware' => 'auth'], function() {
-    //
+
+    /*
+    |--------------------------------------------------------------------------
+    | Services Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Add Service
+    Route::post('/Services', 'ServicesController@store');
+    // My Services
+    Route::get('/getMyServices/{length?}', 'ServicesController@getMyServices');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Orders Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Add New Order
+    Route::get('/Orders/{id}', 'OrdersController@show');
+    // Show purchase Orders
+    Route::get('/purchaseOrders/{length?}', 'OrdersController@getMyPurchaseOrders');
+    // Show Incomeing Orders
+    Route::get('/incomingOrders/{length?}', 'OrdersController@getMyIncomingOrders');
+    // Show Single Order
+    Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
+    // Show Change The Status
+    Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
+    // Show Finish The Order
+    Route::get('/finishOrder/{order_id}', 'OrdersController@finishOrder');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Comments Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Add New Comment
+    Route::post('/Comments', 'CommentsController@store');
+    // Show Comments
+    Route::get('/Comments/{order_id}', 'CommentsController@show');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Messages Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Get The Messages
+    Route::get('/Messages', 'MessagesController@index');
+    // Send Messages
+    Route::post('/Messages', 'MessagesController@store');
+    // Show Single Message
+    Route::get('/Messages/{message_id}', 'MessagesController@show');
+    // Show Recived Messages
+    Route::get('/GetRecivedMessages', 'MessagesController@GetRecivedMessages');
+    // Show UnRead Messages
+    Route::get('/GetUnReadMessages', 'MessagesController@GetUnReadMessages');
+    // Show Read Messages
+    Route::get('/GetReadMessages', 'MessagesController@GetReadMessages');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Favorites Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Add New Favorite
+    Route::get('/Addfavorite/{service_id}', 'FavoriteController@Addfavorite');
+    // Show All Favorite
+    Route::get('/userFavorites', 'FavoriteController@userFavorites');
+    // Delete Favorite
+    Route::delete('/deleteFav/{fav_id}', 'FavoriteController@deleteFav');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rating Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Add Then Will Update Your Vote
+    Route::post('/addNewVote', 'VoteController@addNewVote');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auth Users Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Get The Auth User
+    Route::get('/GetAuthUser', 'UsersController@GetAuthUser');
+    // Show All Charges Operations
+    Route::get('/GetAllChargeOperation', 'UsersController@GetAllChargeOperation');
+    // Show All Payments Operations
+    Route::get('/GetAllPaymentOperation', 'UsersController@GetAllPaymentOperation');
+    // Show All Profits Operations
+    Route::get('/GetAllProfitOperation', 'UsersController@GetAllProfitOperation');
+    // Show All Balance Operations
+    Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Payment Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Add To Credit
+    Route::post('/AddCredit', 'PayController@AddCredit');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // Get My Notifications
+    Route::get('/GetMyNotifications/{length?}', 'NotificationController@GetMyNotifications');
+    // Get UnRead Notifications
+    Route::get('/GetMyUnReadNotifications/{length?}', 'NotificationController@GetMyUnReadNotifications');
+    // Get Count Of Notifications
+    Route::get('/GetNotificationsCount', 'NotificationController@GetNotificationsCount');
+    // Get All User Notifications
+    Route::get('/getAllUserNotifications', 'NotificationController@getAllUserNotifications');
+
+
+
+
 });
 
-// Services
-Route::post('/Services', 'ServicesController@store');
+/*
+|--------------------------------------------------------------------------
+| Services Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+// Show Single Service
 Route::get('/Services/{id}', 'ServicesController@show');
-Route::get('/getMyServices/{length?}', 'ServicesController@getMyServices');
+// Show All Service
 Route::get('/getAllServices/{length?}', 'ServicesController@getAllServices');
+// Show user Service
 Route::get('/getUserServices/{userId}/{length?}', 'ServicesController@getUserServices');
 
-// Orders
-Route::resource('/Orders', 'OrdersController');
-Route::get('/purchaseOrders/{length?}', 'OrdersController@getMyPurchaseOrders');
-Route::get('/incomingOrders/{length?}', 'OrdersController@getMyIncomingOrders');
-Route::get('/getOrderById/{orderId}', 'OrdersController@getOrderById');
-Route::get('/changeStatus/{order_id}/{status}', 'OrdersController@changeStatus');
-Route::get('/finishOrder/{order_id}', 'OrdersController@finishOrder');
-// Comments
-Route::resource('/Comments', 'CommentsController');
-// Message
-Route::resource('/Messages', 'MessagesController');
-Route::get('/GetRecivedMessages', 'MessagesController@GetRecivedMessages');
-Route::get('/GetUnReadMessages', 'MessagesController@GetUnReadMessages');
-Route::get('/GetReadMessages', 'MessagesController@GetReadMessages');
-// fevorite
-Route::get('/Addfavorite/{service_id}', 'FavoriteController@Addfavorite');
-Route::get('/userFavorites', 'FavoriteController@userFavorites');
-Route::delete('/deleteFav/{fav_id}', 'FavoriteController@deleteFav');
-// Rating
-Route::post('/addNewVote', 'VoteController@addNewVote');
-// Category
+/*
+|--------------------------------------------------------------------------
+| Categories Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+// Show All Service By Categories
 Route::get('/getServicesByCategoryId/{catId}/{length?}', 'CategoryController@getServicesByCategoryId');
-// users
-Route::get('/GetAuthUser', 'UsersController@GetAuthUser');
-Route::get('/GetAllChargeOperation', 'UsersController@GetAllChargeOperation');
-Route::get('/GetAllPaymentOperation', 'UsersController@GetAllPaymentOperation');
-Route::get('/GetAllProfitOperation', 'UsersController@GetAllProfitOperation');
-Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
-// Payment
-Route::post('/AddCredit', 'PayController@AddCredit');
-// Notifications
-Route::get('/GetMyNotifications/{length?}', 'NotificationController@GetMyNotifications');
-Route::get('/GetMyUnReadNotifications/{length?}', 'NotificationController@GetMyUnReadNotifications');
+
+
+/*
+|--------------------------------------------------------------------------
+| Notifications Routes
+|--------------------------------------------------------------------------
+|
+*/
+
+// Get Count Of Notifications and Return The Category And Check If The User Auth Or Not
 Route::get('/GetNotificationsCount', 'NotificationController@GetNotificationsCount');
-Route::get('/getAllUserNotifications', 'NotificationController@getAllUserNotifications');
+
+
+/*
+|--------------------------------------------------------------------------
+|                          Back-End Routes                                |
+|--------------------------------------------------------------------------
+|
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Admin Only
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::group(['middleware' => 'admin'], function() {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Services Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE
+
+    /*
+    |--------------------------------------------------------------------------
+    | Orders Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE
+
+    /*
+    |--------------------------------------------------------------------------
+    | Comments Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE
+
+    /*
+    |--------------------------------------------------------------------------
+    | Messages Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE
+
+    /*
+    |--------------------------------------------------------------------------
+    | Favorites Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rating Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE
+
+    /*
+    |--------------------------------------------------------------------------
+    | Payment Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE:
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications Routes
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    // NOTE:
+
+});

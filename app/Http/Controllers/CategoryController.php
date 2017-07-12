@@ -49,10 +49,9 @@ class CategoryController extends Controller
                     ->orderBy('votes_sum', 'DESC')
                     ->get();
             if ($length === null) {
-                // All Cateogries
-                $cat = Cat::where('id', '!=', $catId)->orderBy('id', 'DESC')->get(['id', 'name']);
-
-                // Related Services
+                /**
+                * @return Related Services
+                */
 
                 // most Viewd Services
                 $sidebarSection1 =
@@ -105,7 +104,6 @@ class CategoryController extends Controller
                     }
                     $array = [
                         'services' => $services,
-                        'cat' => $cat,
                         'singleCat' => $singleCat,
                         'sidebarSection1' => $sidebarSection1,
                         'sidebarSection2' => $sidebarSection2,

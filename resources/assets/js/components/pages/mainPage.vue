@@ -79,7 +79,6 @@
                 sortKey: '',
                 reverse: 1,
                 serviceName: '',
-                cat: [],
                 section1: [],
                 section2: [],
                 section3: [],
@@ -112,7 +111,6 @@
                         this.isLoading = true;
                     } else {
                         this.services = res.body['services'];
-                        this.cat = res.body['cat'];
                         this.section1 = res.body['sidebarSection1'];
                         this.section2 = res.body['sidebarSection2'];
                         this.section3 = res.body['sidebarSection3'];

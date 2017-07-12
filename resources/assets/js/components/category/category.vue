@@ -14,10 +14,7 @@
                         </h2>
                         <hr>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                        <side_bar :category="cat" :section1="section1" :section2="section2" :section3="section3"></side_bar>
-                    </div>
-                    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="col-md-11">
@@ -42,7 +39,7 @@
                         <hr>
                         <div class="row">
                             <span v-if="services.length > 0">
-                                <div class="col-sm-4 col-md-4" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
+                                <div class="col-sm-4 col-md-3" v-for="service in services | orderBy sortKey reverse | filterBy serviceName in 'name' 'price'" track-by="$index">
                                     <single_services :service="service"></single_services>
                                 </div>
                                 <div v-if="services.length >= 6">
@@ -85,7 +82,6 @@
                 sortKey: '',
                 reverse: 1,
                 serviceName: '',
-                cat: [],
                 singleCat: [],
                 section1: [],
                 section2: [],
@@ -121,7 +117,6 @@
                     } else {
                         this.services = res.body['services'];
                         this.singleCat = res.body['singleCat'];
-                        this.cat = res.body['cat'];
                         this.section1 = res.body['sidebarSection1'];
                         this.section2 = res.body['sidebarSection2'];
                         this.section3 = res.body['sidebarSection3'];

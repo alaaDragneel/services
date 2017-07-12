@@ -252,7 +252,6 @@ export default {
                     this.Auth.check = false;
                     this.categories = res.body['categories'];
                     this.$dispatch('Auth', 'false');
-                    console.log(res.body);
                 } else {
                     this.$dispatch('Auth', 'true');
                     this.notify = res.body['notificationsCount'];

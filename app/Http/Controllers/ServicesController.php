@@ -254,9 +254,6 @@ class ServicesController extends Controller
                 ->orderBy('votes_sum', 'DESC')
                 ->get();
         if ($length == null) {
-            // All Cateogries
-            $cat = Cat::orderBy('id', 'DESC')->get(['id', 'name']);
-
             // Related Services
 
             $ip = $request->server('REMOTE_ADDR');
@@ -327,7 +324,6 @@ class ServicesController extends Controller
 
             $array = [
                 'services' => $services,
-                'cat' => $cat,
                 'sidebarSection1' => $sidebarSection1,
                 'sidebarSection2' => $sidebarSection2,
                 'sidebarSection3' => $sidebarSection3,

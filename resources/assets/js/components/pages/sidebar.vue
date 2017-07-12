@@ -28,19 +28,6 @@
                   </a>
               </li>
         </ul>
-        <ul class="list-group" style="padding:0px;">
-              <li class="list-group-item active">
-                  <h5>
-                      <i class="fa fa-folder"></i>
-                      Categories
-                  </h5>
-              </li>
-              <li v-for="cat in category" track-by="$index" class="list-group-item ">
-                  <a v-link="{name: '/Category', params:{catId: cat.id, catName: cat.name}}">
-                      {{ cat.name }}
-                  </a>
-              </li>
-        </ul>
         <ul v-if="section1" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
