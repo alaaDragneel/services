@@ -98,8 +98,8 @@
                                     <ul id="myTab" class="nav nav-tabs nav_tabs">
 
                                         <li class="active"><a href="#service-one" data-toggle="tab">Details</a></li>
-                                        <li><a href="#service-two" data-toggle="tab">My Services In Same Category</a></li>
-                                        <li><a href="#service-three" data-toggle="tab">Members Services In Same Category</a></li>
+                                        <li v-if="myOwnServicesInSameCat.length > 0"><a href="#service-two" data-toggle="tab">My Services In Same Category</a></li>
+                                        <li v-if="otherServicesInSameCat.length > 0"><a href="#service-three" data-toggle="tab">Members Services In Same Category</a></li>
 
                                     </ul>
                                     <div id="myTabContent" class="tab-content">
@@ -113,7 +113,7 @@
                                         <div class="tab-pane fade" id="service-two">
                                             <br>
                                             <div class="row">
-                                                <div v-id="myOwnServicesInSameCat.length > 0">
+                                                <div v-if="myOwnServicesInSameCat.length > 0">
                                                     <div class="col-md-5 col-sm-4" v-for="service in myOwnServicesInSameCat" track-by="$index">
                                                         <my_own_services_in_same_cat :service="service"></my_own_services_in_same_cat>
                                                     </div>
@@ -125,7 +125,7 @@
                                         <div class="tab-pane fade" id="service-three">
                                             <br>
                                             <div class="row">
-                                                <div v-id="otherServicesInSameCat.length > 0">
+                                                <div v-if="otherServicesInSameCat.length > 0">
                                                     <div class="col-md-5 col-sm-4" v-for="service in otherServicesInSameCat" track-by="$index">
                                                         <other_services_in_same_cat :service="service"></other_services_in_same_cat>
                                                     </div>

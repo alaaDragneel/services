@@ -12,15 +12,20 @@
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
 
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
 
+Route::group(['middleware' => 'auth'], function() {
+    //
+});
+
 // Services
-Route::resource('/Services', 'ServicesController');
+Route::post('/Services', 'ServicesController@store');
+Route::get('/Services/{id}', 'ServicesController@show');
 Route::get('/getMyServices/{length?}', 'ServicesController@getMyServices');
 Route::get('/getAllServices/{length?}', 'ServicesController@getAllServices');
 Route::get('/getUserServices/{userId}/{length?}', 'ServicesController@getUserServices');

@@ -57,7 +57,16 @@ export default {
     events: {
         deleteFromParent: function (val) {
             this.$broadcast('deleteFromChild', val);
+        },
+        Auth: function (value) {
+            if (value === 'false') {
+                alertify.error("This Action Not Authrized");
+                this.$router.go({
+                    path: '/loginError'
+                });
+            }
         }
+
     },
     route: {
         canReuse: false // Force reload data

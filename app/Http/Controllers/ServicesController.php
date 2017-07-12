@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\http\Requests\AddServicesRequest;
+use App\Http\Requests\AddServicesRequest;
 
 use Auth;
 
@@ -30,26 +30,6 @@ use App\Category as Cat;
 
 class ServicesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-     public function index()
-     {
-         //
-     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -87,7 +67,11 @@ class ServicesController extends Controller
      */
     public function show($id, Request $request)
     {
-        $user = Auth::user();
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
+        } else {
+            $userId = 0;
+        }
         /*Get Data*/
         $service = Service::where('id', $id)->with('user')->withCount('votes')->first();
         $sumVotes = Vote::where('service_id', $service->id)->sum('vote');
@@ -95,7 +79,7 @@ class ServicesController extends Controller
             if (Auth::guest()) {
                 abort(403);
             } else {
-                if ($user->id != $service->user_id) {
+                if ($userId != $service->user_id) {
                     abort(403);
                 }
             }
@@ -103,13 +87,13 @@ class ServicesController extends Controller
 
         /*Add New view*/
         $ip = $request->server('REMOTE_ADDR');
-        $viewCount = View::where(function ($q) use($ip, $user, $service) {
+        $viewCount = View::where(function ($q) use($ip, $userId, $service) {
             $q->where('ip', $ip);
-            $q->where('user_id', $user->id);
+            $q->where('user_id', $userId);
             $q->where('service_id', $service->id);
         })->count();
         if ($viewCount == 0) {
-            if ($user->id != $service->user_id) {
+            if ($userId != $service->user_id) {
                 $guest = Auth::guest();
                 $view = new View();
                 $view->service_id = $id; // id prefer to service id
@@ -180,6 +164,8 @@ class ServicesController extends Controller
         } else {
             $myOwnServicesInSameCat = [];
             $otherServicesInSameCat = [];
+            $mostVoted = [];
+            $mostViewd = [];
         }
 
         // append to User Orders Get the services from the same category
@@ -222,40 +208,6 @@ class ServicesController extends Controller
             'sidebarSection2' => $sidebarSection2,
             'userRate' => $userRate,
         ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     public function getMyServices($length = null)

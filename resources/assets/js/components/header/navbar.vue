@@ -19,24 +19,20 @@
                         <i class="fa fa-folder"></i> Categories <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu mega-dropdown-menu">
-                        <!--NOTE @foreach (\App\Category::get(['id', 'name'])->chunk(6) as $category) -->
-                            <li class="col-sm-3">
+                            <li class="col-sm-3" v-for="cat in categories" track-by="$index">
                                 <ul>
-                                    <!--NOTE @foreach ($category as $cat) -->
-                                        <li class="dropdown-header">
-                                            <a v-link="{name: '/Category', params:{catId: 9, catName: 'web design' }}">
-                                                Web Design
-                                            </a>
-                                        </li>
-                                    <!--NOTE @endforeach -->
+                                    <li class="dropdown-header">
+                                        <a v-link="{name: '/Category', params:{catId: cat.id, catName: cat.name }}">
+                                            {{ cat.name }}
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
-                        <!--NOTE @endforeach -->
                     </ul>
                 </li>
                 <!--NOTE @if (Auth::check()) -->
                     <!-- Orders Section -->
-                    <li class="dropdown">
+                    <li class="dropdown" v-if="Auth.check">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-first-order"></i>
                             <span class="hidden-lg hidden-md">Orders</span>
@@ -59,7 +55,7 @@
                         </ul>
                     </li>
                     <!-- Services Section -->
-                    <li class="dropdown">
+                    <li class="dropdown" v-if="Auth.check">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             <i class="fa fa-server"></i>
                             <span class="hidden-lg hidden-md">Services</span>
@@ -83,8 +79,20 @@
                     </li>
                 <!--NOTE @endif -->
             </ul>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" v-if="Auth.guest">
                 <!-- Authentication Links -->
+                <!--NOTE @if (Auth::guest()) -->
+                    <div class="navbar-custom-menu">
+                        <ul class="nav navbar-nav">
+                            <!-- Logins and registers -->
+                            <li><a href="/login"><i class="fa fa-user"></i> Login</a></li>
+                            <li><a href="/register"><i class="fa fa-user-plus"></i> Register</a></li>
+                        </ul>
+                    </div>
+                <!--NOTE @endif -->
+            </ul>
+            <ul class="nav navbar-nav navbar-right" v-if="Auth.check">
+                <!--NOTE @if (Auth::check()) -->
                     <div class="navbar-custom-menu">
                         <ul class="nav navbar-nav">
                             <!-- Credit Section -->
@@ -201,11 +209,10 @@
                     <i class="fa fa-search"></i>
                 </button>
             </form>
-
-
         </div><!-- /.nav-collapse -->
     </nav>
     <!-- Nav Bar -->
+    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 
 <script>
@@ -222,25 +229,39 @@ export default {
             unReadMessages: 0,
             allNotify:  [],
             notifyLoading: false,
+            categories: [],
+            Auth: {check: true, guest: false}
         }
     },
     ready: function () {
+        this.$refs.spinner.show();
         //trigger Slim Scroll
        $(".menu").slimscroll({
           height: '200px',
           alwaysVisible: false,
           size: '3px'
         }).css("width", "100%");
-
+        $('body').css('overflowY', 'visible');
         this.GetNotificationsCount();
     },
     methods: {
         GetNotificationsCount: function () {
             this.$http.get('/GetNotificationsCount').then(function (res) {
-                this.notify = res.body['notificationsCount'];
-                this.favorite = res.body['favoritesCount'];
-                this.PurchaseOrders = res.body['ordersCount'];
-                this.unReadMessages = res.body['messagesCount'];
+                if (res.body['login'] == 'guest') {
+                    this.Auth.guest = true;
+                    this.Auth.check = false;
+                    this.categories = res.body['categories'];
+                    this.$dispatch('Auth', 'false');
+                    console.log(res.body);
+                } else {
+                    this.$dispatch('Auth', 'true');
+                    this.notify = res.body['notificationsCount'];
+                    this.favorite = res.body['favoritesCount'];
+                    this.PurchaseOrders = res.body['ordersCount'];
+                    this.unReadMessages = res.body['messagesCount'];
+                    this.categories = res.body['categories'];
+                }
+                this.$refs.spinner.hide();
             }, function (res) {
                 alertify.error('Some Errors happends, Error Code: 1000');
             });

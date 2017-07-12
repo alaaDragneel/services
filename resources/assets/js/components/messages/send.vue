@@ -2,7 +2,7 @@
     <navbar></navbar>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">            
+            <div class="col-md-12">
                 <div class="container">
                     <div class="row">
 
@@ -98,6 +98,16 @@ export default {
                 }
                 alertify.error('Try Again Later');
             });
+        }
+    },
+    events: {
+        Auth: function (value) {
+            if (value === 'false') {
+                alertify.error("This Action Not Authrized");
+                this.$router.go({
+                    path: '/loginError'
+                });
+            }
         }
     }
 

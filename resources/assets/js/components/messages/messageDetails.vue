@@ -2,7 +2,7 @@
     <navbar></navbar>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">        
+            <div class="col-md-12">
                 <span v-if="isLoading">
                     <div class="container">
                         <div class="row">
@@ -138,6 +138,16 @@ export default {
     },
     route: {
         canReuse: false // force relode the data
+    },
+    events: {
+        Auth: function (value) {
+            if (value === 'false') {
+                alertify.error("This Action Not Authrized");
+                this.$router.go({
+                    path: '/loginError'
+                });
+            }
+        }
     }
 
 }

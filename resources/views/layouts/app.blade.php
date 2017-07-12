@@ -15,8 +15,6 @@
 </head>
 <body id="app-layout">
 
-    
-
     @yield('content')
 
     <!-- JavaScripts -->

@@ -12,14 +12,14 @@
                       <i class="fa fa-user"></i> {{ service.user.name }}
                   </a>
               </li>
-              <li class="list-group-item ">
+              <li v-if="section2 != null" class="list-group-item ">
                   <a class="btn btn-danger btn-sm" v-link="{name: '/SendMessage', params: {userId: service.user.id}}" >
                       <i class="fa fa-send"></i> Send Message
                   </a>
               </li>
         </ul>
         <!-- SIDEBAR MENU -->
-        <ul v-if="section2.length > 0" class="list-group" style="padding:0px;">
+        <ul v-if="section2 != null" class="list-group" style="padding:0px;">
               <li class="list-group-item active">
                   <h5>
                       <i class="fa fa-heart"></i>

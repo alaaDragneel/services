@@ -11,10 +11,11 @@ Vue.use(VueMoment);
 // Vue validator
 var VueValidator = require('vue-validator');
 Vue.use(VueValidator);
-//  Spinner
-var PulseLoader= require('vue-spinner/dist/vue-spinner.min').SyncLoader;
+// Vue Spainner
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
 // Register the component globally
-Vue.component('pulse-loader', PulseLoader);
+Vue.component('spinner', Spinner);
 // Vue Star Rating
 var StarRating = require('./components/btns/rating.vue');
 // Register the component globally
@@ -53,6 +54,7 @@ var ShowAllProfit = require('./components/credit/allProfit.vue');
 var ShowAllBalance = require('./components/credit/allBalance.vue');
 var ShowAllNotification = require('./components/notification/allNotifications.vue');
 var ShowAllUnReadNotification = require('./components/notification/unReadNotifications.vue');
+var login_errors = require('./components/errors/login.vue');
 
 // The router needs a root component to render.
 // For demo purposes, we will just use an empty one
@@ -146,6 +148,9 @@ route.map({
     },
     '/UnReadNotification': {
         component: ShowAllUnReadNotification
+    },
+    '/loginError': {
+        component: login_errors
     },
 });
 

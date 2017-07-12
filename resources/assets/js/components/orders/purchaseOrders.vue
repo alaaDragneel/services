@@ -129,6 +129,16 @@
                 var length = this.orders.length;
                 this.getMyPurchaseOrders(length);
             }
+        },
+        events: {
+            Auth: function (value) {
+                if (value === 'false') {
+                    alertify.error("This Action Not Authrized");
+                    this.$router.go({
+                        path: '/loginError'
+                    });
+                }
+            }
         }
     }
 </script>

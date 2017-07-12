@@ -2,7 +2,7 @@
     <navbar></navbar>
     <div class="container">
         <div class="row">
-            <div class="col-md-12">        
+            <div class="col-md-12">
                 <span v-if="isLoading">
                     <h2 class="text-center">
                         <div class="row">
@@ -88,5 +88,15 @@
         route: {
             canReuse: false // Force reload data
         },
+        events: {
+            Auth: function (value) {
+                if (value === 'false') {
+                    alertify.error("This Action Not Authrized");
+                    this.$router.go({
+                        path: '/loginError'
+                    });
+                }
+            }
+        }
     }
 </script>

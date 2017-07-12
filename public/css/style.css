@@ -2112,6 +2112,7 @@ body {
     overflow-y: auto;
     word-break: break-word !important;
     background: #F1F3FA;
+    text-transform: capitalize !important;
 }
 
 .navbar {

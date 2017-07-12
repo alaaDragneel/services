@@ -112,6 +112,19 @@
                     }
                 });
             }
+        },
+        route: {
+            canReuse: false,
+        },
+        events: {
+            Auth: function (value) {
+                if (value === 'false') {
+                    alertify.error("This Action Not Authrized");
+                    this.$router.go({
+                        path: '/loginError'
+                    });
+                }
+            }
         }
     }
 </script>

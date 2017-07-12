@@ -93,6 +93,16 @@ export default {
     },
     route: {
         canReuse: false // Force reload data
+    },
+    events: {
+        Auth: function (value) {
+            if (value === 'false') {
+                alertify.error("This Action Not Authrized");
+                this.$router.go({
+                    path: '/loginError'
+                });
+            }
+        }
     }
 
 }
