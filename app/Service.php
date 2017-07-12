@@ -15,11 +15,11 @@ class Service extends Model
     // Category Relation
     public function category()
     {
-        return $this->belongsTo('App\Category');
+        return $this->belongsTo('App\Category', 'cat_id');
     }
 
     // Order Relation
-    public function order()
+    public function orders()
     {
         return $this->hasMany('App\Order', 'service_id');
     }
