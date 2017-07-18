@@ -15,6 +15,7 @@ return array(
     'CreateOrdersTable' => $baseDir . '/database/migrations/2017_06_09_222503_create_orders_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePaysTable' => $baseDir . '/database/migrations/2017_07_04_081618_create_pays_table.php',
+    'CreateProfitsTable' => $baseDir . '/database/migrations/2017_07_18_195336_create_profits_table.php',
     'CreateServicesTable' => $baseDir . '/database/migrations/2017_06_09_223144_create_services_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'CreateViewsTable' => $baseDir . '/database/migrations/2017_06_12_112319_create_views_table.php',

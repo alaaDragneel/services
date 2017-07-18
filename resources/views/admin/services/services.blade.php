@@ -26,7 +26,7 @@
                                     {{ csrf_field() }}
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                         <input type="text" name="search" class="form-control" placeholder="Search..." required>
+                                         <input type="text" name="search" class="form-control" placeholder="Search By Service Name " required>
                                          <span class="input-group-btn">
                                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
                                          </span>
@@ -88,11 +88,11 @@
                                     <p class="disBox"></p>
                                     <div class="btn-group" role="group">
                                         <a href="#" class="moreBox btn btn-primary"><i class="fa fa-edit"></i> Edit</a>
-                                        <a href="{{ route('delete.services') }}" class="deleteBox btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                        <a href="#" class="deleteBox btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
                                         <span class="priceBox btn btn-warning"></span>
-                                        <a href="{{ route('changeStatus.services') }}" class="statusBox btn "></a>
-                                        <span href="#" class="btn btn-primary order-count"></span>
-                                        <span href="#" class="btn btn-inverse provider"></span>
+                                        <a href="#" class="statusBox btn "></a>
+                                        <a href="#" class="btn btn-primary order-count"></a>
+                                        <a href="#" class="btn btn-inverse provider"></a>
                                         </div> <!-- cd-item-action -->
                                     </div> <!-- cd-item-info -->
                                     <a href="#0" class="cd-close">Close</a>

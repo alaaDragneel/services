@@ -39,6 +39,32 @@
             <i class="fa fa-comments text-aqua"></i> {{ notify.user_who_send_notification.name }}
             Commented On Order #{{ notify.notify_id }}!
         </a>
+
+        <!-- Admin Accept Service -->
+        <a v-if="notify.type == 'AcceptedService'" v-link="{name: '/ServicesDetails', params:{serviceId: notify.notify_id, serviceName: 'Admin Reject Service'}}"
+            title="Admin Was Accepted Service #{{notify.notify_id}}!">
+            <i class="fa fa-check-circle text-success"></i> Admin Was Accepted Service #{{notify.notify_id}}!
+        </a>
+        <!-- Admin Reject Service -->
+        <a v-if="notify.type == 'RejectedService'" v-link="{name: '/ServicesDetails', params:{serviceId: notify.notify_id, serviceName: 'Admin Reject Service'}}"
+            title="Admin Was Rejected Service #{{notify.notify_id}}!">
+            <i class="fa fa-close text-red"></i> Admin Was Rejected Service #{{notify.notify_id}}!
+        </a>
+        <!-- Admin Accepted Order -->
+        <a v-if="notify.type == 'AdminAccepted'" v-link="{name: '/Order', params:{orderId:  notify.notify_id }}"
+            title="Admin Was Accepted order #{{notify.notify_id}}!">
+            <i class="fa fa-check-square text-aque"></i> Admin Was Accepted order #{{notify.notify_id}}!
+        </a>
+        <!-- Admin Rejected Order -->
+        <a v-if="notify.type == 'AdminRejected'" v-link="{name: '/Order', params:{orderId:  notify.notify_id }}"
+            title="Admin Was Rejected Service #{{notify.notify_id}}!">
+            <i class="fa fa-close text-red"></i> Admin Was Rejected Order #{{notify.notify_id}}!
+        </a>
+        <!-- Admin Compeleted Order -->
+        <a v-if="notify.type == 'AdminCompeleted'" v-link="{name: '/Order', params:{orderId:  notify.notify_id }}"
+            title="Admin Was Rejected Service #{{notify.notify_id}}!">
+            <i class="fa fa-check-circle text-green"></i> Admin Was Completed Order #{{notify.notify_id}}!
+        </a>
 </template>
 
 <script>

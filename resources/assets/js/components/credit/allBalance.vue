@@ -76,6 +76,23 @@
                         </div>
                         <!-- ./col -->
                     </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="getProfit">Get Profite</label>
+                            <input type="text" class="form-control" id="getProfit" placeholder="Write your Profite To et It" v-model="profit">
+                        </div>
+                        <div class="alert alert-danger">
+                            <b>Note: </b>
+                            <span>
+                                You Can Transfeer the Profit Only.
+                                <br>
+                                You Can't Transfeer Fro Charges.
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <button @click="getProfit" type="button" name="button" class="btn btn-success"><i class="fa fa-money"></i> Get Profit</button>
+                        </div>
+                    </div>
                 </span>
             </div>
         </div>
@@ -97,6 +114,7 @@
                 userCharge: 0,
                 userPays: 0,
                 userProfits: 0,
+                profit: 0,
 
             }
         },
@@ -111,11 +129,32 @@
                 this.userCharge = res.body['userCharge'] == null ? 0 : res.body['userCharge'];
                 this.userPays = res.body['userPays'] == null ? 0 : res.body['userPays'];
                 this.userProfits = res.body['userProfits'] == null ? 0 : res.body['userProfits'];
+                this.profit = this.userProfits;
 	            this.$refs.spinner.hide();
                 this.isLoading = true;
           	}, function (res) {
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
           	});
+          },
+          getProfit: function () {
+              this.$refs.spinner.show();
+              var formData = new FormData();
+              formData.append('profit', this.profit);
+              this.$http.post('/GetProfit', formData).then(function (res) {
+                  this.$refs.spinner.hide();
+                  this.isLoading = true;
+                  if (res.body['success']) {
+                      alertify.success(res.body['success']);
+                      this.userProfits -= this.profit;
+                      this.profit = this.userProfits;
+                  } else if (res.body == 'saving error') {
+                      alertify.error('Error During Save the profit Operation Contact With The Adminstrator');
+                  } else if (res.body == 'profit error') {
+                      alertify.error('Error You Have Enogth Profit');
+                  }
+              }, function (res) {
+                  alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+              });
           },
         },
         route: {

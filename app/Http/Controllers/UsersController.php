@@ -8,11 +8,15 @@ use App\Http\Requests;
 
 use Auth;
 
+use App;
+
 use Response;
 
 use App\Pay;
 
 use App\Buy;
+
+use App\Profit;
 
 class UsersController extends Controller
 {
@@ -120,4 +124,36 @@ class UsersController extends Controller
         return Response::json($array, 200);
     }
 
+
+    public function GetProfit(Request $request)
+    {
+        $profit = intval($request->profit);
+        $user = Auth::user();
+
+        /*
+        |-----------------------------------------
+        | Operations
+        |-----------------------------------------
+        | Profits Operations
+        | NOTE Only Calculate The Payed [Finished] Orders [1 => Finished]
+        |
+        */
+
+        $userProfits = Buy::where(function ($q) use ($user) {
+            $q->where('recive_id', $user->id)->where('finish', 1);
+        })->sum('buy_price');
+
+        $profitDone = Profit::where('user_id', $user->id)->sum('profit_price');
+        $p = $userProfits - $profitDone; // الفرق بين اللي معاه و اللي عايز يسحبه علي اساس انه ممكن يكون طلب اكتر من مره
+        if ($p >= $profit && $p != 0) {
+            $getProfit = new Profit();
+            $getProfit->profit_price = $profit;
+            $getProfit->user_id = $user->id;
+            if ($getProfit->save()) {
+                return response()->json(['success' => 'Success: You Get Out '. intval($profit) .' Profit']);
+            }
+            return 'saving error';
+        }
+        return 'profit error';
+    }
 }

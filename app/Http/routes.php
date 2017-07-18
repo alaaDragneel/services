@@ -141,6 +141,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/GetAllProfitOperation', 'UsersController@GetAllProfitOperation');
     // Show All Balance Operations
     Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
+    // Get The Profit
+    Route::post('/GetProfit', 'UsersController@GetProfit');
 
     /*
     |--------------------------------------------------------------------------
@@ -251,6 +253,16 @@ Route::group(['middleware' => 'admin'], function() {
                 'as' => 'index.services'
             ]);
 
+            Route::get('/services/waiting', [
+                'uses' => 'AdminServiceController@waiting',
+                'as' => 'waiting.services'
+            ]);
+
+            Route::get('/services/user/all/{id}', [
+                'uses' => 'AdminServiceController@allUserServices',
+                'as' => 'all.user.services'
+            ]);
+
             Route::get('/services/filter_by/{status}', [
                 'uses' => 'AdminServiceController@filter_by',
                 'as' => 'filter.services'
@@ -299,9 +311,37 @@ Route::group(['middleware' => 'admin'], function() {
             |
             */
 
-            Route::get('/user/{id}', [
-                'uses' => 'AdminServiceController@getServiceInfo',
+
+            Route::get('/users', [
+                'uses' => 'AdminUserController@index',
+                'as' => 'index.users'
+            ]);
+
+            Route::get('/users/filter_by/{status}', [
+                'uses' => 'AdminUserController@filter_by',
+                'as' => 'filter.users'
+            ]);
+
+            Route::get('/users/search', [
+                'uses' => 'AdminUserController@filter_by_search',
+                'as' => 'filter.search.users'
+            ]);
+
+            Route::get('/users/edit/{id}', [
+                'uses' => 'AdminUserController@editUser',
                 'as' => 'edit.user'
+            ]);
+
+
+
+            Route::get('/users/delete/{id}', [
+                'uses' => 'AdminUserController@deleteUser',
+                'as' => 'delete.users'
+            ]);
+
+            Route::post('/users/update/{id}', [
+                'uses' => 'AdminUserController@updateUser',
+                'as' => 'update.user'
             ]);
 
             /*
@@ -316,13 +356,23 @@ Route::group(['middleware' => 'admin'], function() {
                 'as' => 'index.orders'
             ]);
 
+            Route::get('/orders/user/owner/{id}', [
+                'uses' => 'AdminOrderController@allUserOwnerOrders',
+                'as' => 'all.user.owner.orders'
+            ]);
 
-            Route::get('/services/filter_by/{status}', [
+            Route::get('/orders/user/other/{id}', [
+                'uses' => 'AdminOrderController@allUserOtherOrders',
+                'as' => 'all.user.other.orders'
+            ]);
+
+
+            Route::get('/orders/filter_by/{status}', [
                 'uses' => 'AdminOrderController@filter_by',
                 'as' => 'filter.orders'
             ]);
 
-            Route::get('/services/search', [
+            Route::get('/orders/search', [
                 'uses' => 'AdminOrderController@filter_by_search',
                 'as' => 'filter.search.orders'
             ]);
@@ -337,6 +387,8 @@ Route::group(['middleware' => 'admin'], function() {
                 'uses' => 'AdminOrderController@editOrder',
                 'as' => 'edit.orders'
             ]);
+
+            Route::get('/orders/getAllOrders/{id?}', 'AdminOrderController@getAllOrders');
 
             Route::post('/orders/update/{id}', [
                 'uses' => 'AdminOrderController@updateOrder',

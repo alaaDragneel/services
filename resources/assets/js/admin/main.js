@@ -33,7 +33,7 @@ jQuery(document).ready(function($){
 
 			 }
 
-			 $('.statusBox').attr('href', urlHome(1) + '/admin/services/changeStatus/' + id)
+			 $('.statusBox').attr('href', urlHome(1) + '/admin/services/changeStatus/' + id);
 
 			 $('.moreBox').attr('href', urlHome(1) + '/admin/services/edit/' + id);
 
@@ -42,8 +42,10 @@ jQuery(document).ready(function($){
 			 $('.disBox').html(service.description);
 
 			 $('.order-count').html("<i class='fa fa-first-order'></i> " + orders_count + ' Order');
+			 $('.order-count').attr('href', urlHome(1) + '/admin/orders/getAllOrders/' + service.id);
 
 			 $('.provider').html("Added by " + user.name);
+			 $('.provider').attr('href', urlHome(1) + '/admin/users/edit/' + user.id);
 		 });
 		var selectedImage = $(this).parent('.cd-item').children('img'),
 			slectedImageUrl = selectedImage.attr('src');

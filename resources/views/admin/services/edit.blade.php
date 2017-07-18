@@ -21,7 +21,7 @@
                 {{-- sidebar --}}
                 <div class="col-md-10">
 
-                    <div class="col-md-3 col-sm-12">
+                    <div class="col-md-6 col-sm-12">
                         <div class="content-box-header bg-green">
                             <div class="panel-title">User Information</div>
                         </div>
@@ -29,26 +29,7 @@
                             <a href="{{ route('edit.user', ['id' => $service->user->id]) }}">{{ $service->user->name }}</a>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
-                        <div class="content-box-header bg-yellow">
-                            <div class="panel-title">Srvice Actions</div>
-                        </div>
-                        <div class="content-box-large box-with-header">
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('delete.services', ['id' => $service->id]) }}" class="deleteBox btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
-                                <a href="{{ route('changeStatus.services', ['id' => $service->id]) }}" class="statusBox btn {{ $service->status == 0 ? 'btn-success' : 'btn-info' }}">
-                                    @if ($service->status == 0)
-                                        <i class="fa fa-check-circle"></i>  Publish
-                                    @else
-                                        <i class="fa fa-clock-o"></i>  Reject
-                                    @endif
-                                </a>
-                                <a href="{{ route('index.services') }}" class="btn btn-primary"><i class="fa fa-server"></i> All Services</a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12">
+                    <div class="col-md-6 col-sm-12">
                         <div class="content-box-header bg-red">
                             <div class="panel-title">Orders ({{ count($service->orders) }})</div>
                         </div>
@@ -130,6 +111,19 @@
                     <div class="col-md-12">
                         <div class="content-box-header bg-blue">
                             Edit {{ $service->name }}
+                            <div class="btn-group btn-group-sm pull-right">
+                                <a href="{{ route('delete.services', ['id' => $service->id]) }}" class="deleteBox btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                <a href="{{ route('changeStatus.services', ['id' => $service->id]) }}" class="statusBox btn {{ $service->status == 0 ? 'btn-success' : 'btn-info' }}">
+                                    @if ($service->status == 0)
+                                        <i class="fa fa-check-circle"></i>  Publish
+                                    @else
+                                        <i class="fa fa-clock-o"></i>  Reject
+                                    @endif
+                                </a>
+                                <a href="{{ route('index.services') }}" class="btn btn-inverse"><i class="fa fa-server"></i> All Services</a>
+                            </div>
+                            <div class="clearfix"></div>
+
                         </div>
                         <div class="content-box-large box-with-header">
                                 {!! Form::model($service, ['route' => ['update.service',  $service->id], 'method' => 'post', 'files' => true ]) !!}

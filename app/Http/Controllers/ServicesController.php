@@ -28,6 +28,10 @@ use App\Order;
 
 use App\Category as Cat;
 
+use App\Events\ReadNotification as ReadNotify;
+
+use Event;
+
 class ServicesController extends Controller
 {
     /**
@@ -84,6 +88,16 @@ class ServicesController extends Controller
                 }
             }
         }
+
+        /*
+        | ----------------------------------------
+        | Seen Notification
+        | ----------------------------------------
+        |
+        */
+
+        Event::fire(new ReadNotify($service->id, ['AcceptedService', 'RejectedService']));
+
 
         /*Add New view*/
         $ip = $request->server('REMOTE_ADDR');
@@ -189,13 +203,13 @@ class ServicesController extends Controller
         }
 
         // to auto select the stars
-            if (Auth::check()) {
-                $userRate = Vote::select('id', 'vote')->where(function ($q) use ($user, $service) {
-                    $q->where('service_id', $service->id)->where('user_id', $user->id);
-                })->first();
-            }else {
-                $userRate = null;
-            }
+        if (Auth::check()) {
+            $userRate = Vote::select('id', 'vote')->where(function ($q) use ($user, $service) {
+                $q->where('service_id', $service->id)->where('user_id', $user->id);
+            })->first();
+        }else {
+            $userRate = null;
+        }
 
         return Response::json([
             'service' => $service,

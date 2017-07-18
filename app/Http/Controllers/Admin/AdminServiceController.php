@@ -5,8 +5,14 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+
 use App\Http\Requests\AddServicesRequest;
+
 use App\Http\Controllers\Controller;
+
+use App\Events\CreateNotification as CreateNotify;
+
+use Event;
 
 use App\Service;
 
@@ -33,7 +39,23 @@ class AdminServiceController extends Controller
     public function index()
     {
 
-        $services = Service::paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
+        $services = Service::orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
+        $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
+        return view('admin.services.services', compact('services', 'cat'));
+    }
+
+    public function waiting()
+    {
+
+        $services = Service::where('status', 0)->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
+        $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
+        return view('admin.services.services', compact('services', 'cat'));
+    }
+
+    public function allUserServices($id)
+    {
+
+        $services = Service::where('user_id', $id)->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
         $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
         return view('admin.services.services', compact('services', 'cat'));
     }
@@ -93,11 +115,21 @@ class AdminServiceController extends Controller
         $service = Service::findOrFail($id);
         if ($service->status == 0) {
             $service->status = 1;
+            $adminStatus = 'AcceptedService';
             $service->update();
-        } else {
+        } elseif ($service->status == 1) {
             $service->status = 0;
+            $adminStatus = 'RejectedService';
             $service->update();
         }
+
+        /*
+        | -----------------------------------------------------------
+        | make New Notifications For The Recived User
+        | -----------------------------------------------------------
+        */
+
+        Event::fire(new CreateNotify($service->id, \Auth::user()->id, $service->user_id, $adminStatus));
 
         return redirect()->back()->with('success', 'status of services Updated successfully');
     }

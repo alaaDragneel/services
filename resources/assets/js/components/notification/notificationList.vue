@@ -93,6 +93,39 @@
                 {{ notification.user_who_send_notification.name }} Commented On Order #{{notification.notify_id}}!
             </a>
         </td>
+        <td v-if="notification.type == 'AcceptedService'">
+            <a v-link="{name: '/ServicesDetails', params:{serviceId: notification.notify_id, serviceName: 'Admin Accept Service'}}"
+                title="Admin Was Accepted Service #{{notification.notify_id}}!">
+                Admin Was Accepted Service #{{notification.notify_id}}!
+            </a>
+        </td>
+        <td v-if="notification.type == 'RejectedService'">
+            <a v-link="{name: '/ServicesDetails', params:{serviceId: notification.notify_id, serviceName: 'Admin Reject Service'}}"
+                title="Admin Was Rejected Service #{{notification.notify_id}}!">
+                Admin Was Rejected Service #{{notification.notify_id}}!
+            </a>
+        </td>
+        <td v-if="notification.type == 'AdminAccepted'">
+            <!-- Admin Accepted Order -->
+            <a  v-link="{name: '/Order', params:{orderId: notification.notify_id }}"
+                title="Admin Was Accepted order #{{notification.notify_id}}!">
+                 Admin Was Accepted order #{{notification.notify_id}}!
+            </a>
+        </td>
+        <td v-if="notification.type == 'AdminRejected'">
+            <!-- Admin Rejected Order -->
+            <a  v-link="{name: '/Order', params:{orderId:  notification.notify_id }}"
+                title="Admin Was Rejected Service #{{notification.notify_id}}!">
+                Admin Was Rejected Order #{{notification.notify_id}}!
+            </a>
+        </td>
+        <td v-if="notification.type == 'AdminCompeleted'">
+            <!-- Admin Compeleted Order -->
+            <a  v-link="{name: '/Order', params:{orderId:  notification.notify_id }}"
+                title="Admin Was Rejected Service #{{notification.notify_id}}!">
+                 Admin Was Completed Order #{{notification.notify_id}}!
+            </a>
+        </td>
         <td>{{ notification.created_at | moment 'calendar' }}</td>
         <td>
             <span v-if="notification.seen == 1">

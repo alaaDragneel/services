@@ -214,7 +214,7 @@ class OrdersController extends Controller
                 |
                 */
 
-                Event::fire(new ReadNotify($orderId, ['ReviceOrders', 'AcceptedOrder', 'RejectedOrder', 'CompeleteOrder', 'RecivedComment']));
+                Event::fire(new ReadNotify($orderId, ['ReviceOrders', 'AcceptedOrder', 'RejectedOrder', 'CompeleteOrder', 'RecivedComment', 'AdminAccepted', 'AdminRejected', 'AdminCompeleted']));
 
                 $array = [
                     'user_id' => $user_id,

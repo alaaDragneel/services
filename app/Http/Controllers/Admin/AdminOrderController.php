@@ -15,6 +15,10 @@ use App\Buy;
 
 use App\Comment;
 
+use App\Events\CreateNotification as CreateNotify;
+
+use Event;
+
 class AdminOrderController extends Controller
 {
     public function __construct()
@@ -25,7 +29,21 @@ class AdminOrderController extends Controller
     public function index()
     {
 
-        $orders = Order::with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
+        $orders = Order::with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
+        return view('admin.orders.orders', compact('orders'));
+    }
+
+    public function allUserOwnerOrders($id)
+    {
+
+        $orders = Order::where('user_order', $id)->with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
+        return view('admin.orders.orders', compact('orders'));
+    }
+
+    public function allUserOtherOrders($id)
+    {
+
+        $orders = Order::where('user_id', $id)->with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
         return view('admin.orders.orders', compact('orders'));
     }
 
@@ -80,6 +98,9 @@ class AdminOrderController extends Controller
             |
             */
             if ($request->status == 0 || $request->status == 1 || $request->status == 2) {
+                if ($request->status == 2) {
+                    $adminStatus = 'AdminAccepted';
+                }
                 $buy = Buy::where('order_id', $order->id)->first();
                 $buy->finish = 0;
                 $buy->update();
@@ -92,6 +113,7 @@ class AdminOrderController extends Controller
             |
             */
             if ($request->status == 3) {
+                $adminStatus = 'AdminRejected';
                 $buy = Buy::where('order_id', $order->id)->first();
                 $buy->finish = 2;
                 $buy->update();
@@ -105,10 +127,27 @@ class AdminOrderController extends Controller
             */
 
             if ($request->status == 4) {
+                $adminStatus = 'AdminCompeleted';
                 $buy = Buy::where('order_id', $order->id)->first();
                 $buy->finish = 1;
                 $buy->update();
             }
+            $user = \Auth::user();
+            /*
+            | -----------------------------------------------------------
+            | make New Notifications For The Order Owner
+            | -----------------------------------------------------------
+            */
+
+            Event::fire(new CreateNotify($order->id, $user->id, $order->user_order, $adminStatus));
+
+            /*
+            | -----------------------------------------------------------
+            | make New Notifications For The service Owner
+            | -----------------------------------------------------------
+            */
+
+            Event::fire(new CreateNotify($order->id, $user->id, $order->user_id, $adminStatus));
 
             $updateOrder = $order->update();
             if ($updateOrder) {
@@ -122,34 +161,40 @@ class AdminOrderController extends Controller
     }
 
 
-        public function filter_by($status = null)
-        {
-            if ($status != null) {
-                $statusCheck = [0, 1, 2, 3, 4, 5, 'id-ASC', 'id-DESC'];
-                if (in_array($status, $statusCheck)) {
-                    if ($status == 5) { // NOTE Mean Get All Services
-                        $orders = Order::with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
-                    } else if ($status == 'id-ASC' || $status == 'id-DESC') {
-                        $explode = explode('-', $status);
-                        $orders = Order::orderBy($explode[0], $explode[1])->with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
-                    } else {
-                        $orders = Order::where('status', $status)->with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
-                    }
+    public function filter_by($status = null)
+    {
+        if ($status != null) {
+            $statusCheck = [0, 1, 2, 3, 4, 5, 'id-ASC', 'id-DESC'];
+            if (in_array($status, $statusCheck)) {
+                if ($status == 5) { // NOTE Mean Get All Services
+                    $orders = Order::with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
+                } else if ($status == 'id-ASC' || $status == 'id-DESC') {
+                    $explode = explode('-', $status);
+                    $orders = Order::orderBy($explode[0], $explode[1])->with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
                 } else {
-                    return redirect()->back()->with('error', 'Error With The Values');
+                    $orders = Order::where('status', $status)->with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
                 }
             } else {
-                $orders = Order::with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
+                return redirect()->back()->with('error', 'Error With The Values');
             }
-
-            return view('admin.orders.orders', compact('orders'));
+        } else {
+            $orders = Order::with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
         }
 
-        public function filter_by_search(Request $request)
-        {
-            $search = strip_tags($request->search);
-            $orders = Order::where('id', "$search")->with('getMyOrders', 'getUserAddService', 'services')->paginate(env('LIMIT_SERVICES'));
-            return view('admin.orders.orders', compact('orders'));
-        }
+        return view('admin.orders.orders', compact('orders'));
+    }
 
+    public function filter_by_search(Request $request)
+    {
+        $search = strip_tags($request->search);
+        $orders = Order::where('id', "$search")->with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
+        return view('admin.orders.orders', compact('orders'));
+    }
+
+    public function getAllOrders(Request $request)
+    {
+        $service_id = $request->route()->id;
+        $orders = Order::where('service_id', $service_id)->with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
+        return view('admin.orders.orders', compact('orders'));
+    }
 }

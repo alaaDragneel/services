@@ -22,7 +22,7 @@
                     <div class="col-md-10">
                         <div class="content-box-large">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <div class="btn-group">
+                                <div class="btn-group btn-group-sm">
                                     <a class="btn btn-default" href="{{ route('filter.orders', ['status' => 5]) }}"><i class="fa fa-list-ol"></i> All orders</a>
                                     <a class="btn btn-success" href="{{ route('filter.orders', ['status' => 0]) }}"><i class="fa fa-pagelines"></i> New orders</a>
                                     <a class="btn btn-warning" href="{{ route('filter.orders', ['status' => 1]) }}"><i class="fa fa-history"></i> Old orders</a>

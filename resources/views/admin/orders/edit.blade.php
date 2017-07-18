@@ -82,20 +82,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 col-sm-12">
-                        <div class="content-box-header bg-red">
-                            <div class="panel-title">Order Actions</div>
-                        </div>
-                        <div class="content-box-large box-with-header">
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('delete.orders', ['id' => $order->id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
-                                <a href="{{ route('index.orders') }}" class="btn btn-primary"><i class="fa fa-server"></i> All Orders</a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-12 col-sm-12">
                         <div class="content-box-header bg-blue">
                             <div class="panel-title">Order Status</div>
                         </div>
@@ -120,6 +107,12 @@
                     <div class="col-md-12">
                         <div class="content-box-header bg-blue">
                             Edit {{ $order->services->name }}
+                            <div class="btn-group btn-group-sm pull-right">
+                                <a href="{{ route('delete.orders', ['id' => $order->id]) }}" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                <a href="{{ route('index.orders') }}" class="btn btn-inverse"><i class="fa fa-server"></i> All Orders</a>
+                            </div>
+                            <div class="clearfix"></div>
+
                         </div>
                         <div class="content-box-large box-with-header">
                                 <div class="col-md-12">
@@ -194,7 +187,7 @@
                                                     <div class="panel-body">
                                                         <header class="text-left mainInfo">
                                                             <div class="comment-user pull-left">
-                                                                <a href="{{ route('edit.user', ['id', $comment->user_id]) }}">
+                                                                <a href="{{ route('edit.user', ['id' => $comment->user_id]) }}">
                                                                     <i class="fa fa-user"></i>
                                                                     {{ $comment->user_id }}
                                                                 </a>
@@ -206,7 +199,7 @@
                                                             <div class="clearfix"></div>
                                                         </header>
                                                         <div class="comment-post pull-left">
-                                                            <p>
+                                                            <p style="word-break: break-word;">
                                                                 {{ $comment->comment }}
                                                             </p>
                                                         </div>
