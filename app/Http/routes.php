@@ -311,12 +311,37 @@ Route::group(['middleware' => 'admin'], function() {
             |
             */
 
-            Route::get('/order/{id}', [
-                'uses' => 'AdminServiceController@getServiceInfo',
-                'as' => 'edit.order'
+            Route::get('/orders', [
+                'uses' => 'AdminOrderController@index',
+                'as' => 'index.orders'
             ]);
 
-            // NOTE
+
+            Route::get('/services/filter_by/{status}', [
+                'uses' => 'AdminOrderController@filter_by',
+                'as' => 'filter.orders'
+            ]);
+
+            Route::get('/services/search', [
+                'uses' => 'AdminOrderController@filter_by_search',
+                'as' => 'filter.search.orders'
+            ]);
+
+
+            Route::get('/orders/delete/{id}', [
+                'uses' => 'AdminOrderController@deleteOrder',
+                'as' => 'delete.orders'
+            ]);
+
+            Route::get('/orders/edit/{id}', [
+                'uses' => 'AdminOrderController@editOrder',
+                'as' => 'edit.orders'
+            ]);
+
+            Route::post('/orders/update/{id}', [
+                'uses' => 'AdminOrderController@updateOrder',
+                'as' => 'update.order'
+            ]);
 
             /*
             |--------------------------------------------------------------------------
@@ -325,7 +350,11 @@ Route::group(['middleware' => 'admin'], function() {
             |
             */
 
-            // NOTE
+
+            Route::get('/orders/comment/delete/{id}', [
+                'uses' => 'AdminOrderController@deleteComment',
+                'as' => 'delete.comment'
+            ]);
 
             /*
             |--------------------------------------------------------------------------

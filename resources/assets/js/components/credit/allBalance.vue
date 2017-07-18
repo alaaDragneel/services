@@ -19,7 +19,7 @@
                             <!-- small box -->
                             <div class="small-box bg-blue">
                                 <div class="inner">
-                                    <h3>${{ userCharge - userPays }}</h3>
+                                    <h3>${{ parseInt(userProfits) + parseInt(userCharge) - parseInt(userPays) }}</h3>
 
                                     <p>Balance</p>
                                 </div>

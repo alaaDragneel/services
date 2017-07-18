@@ -6,7 +6,6 @@
 
     <!-- Styles -->
     {{ Html::style('admin/css/style.css') }}
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -47,6 +46,13 @@ function urlHome(root = 1)
     <script type="text/javascript">
         var msg = '{{ Session::get('success') }}';
         alertify.success(msg);
+    </script>
+@endif
+@if (Session::has('error'))
+
+    <script type="text/javascript">
+        var msg = '{{ Session::get('error') }}';
+        alertify.error(msg);
     </script>
 @endif
 </body>

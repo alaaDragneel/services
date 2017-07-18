@@ -58,7 +58,6 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
-
                             <hr>
                             <ul class="cd-items cd-container">
                                 @forelse ($services as $service)
@@ -71,9 +70,12 @@
                                 @endforelse
 
                             </ul> <!-- cd-items -->
+                            <div class="clearfix"></div>
                             <ul class="col-md-6 col-md-offset-3">
                                 {{ $services->appends(Request::query())->render() }}
                             </ul>
+                            <div class="clearfix"></div>
+
                             <div class="cd-quick-view">
                                 <div class="cd-slider-wrapper">
                                     <ul class="cd-slider">
@@ -90,7 +92,7 @@
                                         <span class="priceBox btn btn-warning"></span>
                                         <a href="{{ route('changeStatus.services') }}" class="statusBox btn "></a>
                                         <span href="#" class="btn btn-primary order-count"></span>
-                                        <span href="#" class="btn btn-default provider"></span>
+                                        <span href="#" class="btn btn-inverse provider"></span>
                                         </div> <!-- cd-item-action -->
                                     </div> <!-- cd-item-info -->
                                     <a href="#0" class="cd-close">Close</a>

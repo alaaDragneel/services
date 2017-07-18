@@ -21,27 +21,111 @@
                 {{-- sidebar --}}
                 <div class="col-md-10">
 
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-3 col-sm-12">
                         <div class="content-box-header bg-green">
                             <div class="panel-title">User Information</div>
                         </div>
                         <div class="content-box-large box-with-header">
-                            <a href="{{ route('edit.user', ['id', $service->user->id]) }}">{{ $service->user->name }}</a>
+                            <a href="{{ route('edit.user', ['id' => $service->user->id]) }}">{{ $service->user->name }}</a>
                         </div>
                     </div>
-
-                    <div class="col-md-6 col-sm-12">
-                        <div class="content-box-header bg-aqua">
+                    <div class="col-md-4 col-sm-12">
+                        <div class="content-box-header bg-yellow">
+                            <div class="panel-title">Srvice Actions</div>
+                        </div>
+                        <div class="content-box-large box-with-header">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ route('delete.services', ['id' => $service->id]) }}" class="deleteBox btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                <a href="{{ route('changeStatus.services', ['id' => $service->id]) }}" class="statusBox btn {{ $service->status == 0 ? 'btn-success' : 'btn-info' }}">
+                                    @if ($service->status == 0)
+                                        <i class="fa fa-check-circle"></i>  Publish
+                                    @else
+                                        <i class="fa fa-clock-o"></i>  Reject
+                                    @endif
+                                </a>
+                                <a href="{{ route('index.services') }}" class="btn btn-primary"><i class="fa fa-server"></i> All Services</a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-12">
+                        <div class="content-box-header bg-red">
                             <div class="panel-title">Orders ({{ count($service->orders) }})</div>
                         </div>
                         <div class="content-box-large box-with-header">
                             @forelse ($service->orders as $order)
-                                <a href="{{ route('edit.order', ['id', $order->id]) }}">#{{ $order->id }}</a>
+                                <span class="col-md-1 text-left">
+                                    <a href="{{ route('edit.orders', ['id' => $order->id]) }}">#{{ $order->id }}</a>
+                                </span>
+                                <div class="col-md-6 text-center">
+                                    @if ($order->status == 0)
+                                        <span class="label label-inverse">New Order</span>
+                                        <br>
+                                    @elseif ($order->status == 1)
+                                        <span class="label label-warning">Old Order</span>
+                                        <br>
+                                    @elseif ($order->status == 2)
+                                        <span class="label label-primary">In Prograss Order</span>
+                                        <br>
+                                    @elseif ($order->status == 3)
+                                        <span class="label label-danger">Cancelled</span>
+                                        <br>
+                                    @elseif ($order->status == 4)
+                                        <span class="label label-success">Finished</span>
+                                        <br>
+                                    @endif
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <span class="label label-info">
+                                        <i class="fa fa-calendar"></i> {{ $order->created_at->format('Y/m/d') }}
+                                    </span>
+                                    <br>
+                                    <br>
+                                </div>
+                                <div class="clearfix"></div>
+
                             @empty
-                                <div class="alert alert-danger text-center">No Order For This Service</div>
+                                <div class="alert alert-inverse text-center">No Order For This Service</div>
                             @endforelse
                         </div>
                     </div>
+                    <div class="clearfix"></div>
+
+                    <div class="col-md-12 col-sm-12">
+                        <div class="content-box-header bg-inverse">
+                            <div class="panel-title">Service Votes And Views</div>
+                        </div>
+                        <div class="content-box-large box-with-header">
+                            <div class="col-md-11 col-md-offset-1 col-sm-12">
+                                <div class="btn-group btn-group-sm" style="margin-left: 15%;">
+                                    <span class="btn btn-primary">
+                                        <i class="fa fa-eye"></i> Number Of Views {{ $service->view_count }}
+                                    </span>
+                                    <span class="btn btn-danger">
+                                        <i class="fa fa-user"></i>
+                                        Number of voters
+                                        {{ $service->votes_count }}
+                                    </span>
+                                    <!-- The Service Rates -->
+                                    <span class="btn btn-warning">
+                                        <i class="fa fa-star"></i>
+                                        Number of stars
+                                        {{ $sumVotes > 0 ? $sumVotes : 0 }}
+                                    </span>
+
+                                    @if ($service->votes_count > 0)
+                                        <span class="btn btn-success" >
+                                            % {{ getParseIntVal(($sumVotes * 100) / ($service->votes_count * 5)) }}
+                                            percentage
+                                        </span>
+                                    @endif
+                                </div>
+                                <!-- Number Of Users Whose Rate -->
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
 
                     <div class="col-md-12">
                         <div class="content-box-header bg-blue">
@@ -49,11 +133,8 @@
                         </div>
                         <div class="content-box-large box-with-header">
                                 {!! Form::model($service, ['route' => ['update.service',  $service->id], 'method' => 'post', 'files' => true ]) !!}
-
                                 <div class="form-group">
                                     <label for="name">Service Name</label>
-                                    {!! Form::label('Service Name', 'name') !!}
-                                    {!! Form::label('Service Name', 'name') !!}
                                     <input type="text" class="form-control" id="name" name="name" value="{{ $service->name }}" placeholder="Enter the Service Name">
                                 </div>
 
@@ -101,7 +182,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary" @click="AddThisService">
+                                    <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-edit"></i> update Service
                                     </button>
                                 </div>

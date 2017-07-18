@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\AddServicesRequest;
 use App\Http\Controllers\Controller;
 
 use App\Service;
 
 use App\Category;
+
+use App\Vote;
+
+use App;
 
 use File;
 
@@ -19,7 +24,13 @@ use Image;
 
 class AdminServiceController extends Controller
 {
-    public function index($status = null)
+
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+
+    public function index()
     {
 
         $services = Service::paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
@@ -48,7 +59,7 @@ class AdminServiceController extends Controller
                     $services = Service::where('status', $status)->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
                 }
             } else {
-                return redirect()->back();
+                return redirect()->back()->with('error', 'Error With The Values');
             }
         } else {
             $services = Service::paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
@@ -70,7 +81,8 @@ class AdminServiceController extends Controller
 
     public function filter_by_search(Request $request)
     {
-        $services = Service::where('name', 'LIKE' , "$request->search%")->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
+        $search = strip_tags($request->search);
+        $services = Service::where('name', 'LIKE' , "$search%")->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
         $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
         return view('admin.services.services', compact('services', 'cat'));
     }
@@ -95,18 +107,22 @@ class AdminServiceController extends Controller
         $id = $request->route()->id;
         $service = Service::findOrFail($id);
         $service->delete();
-        return redirect()->back()->with('success', 'services deleted successfully');
+        return redirect()->route('index.services')->with('success', 'services deleted successfully');
     }
 
     public function editService($id, Request $request)
     {
-        $id = $request->route()->id;
-        $service = Service::where('id', $id)->with('user', 'category', 'orders', 'votes')->withCount('votes', 'view')->first();
-        $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
-        return view('admin.services.edit', compact('service', 'cat'));
+            $id = $request->route()->id;
+            $service = Service::where('id', $id)->with('user', 'category', 'orders', 'votes')->withCount('votes', 'view')->first();
+            if ($service) {
+                $sumVotes = Vote::where('service_id', $service->id)->sum('vote');
+                $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
+                return view('admin.services.edit', compact('service', 'cat', 'sumVotes'));
+            }
+        return App::abort(404);
     }
 
-    public function updateService($id, Request $request)
+    public function updateService($id, AddServicesRequest $request)
     {
         $prices = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         if (in_array($request->price, $prices)) {

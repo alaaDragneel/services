@@ -27,3 +27,7 @@ function getAllNotificationObjects($user_id) {
     ->with('userWhoSendNotification')
     ->take(20)->orderBy('id', 'DESC')->get();
 }
+
+function getParseIntVal($var) {
+    return intval($var);
+}
