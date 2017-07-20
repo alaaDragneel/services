@@ -24342,6 +24342,7 @@ var addCredit = require('./components/credit/add.vue');
 var ShowAllCharge = require('./components/credit/allCharge.vue');
 var ShowAllPayment = require('./components/credit/allPayment.vue');
 var ShowAllProfit = require('./components/credit/allProfit.vue');
+var ShowAllWaitingProfit = require('./components/credit/allWaitingProfits.vue');
 var ShowAllBalance = require('./components/credit/allBalance.vue');
 var ShowAllNotification = require('./components/notification/allNotifications.vue');
 var ShowAllUnReadNotification = require('./components/notification/unReadNotifications.vue');
@@ -24430,6 +24431,9 @@ route.map({
     '/AllProfit': {
         component: ShowAllProfit
     },
+    '/AllWaitingProfit': {
+        component: ShowAllWaitingProfit
+    },
     '/AllBalance': {
         component: ShowAllBalance
     },
@@ -24449,7 +24453,7 @@ route.map({
 // the element matching the selector body.
 route.start(App, 'body');
 
-},{"./components/btns/rating.vue":13,"./components/category/category.vue":15,"./components/credit/add.vue":18,"./components/credit/allBalance.vue":19,"./components/credit/allCharge.vue":20,"./components/credit/allPayment.vue":21,"./components/credit/allProfit.vue":22,"./components/errors/login.vue":23,"./components/favorite/favorite.vue":25,"./components/header/navbar.vue":26,"./components/messages/incomingMessage.vue":28,"./components/messages/messageDetails.vue":29,"./components/messages/newMessage.vue":32,"./components/messages/oldMessage.vue":33,"./components/messages/send.vue":34,"./components/messages/sendMessage.vue":35,"./components/notification/allNotifications.vue":36,"./components/notification/unReadNotifications.vue":38,"./components/orders/incomingOrders.vue":39,"./components/orders/purchaseOrders.vue":41,"./components/orders/singleOrder.vue":42,"./components/pages/mainPage.vue":44,"./components/services/addServices.vue":47,"./components/services/myServices.vue":48,"./components/services/service_details.vue":49,"./components/users/UserServices.vue":52,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-strap/dist/vue-strap.min":7,"vue-validator":8}],11:[function(require,module,exports){
+},{"./components/btns/rating.vue":13,"./components/category/category.vue":15,"./components/credit/add.vue":18,"./components/credit/allBalance.vue":19,"./components/credit/allCharge.vue":20,"./components/credit/allPayment.vue":21,"./components/credit/allProfit.vue":22,"./components/credit/allWaitingProfits.vue":23,"./components/errors/login.vue":24,"./components/favorite/favorite.vue":26,"./components/header/navbar.vue":27,"./components/messages/incomingMessage.vue":29,"./components/messages/messageDetails.vue":30,"./components/messages/newMessage.vue":33,"./components/messages/oldMessage.vue":34,"./components/messages/send.vue":35,"./components/messages/sendMessage.vue":36,"./components/notification/allNotifications.vue":37,"./components/notification/unReadNotifications.vue":39,"./components/orders/incomingOrders.vue":40,"./components/orders/purchaseOrders.vue":42,"./components/orders/singleOrder.vue":43,"./components/pages/mainPage.vue":45,"./components/services/addServices.vue":48,"./components/services/myServices.vue":49,"./components/services/service_details.vue":50,"./components/users/UserServices.vue":53,"vue":9,"vue-moment":4,"vue-resource":5,"vue-router":6,"vue-strap/dist/vue-strap.min":7,"vue-validator":8}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24711,6 +24715,7 @@ exports.default = {
                     this.isLoading = true;
                 }
             }, function (res) {
+                this.$refs.spinner.hide();
 
                 alertify.error('There are Some Erros Try Again later');
             });
@@ -24749,7 +24754,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-a0ac849a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../pages/sidebar.vue":45,"../users/SingleServices.vue":51,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],16:[function(require,module,exports){
+},{"../pages/sidebar.vue":46,"../users/SingleServices.vue":52,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24910,6 +24915,8 @@ exports.default = {
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
+                this.$refs.spinner.hide();
+
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         },
@@ -24926,6 +24933,8 @@ exports.default = {
                     path: '/AllCharge'
                 });
             }, function (res) {
+                this.$refs.spinner.hide();
+
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         }
@@ -24994,7 +25003,9 @@ exports.default = {
             userCharge: 0,
             userPays: 0,
             userProfits: 0,
-            profit: 0
+            userWaitingProfits: 0,
+            profit: 0,
+            disabled: false
 
         };
     },
@@ -25010,10 +25021,12 @@ exports.default = {
                 this.userCharge = res.body['userCharge'] == null ? 0 : res.body['userCharge'];
                 this.userPays = res.body['userPays'] == null ? 0 : res.body['userPays'];
                 this.userProfits = res.body['userProfits'] == null ? 0 : res.body['userProfits'];
-                this.profit = this.userProfits;
+                this.userWaitingProfits = res.body['userWaitingProfits'] == null ? 0 : parseInt(res.body['userWaitingProfits']);
+                this.profit = parseInt(this.userProfits);
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
+                this.$refs.spinner.hide();
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         },
@@ -25026,7 +25039,8 @@ exports.default = {
                 this.isLoading = true;
                 if (res.body['success']) {
                     alertify.success(res.body['success']);
-                    this.userProfits -= this.profit;
+                    this.userProfits -= parseInt(this.profit);
+                    this.userWaitingProfits += parseInt(this.profit);
                     this.profit = this.userProfits;
                 } else if (res.body == 'saving error') {
                     alertify.error('Error During Save the profit Operation Contact With The Adminstrator');
@@ -25034,6 +25048,10 @@ exports.default = {
                     alertify.error('Error You Have Enogth Profit');
                 }
             }, function (res) {
+                this.$refs.spinner.hide();
+                for (var key in res.body) {
+                    alertify.error(res.body[key][0]);
+                }
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         }
@@ -25050,10 +25068,19 @@ exports.default = {
                 });
             }
         }
+    },
+    computed: {
+        disabled: function disabled() {
+            if (this.profit == '') {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<navbar></navbar>\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <span v-if=\"isLoading\">\n                <h2 class=\"text-center\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <i class=\"fa fa-money\"></i> {{ user.name }} Balances Section\n                        </div>\n                        <div class=\"col-md-12\">\n                            <small class=\"text-info\"><strong>Here All Balances Of Member {{ user.name }} Will Appear</strong></small>\n                        </div>\n                    </div>\n                </h2>\n                <div class=\"row\">\n                    <div class=\"col-lg-3 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-blue\">\n                            <div class=\"inner\">\n                                <h3>${{ parseInt(userProfits) + parseInt(userCharge) - parseInt(userPays) }}</h3>\n\n                                <p>Balance</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-money\"></i>\n                            </div>\n                            <a @click.prevent class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-3 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-red\">\n                            <div class=\"inner\">\n                                <h3>${{ userCharge }}</h3>\n\n                                <p>Charges</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-btn fa-gear fa-spin\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllCharge'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-3 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-yellow\">\n                            <div class=\"inner\">\n                                <h3>${{ userPays }}</h3>\n\n                                <p>Payments</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-minus-circle\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllPayment'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-3 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-green\">\n                            <div class=\"inner\">\n                                <h3>${{ userProfits }}</h3>\n\n                                <p>Profits</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-briefcase\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllProfit'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                </div>\n                <div class=\"row\">\n                    <div class=\"form-group\">\n                        <label for=\"getProfit\">Get Profite</label>\n                        <input type=\"text\" class=\"form-control\" id=\"getProfit\" placeholder=\"Write your Profite To et It\" v-model=\"profit\">\n                    </div>\n                    <div class=\"alert alert-danger\">\n                        <b>Note: </b>\n                        <span>\n                            You Can Transfeer the Profit Only.\n                            <br>\n                            You Can't Transfeer Fro Charges.\n                        </span>\n                    </div>\n                    <div class=\"form-group\">\n                        <button @click=\"getProfit\" type=\"button\" name=\"button\" class=\"btn btn-success\"><i class=\"fa fa-money\"></i> Get Profit</button>\n                    </div>\n                </div>\n            </span>\n        </div>\n    </div>\n</div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<navbar></navbar>\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <span v-if=\"isLoading\">\n                <h2 class=\"text-center\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <i class=\"fa fa-money\"></i> {{ user.name }} Balances Section\n                        </div>\n                        <div class=\"col-md-12\">\n                            <small class=\"text-info\"><strong>Here All Balances Of Member {{ user.name }} Will Appear</strong></small>\n                        </div>\n                    </div>\n                </h2>\n                <div class=\"row\">\n                    <div class=\"col-lg-4 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-green\">\n                            <div class=\"inner\">\n                                <h3>${{ parseInt(userProfits) + parseInt(userCharge) - parseInt(userPays) }}</h3>\n\n                                <p>Balance</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-money\"></i>\n                            </div>\n                            <a @click.prevent class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-4 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-yellow\">\n                            <div class=\"inner\">\n                                <h3>${{ userCharge }}</h3>\n\n                                <p>Charges</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-btn fa-gear fa-spin\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllCharge'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-4 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-red\">\n                            <div class=\"inner\">\n                                <h3>${{ userPays }}</h3>\n\n                                <p>Payments</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-minus-circle\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllPayment'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-4 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-blue\">\n                            <div class=\"inner\">\n                                <h3>${{ userProfits }}</h3>\n\n                                <p>Profits</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-briefcase\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllProfit'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-4 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-inverse\">\n                            <div class=\"inner\">\n                                <h3>${{ userWaitingProfits }}</h3>\n\n                                <p>Waiting Profits</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-clock-o\"></i>\n                            </div>\n                            <a v-link=\"{path: '/AllWaitingProfit'}\" class=\"small-box-footer\">More info <i class=\"fa fa-arrow-circle-right\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                    <div class=\"col-lg-4 col-xs-6\">\n                        <!-- small box -->\n                        <div class=\"small-box bg-aqua\">\n                            <div class=\"inner\">\n                                <h3>${{ parseInt(userProfits) + parseInt(userWaitingProfits) }}</h3>\n\n                                <p>Total Profits</p>\n                            </div>\n                            <div class=\"icon\">\n                                <i class=\"fa fa-credit-card-alt\"></i>\n                            </div>\n                            <a @click.prevent href=\"#\" class=\"small-box-footer\"> No More Info <i class=\"fa fa-info-circle\"></i></a>\n                        </div>\n                    </div>\n                    <!-- ./col -->\n                </div>\n                <div class=\"row\">\n                    <div class=\"form-group\">\n                        <label for=\"getProfit\">Get Profite</label>\n                        <input type=\"text\" class=\"form-control\" id=\"getProfit\" placeholder=\"Write your Profite To Get It\" v-model=\"profit\">\n                    </div>\n                    <div class=\"alert alert-danger\">\n                        <b>Note: </b>\n                        <span>\n                            You Can Transfeer the Profit Only.\n                            <br>\n                            You Can't Transfeer Fro Charges.\n                        </span>\n                    </div>\n                    <div class=\"form-group\">\n                        <button @click.prevent=\"getProfit\" :disabled=\"disabled\" type=\"button\" name=\"button\" class=\"btn btn-success\"><i class=\"fa fa-money\"></i> Get Profit</button>\n                    </div>\n                </div>\n            </span>\n        </div>\n    </div>\n</div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25101,6 +25128,8 @@ exports.default = {
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
+                this.$refs.spinner.hide();
+
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         }
@@ -25168,6 +25197,8 @@ exports.default = {
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
+                this.$refs.spinner.hide();
+
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         }
@@ -25235,6 +25266,8 @@ exports.default = {
                 this.$refs.spinner.hide();
                 this.isLoading = true;
             }, function (res) {
+                this.$refs.spinner.hide();
+
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
             });
         }
@@ -25266,6 +25299,76 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],23:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require('vue-strap/dist/vue-strap.min').spinner;
+
+exports.default = {
+    components: {
+        spinner: Spinner
+    },
+    data: function data() {
+        return {
+            isLoading: false,
+            user: '',
+            waitingProfits: '',
+            waitingSum: 0,
+            doneSum: 0
+
+        };
+    },
+
+    ready: function ready() {
+        this.$refs.spinner.show();
+        this.GetAllWaitingProfit();
+    },
+    methods: {
+        GetAllWaitingProfit: function GetAllWaitingProfit() {
+            this.$http.get('/GetAllWitingProfitOperation').then(function (res) {
+                this.user = res.body['user'];
+                this.waitingProfits = res.body['waitingProfits'];
+                this.waitingSum = res.body['waitingSum'] == null ? 0 : res.body['waitingSum'];
+                this.doneSum = res.body['doneSum'] == null ? 0 : res.body['doneSum'];
+                this.$refs.spinner.hide();
+                this.isLoading = true;
+            }, function (res) {
+                this.$refs.spinner.hide();
+                alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
+            });
+        }
+    },
+    route: {
+        canReuse: false // Force reload data
+    },
+    events: {
+        Auth: function Auth(value) {
+            if (value === 'false') {
+                alertify.error("This Action Not Authrized");
+                this.$router.go({
+                    path: '/loginError'
+                });
+            }
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<navbar></navbar>\n<div class=\"container\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <span v-if=\"isLoading\">\n                <h2 class=\"text-center\">\n                    <div class=\"row\">\n                        <div class=\"col-md-12\">\n                            <i class=\"fa fa-clock-o\"></i> {{ user.name }} Waiting Profits Section\n                        </div>\n                        <div class=\"col-md-12\">\n                            <small class=\"text-danger\"><strong>Here All Waiting  Profits Of Member {{ user.name }} Will Appear</strong></small>\n                        </div>\n                        <div class=\"col-md-4 col-sm-12\">\n                            <small class=\"text-primary\"><strong><i class=\"fa fa-gear fa-spin\"></i> {{ waitingProfits.length }} Profit Operations</strong></small>\n                        </div>\n                        <div class=\"col-md-4 col-sm-12\">\n                            <small class=\"text-warning\"><strong><i class=\"fa fa-clock-o\"></i> {{ waitingSum }} Total Waiting Profit</strong></small>\n                        </div>\n                        <div class=\"col-md-4 col-sm-12\">\n                            <small class=\"text-success\"><strong><i class=\"fa fa-money\"></i> {{ doneSum }} Total Done Profit</strong></small>\n                        </div>\n                    </div>\n                </h2>\n                <div class=\"row\">\n                    <table class=\"table table-bordered table-hover table-responsive table-striped\">\n                        <thead>\n                            <th>Waiting Profit Number</th>\n                            <th>Waiting Profit Price</th>\n                            <th>Waiting Profit State</th>\n                            <th>Waiting Profit Date</th>\n                        </thead>\n                        <tbody v-if=\"waitingProfits.length > 0\">\n                            <tr v-for=\"waitingProfit in waitingProfits\" track-by=\"$index\">\n                                <td>{{ waitingProfit.id }}</td>\n                                <td>${{ waitingProfit.profit_price }}</td>\n                                <td v-if=\"waitingProfit.status == 0\">\n                                    <span class=\"label label-inverse\">Witing The Adminstration</span>\n                                </td>\n                                <td v-if=\"waitingProfit.status == 1\">\n                                    <span class=\"label label-success\">Success</span>\n                                </td>\n                                <td>{{ waitingProfit.created_at | moment \"calendar\" }}</td>\n                            </tr>\n                        </tbody>\n                        <tbody v-else>\n                            <tr>\n                                    <td colspan=\"6\"><div class=\"alert alert-danger text-center\">No WaitingProfit Operations Happend!</div></td>\n                            </tr>\n                        </tbody>\n                    </table>\n                </div>\n            </span>\n        </div>\n    </div>\n</div>\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5bc1d60e", module.exports)
+  } else {
+    hotAPI.update("_v-5bc1d60e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25284,7 +25387,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-840b4e9e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],24:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25341,7 +25444,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-35c20352", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],25:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],26:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25419,7 +25522,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-60ac2f73", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../messages/messageMenu.vue":30,"./favList.vue":24,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],26:[function(require,module,exports){
+},{"../messages/messageMenu.vue":31,"./favList.vue":25,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],27:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25445,7 +25548,8 @@ exports.default = {
             allNotify: [],
             notifyLoading: false,
             categories: [],
-            Auth: { check: true, guest: false }
+            Auth: { check: true, guest: false },
+            user: []
         };
     },
 
@@ -25475,6 +25579,7 @@ exports.default = {
                     this.PurchaseOrders = res.body['ordersCount'];
                     this.unReadMessages = res.body['messagesCount'];
                     this.categories = res.body['categories'];
+                    this.user = res.body['user'];
                 }
                 this.$refs.spinner.hide();
             }, function (res) {
@@ -25508,7 +25613,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<!-- Nav Bar -->\n<nav class=\"navbar navbar-inverse\">\n    <div class=\"navbar-header\">\n        <button class=\"navbar-toggle\" type=\"button\" data-toggle=\"collapse\" data-target=\".js-navbar-collapse\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n        </button>\n        <a class=\"navbar-brand\" v-link=\"{path: '/'}\">My Services Site</a>\n    </div>\n\n    <div class=\"collapse navbar-collapse js-navbar-collapse\">\n        <ul class=\"nav navbar-nav\">\n            <!-- Left Side Of Navbar -->\n            <li class=\"dropdown mega-dropdown\">\n                <a href=\"#\" class=\"dropdown-toggle catFolder\" data-toggle=\"dropdown\">\n                    <i class=\"fa fa-folder\"></i> Categories <span class=\"caret\"></span>\n                </a>\n                <ul class=\"dropdown-menu mega-dropdown-menu\">\n                        <li class=\"col-sm-3\" v-for=\"cat in categories\" track-by=\"$index\">\n                            <ul>\n                                <li class=\"dropdown-header\">\n                                    <a v-link=\"{name: '/Category', params:{catId: cat.id, catName: cat.name }}\">\n                                        {{ cat.name }}\n                                    </a>\n                                </li>\n                            </ul>\n                        </li>\n                </ul>\n            </li>\n            <!--NOTE @if (Auth::check()) -->\n                <!-- Orders Section -->\n                <li class=\"dropdown\" v-if=\"Auth.check\">\n                    <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                        <i class=\"fa fa-first-order\"></i>\n                        <span class=\"hidden-lg hidden-md\">Orders</span>\n                        <span class=\"caret\"></span>\n                    </a>\n\n                    <ul class=\"dropdown-menu\" role=\"menu\">\n                        <li>\n                            <a v-link=\"{path: '/IncomingOrders'}\">\n                                <i class=\"fa fa-truck\"></i>\n                                Incoming Orders\n                            </a>\n                        </li>\n                        <li>\n                            <a v-link=\"{path: '/PurchaseOrders'}\">\n                                <i class=\"fa fa-cart-plus\"></i>\n                                Purchase Orders\n                            </a>\n                        </li>\n                    </ul>\n                </li>\n                <!-- Services Section -->\n                <li class=\"dropdown\" v-if=\"Auth.check\">\n                    <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                        <i class=\"fa fa-server\"></i>\n                        <span class=\"hidden-lg hidden-md\">Services</span>\n                        <span class=\"caret\"></span>\n                    </a>\n\n                    <ul class=\"dropdown-menu\" role=\"menu\">\n                        <li>\n                            <a v-link=\"{path: '/AddServices'}\">\n                                <i class=\"fa fa-plus\"></i>\n                                Add Service\n                            </a>\n                        </li>\n                        <li>\n                            <a v-link=\"{path: '/MyServices'}\">\n                                <i class=\"fa fa-user\"></i>\n                                My Services\n                            </a>\n                        </li>\n                    </ul>\n                </li>\n            <!--NOTE @endif -->\n        </ul>\n        <ul class=\"nav navbar-nav navbar-right\" v-if=\"Auth.guest\">\n            <!-- Authentication Links -->\n            <!--NOTE @if (Auth::guest()) -->\n                <div class=\"navbar-custom-menu\">\n                    <ul class=\"nav navbar-nav\">\n                        <!-- Logins and registers -->\n                        <li><a href=\"/login\"><i class=\"fa fa-user\"></i> Login</a></li>\n                        <li><a href=\"/register\"><i class=\"fa fa-user-plus\"></i> Register</a></li>\n                    </ul>\n                </div>\n            <!--NOTE @endif -->\n        </ul>\n        <ul class=\"nav navbar-nav navbar-right\" v-if=\"Auth.check\">\n            <!--NOTE @if (Auth::check()) -->\n                <div class=\"navbar-custom-menu\">\n                    <ul class=\"nav navbar-nav\">\n                        <!-- Credit Section -->\n                        <li class=\"dropdown\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-money\"></i> <span class=\"hidden-lg hidden-md\">Payments</span> <span class=\"caret\"></span>\n                            </a>\n\n                            <ul class=\"dropdown-menu\" role=\"menu\">\n                                <li><a v-link=\"{path: '/AddCredit'}\"><i class=\"fa fa-btn fa-plus\"></i> Add Credit</a></li>\n                                <li><a v-link=\"{path: '/AllCharge'}\"><i class=\"fa fa-btn fa-gear fa-spin\"></i> Charge</a></li>\n                                <li><a v-link=\"{path: '/AllPayment'}\"><i class=\"fa fa-btn fa-minus-circle\"></i> Payment</a></li>\n                                <li><a v-link=\"{path: '/AllProfit'}\"><i class=\"fa fa-btn fa-briefcase\"></i> Profit</a></li>\n                                <li><a v-link=\"{path: '/AllBalance'}\"><i class=\"fa fa-btn fa-money\"></i> Balance</a></li>\n                            </ul>\n                        </li>\n\n                        <!-- Messages Section -->\n                        <li class=\"dropdown\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-envelope\"></i> <span class=\"hidden-lg hidden-md\">Messages</span> <span class=\"caret\"></span>\n                            </a>\n                            <ul class=\"dropdown-menu\" role=\"menu\">\n                                <li>\n                                    <a v-link=\"{path: '/GetMyRecivedMessages'}\">\n                                        <i class=\"fa fa-inbox\"></i>\n                                        Incoming Messages\n                                    </a>\n                                </li>\n                                <li>\n                                    <a v-link=\"{path: '/GetMySendMessages'}\">\n                                        <i class=\"fa fa-send\"></i>\n                                        Send Messages\n                                    </a>\n                                </li>\n                                <li>\n                                    <a v-link=\"{path: '/GetUnReadMessages'}\">\n                                        <i class=\"fa fa-eye-slash\"></i>\n                                        UnRead Messages\n                                    </a>\n                                </li>\n                                <li>\n                                    <a v-link=\"{path: '/GetReadMessages'}\">\n                                        <i class=\"fa fa-eye\"></i>\n                                        Read Messages\n                                    </a>\n                                </li>\n                            </ul>\n                        </li>\n                        <!-- Notification -->\n                        <li @click=\"getAllUserNotifications\" class=\"dropdown notifications-menu\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">\n                                <i class=\"fa fa-bell\"></i>\n                                <span class=\"label label-success\">{{ notify }}</span>\n                                <span class=\"caret\"></span>\n                            </a>\n                            <ul class=\"dropdown-menu\">\n                                <li class=\"header\">You have {{ notify }} notifications</li>\n                                <li>\n                                    <!-- inner menu: contains the actual data -->\n                                    <ul class=\"menu\" style=\"overflow: hidden; width: 100%; height: 200px;\">\n                                        <li v-if=\"notifyLoading\" style=\"position: absolute; top: 50%; left: 44%; font-size: 30px; color: #999;\">\n                                            <i class=\"fa fa-spinner fa-spin\"></i>\n                                        </li>\n                                        <li v-if=\"allNotify.length > 0\" v-for=\"notify in allNotify\" :class=\"['main-li', 'text-center', notify.seen == 1 ? 'seen' : '']\" track-by=\"$index\">\n                                                <notify_list v-if=\"!notifyLoading\" :notify=\"notify\"></notify_list>\n                                        </li>\n                                    </ul>\n                                </li>\n                                <li class=\"footer\"><a v-link=\"{path: '/Notification'}\">View all</a></li>\n                            </ul>\n                        </li>\n                        <!-- Favorite -->\n                        <li class=\"dropdown\">\n                            <a v-link=\"{path: '/GetMyFavorites'}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <span class=\"fa fa-heart\"></span>\n                                <span class=\"hidden-lg hidden-md\">Favorite</span>\n                                <span class=\"label label-danger\">{{ favorite }}</span>\n                            </a>\n                        </li>\n                        <!-- Purchase Orders -->\n                        <li class=\"dropdown\">\n                            <a v-link=\"{path: '/PurchaseOrders'}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-cart-plus\"></i>\n                                <span class=\"hidden-lg hidden-md\">Purchase Orders</span>\n                                    <span class=\"label label-primary\" >{{ PurchaseOrders }}</span>\n                            </a>\n                        </li>\n                        <!-- unReadMessages -->\n                        <li class=\"dropdown\">\n                            <a v-link=\"{path: '/GetUnReadMessages'}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-eye-slash\"></i>\n                                <span class=\"hidden-lg hidden-md\">Unread Messages</span>\n                                    <span class=\"label label-info\" >{{ unReadMessages }}</span>\n                            </a>\n                        </li>\n                        <!-- User Section -->\n                        <li class=\"dropdown\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-user\"></i> <span class=\"hidden-lg hidden-md\">alaaDragneel</span> <span class=\"caret\"></span>\n                            </a>\n                            <ul class=\"dropdown-menu\" role=\"menu\">\n                                <li><a href=\"logout\"><i class=\"fa fa-btn fa-edit\"></i> My Information</a></li>\n                                <li><a href=\"logout\"><i class=\"fa fa-btn fa-sign-out\"></i> Logout</a></li>\n                            </ul>\n                        </li>\n                    </ul>\n                </div>\n            <!--NOTE @endif -->\n        </ul>\n        <form class=\"navbar-form navbar-left\">\n            <input type=\"text\" class=\"form-control\" placeholder=\"Search...\">\n            <button type=\"button\" class=\"btn btn-primary\">\n                <i class=\"fa fa-search\"></i>\n            </button>\n        </form>\n    </div><!-- /.nav-collapse -->\n</nav>\n<!-- Nav Bar -->\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<!-- Nav Bar -->\n<nav class=\"navbar navbar-inverse\">\n    <div class=\"navbar-header\">\n        <button class=\"navbar-toggle\" type=\"button\" data-toggle=\"collapse\" data-target=\".js-navbar-collapse\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n        </button>\n        <a class=\"navbar-brand\" v-link=\"{path: '/'}\">My Services Site</a>\n    </div>\n\n    <div class=\"collapse navbar-collapse js-navbar-collapse\">\n        <ul class=\"nav navbar-nav\">\n            <!-- Left Side Of Navbar -->\n            <li class=\"dropdown mega-dropdown\">\n                <a href=\"#\" class=\"dropdown-toggle catFolder\" data-toggle=\"dropdown\">\n                    <i class=\"fa fa-folder\"></i> Categories <span class=\"caret\"></span>\n                </a>\n                <ul class=\"dropdown-menu mega-dropdown-menu\">\n                        <li class=\"col-sm-3\" v-for=\"cat in categories\" track-by=\"$index\">\n                            <ul>\n                                <li class=\"dropdown-header\">\n                                    <a v-link=\"{name: '/Category', params:{catId: cat.id, catName: cat.name }}\">\n                                        {{ cat.name }}\n                                    </a>\n                                </li>\n                            </ul>\n                        </li>\n                </ul>\n            </li>\n            <!--NOTE @if (Auth::check()) -->\n                <!-- Orders Section -->\n                <li class=\"dropdown\" v-if=\"Auth.check\">\n                    <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                        <i class=\"fa fa-first-order\"></i>\n                        <span class=\"hidden-lg hidden-md\">Orders</span>\n                        <span class=\"caret\"></span>\n                    </a>\n\n                    <ul class=\"dropdown-menu\" role=\"menu\">\n                        <li>\n                            <a v-link=\"{path: '/IncomingOrders'}\">\n                                <i class=\"fa fa-truck\"></i>\n                                Incoming Orders\n                            </a>\n                        </li>\n                        <li>\n                            <a v-link=\"{path: '/PurchaseOrders'}\">\n                                <i class=\"fa fa-cart-plus\"></i>\n                                Purchase Orders\n                            </a>\n                        </li>\n                    </ul>\n                </li>\n                <!-- Services Section -->\n                <li class=\"dropdown\" v-if=\"Auth.check\">\n                    <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                        <i class=\"fa fa-server\"></i>\n                        <span class=\"hidden-lg hidden-md\">Services</span>\n                        <span class=\"caret\"></span>\n                    </a>\n\n                    <ul class=\"dropdown-menu\" role=\"menu\">\n                        <li>\n                            <a v-link=\"{path: '/AddServices'}\">\n                                <i class=\"fa fa-plus\"></i>\n                                Add Service\n                            </a>\n                        </li>\n                        <li>\n                            <a v-link=\"{path: '/MyServices'}\">\n                                <i class=\"fa fa-user\"></i>\n                                My Services\n                            </a>\n                        </li>\n                    </ul>\n                </li>\n            <!--NOTE @endif -->\n        </ul>\n        <ul class=\"nav navbar-nav navbar-right\" v-if=\"Auth.guest\">\n            <!-- Authentication Links -->\n            <!--NOTE @if (Auth::guest()) -->\n                <div class=\"navbar-custom-menu\">\n                    <ul class=\"nav navbar-nav\">\n                        <!-- Logins and registers -->\n                        <li><a href=\"/login\"><i class=\"fa fa-user\"></i> Login</a></li>\n                        <li><a href=\"/register\"><i class=\"fa fa-user-plus\"></i> Register</a></li>\n                    </ul>\n                </div>\n            <!--NOTE @endif -->\n        </ul>\n        <ul class=\"nav navbar-nav navbar-right\" v-if=\"Auth.check\">\n            <!--NOTE @if (Auth::check()) -->\n                <div class=\"navbar-custom-menu\">\n                    <ul class=\"nav navbar-nav\">\n                        <!-- Credit Section -->\n                        <li class=\"dropdown\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-money\"></i> <span class=\"hidden-lg hidden-md\">Payments</span> <span class=\"caret\"></span>\n                            </a>\n\n                            <ul class=\"dropdown-menu\" role=\"menu\">\n                                <li><a v-link=\"{path: '/AddCredit'}\"><i class=\"fa fa-btn fa-plus\"></i> Add Credit</a></li>\n                                <li><a v-link=\"{path: '/AllCharge'}\"><i class=\"fa fa-btn fa-gear fa-spin\"></i> Charge</a></li>\n                                <li><a v-link=\"{path: '/AllPayment'}\"><i class=\"fa fa-btn fa-minus-circle\"></i> Payment</a></li>\n                                <li><a v-link=\"{path: '/AllProfit'}\"><i class=\"fa fa-btn fa-briefcase\"></i> Profit</a></li>\n                                <li><a v-link=\"{path: '/AllWaitingProfit'}\"><i class=\"fa fa-btn fa-clock-o\"></i> Waiting Profit</a></li>\n                                <li><a v-link=\"{path: '/AllBalance'}\"><i class=\"fa fa-btn fa-money\"></i> Balance</a></li>\n                            </ul>\n                        </li>\n\n                        <!-- Messages Section -->\n                        <li class=\"dropdown\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-envelope\"></i> <span class=\"hidden-lg hidden-md\">Messages</span> <span class=\"caret\"></span>\n                            </a>\n                            <ul class=\"dropdown-menu\" role=\"menu\">\n                                <li>\n                                    <a v-link=\"{path: '/GetMyRecivedMessages'}\">\n                                        <i class=\"fa fa-inbox\"></i>\n                                        Incoming Messages\n                                    </a>\n                                </li>\n                                <li>\n                                    <a v-link=\"{path: '/GetMySendMessages'}\">\n                                        <i class=\"fa fa-send\"></i>\n                                        Send Messages\n                                    </a>\n                                </li>\n                                <li>\n                                    <a v-link=\"{path: '/GetUnReadMessages'}\">\n                                        <i class=\"fa fa-eye-slash\"></i>\n                                        UnRead Messages\n                                    </a>\n                                </li>\n                                <li>\n                                    <a v-link=\"{path: '/GetReadMessages'}\">\n                                        <i class=\"fa fa-eye\"></i>\n                                        Read Messages\n                                    </a>\n                                </li>\n                            </ul>\n                        </li>\n                        <!-- Notification -->\n                        <li @click=\"getAllUserNotifications\" class=\"dropdown notifications-menu\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">\n                                <i class=\"fa fa-bell\"></i>\n                                <span class=\"label label-success\">{{ notify }}</span>\n                                <span class=\"caret\"></span>\n                            </a>\n                            <ul class=\"dropdown-menu\">\n                                <li class=\"header\">You have {{ notify }} notifications</li>\n                                <li>\n                                    <!-- inner menu: contains the actual data -->\n                                    <ul class=\"menu\" style=\"overflow: hidden; width: 100%; height: 200px;\">\n                                        <li v-if=\"notifyLoading\" style=\"position: absolute; top: 50%; left: 44%; font-size: 30px; color: #999;\">\n                                            <i class=\"fa fa-spinner fa-spin\"></i>\n                                        </li>\n                                        <li v-if=\"allNotify.length > 0\" v-for=\"notify in allNotify\" :class=\"['main-li', 'text-center', notify.seen == 1 ? 'seen' : '']\" track-by=\"$index\">\n                                                <notify_list v-if=\"!notifyLoading\" :notify=\"notify\"></notify_list>\n                                        </li>\n                                    </ul>\n                                </li>\n                                <li class=\"footer\"><a v-link=\"{path: '/Notification'}\">View all</a></li>\n                            </ul>\n                        </li>\n                        <!-- Favorite -->\n                        <li class=\"dropdown\">\n                            <a v-link=\"{path: '/GetMyFavorites'}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <span class=\"fa fa-heart\"></span>\n                                <span class=\"hidden-lg hidden-md\">Favorite</span>\n                                <span class=\"label label-danger\">{{ favorite }}</span>\n                            </a>\n                        </li>\n                        <!-- Purchase Orders -->\n                        <li class=\"dropdown\">\n                            <a v-link=\"{path: '/PurchaseOrders'}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-cart-plus\"></i>\n                                <span class=\"hidden-lg hidden-md\">Purchase Orders</span>\n                                    <span class=\"label label-primary\" >{{ PurchaseOrders }}</span>\n                            </a>\n                        </li>\n                        <!-- unReadMessages -->\n                        <li class=\"dropdown\">\n                            <a v-link=\"{path: '/GetUnReadMessages'}\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-eye-slash\"></i>\n                                <span class=\"hidden-lg hidden-md\">Unread Messages</span>\n                                    <span class=\"label label-info\" >{{ unReadMessages }}</span>\n                            </a>\n                        </li>\n                        <!-- User Section -->\n                        <li class=\"dropdown\">\n                            <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-expanded=\"false\">\n                                <i class=\"fa fa-user\"></i> <span class=\"hidden-lg hidden-md\">{{ user.name }}</span> <span class=\"caret\"></span>\n                            </a>\n                            <ul class=\"dropdown-menu\" role=\"menu\">\n                                <li><a href=\"logout\"><i class=\"fa fa-btn fa-edit\"></i> My Information</a></li>\n                                <li v-if=\"user.admin == 1\"><a href=\"/admin/dashboard\"><i class=\"fa fa-btn fa-dashboard\"></i> Back-End</a></li>\n                                <li><a href=\"/logout\"><i class=\"fa fa-btn fa-sign-out\"></i> Logout</a></li>\n                            </ul>\n                        </li>\n                    </ul>\n                </div>\n            <!--NOTE @endif -->\n        </ul>\n        <form class=\"navbar-form navbar-left\">\n            <input type=\"text\" class=\"form-control\" placeholder=\"Search...\">\n            <button type=\"button\" class=\"btn btn-primary\">\n                <i class=\"fa fa-search\"></i>\n            </button>\n        </form>\n    </div><!-- /.nav-collapse -->\n</nav>\n<!-- Nav Bar -->\n<spinner v-ref:spinner size=\"lg\" fixed text=\"Loading....\"></spinner>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25519,7 +25624,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0c9cbd16", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notificationsType.vue":27,"vue":9,"vue-hot-reload-api":3}],27:[function(require,module,exports){
+},{"./notificationsType.vue":28,"vue":9,"vue-hot-reload-api":3}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25540,7 +25645,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f607eac", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],28:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25614,7 +25719,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00f5c6ac", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":30,"./messagesList.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],29:[function(require,module,exports){
+},{"./messageMenu.vue":31,"./messagesList.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25689,7 +25794,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-59713cbc", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":30,"./messagesList.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],30:[function(require,module,exports){
+},{"./messageMenu.vue":31,"./messagesList.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -25714,7 +25819,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-418130a2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],31:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],32:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25753,7 +25858,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-44acf49e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],32:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25827,7 +25932,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7d17112e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":30,"./messagesList.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],33:[function(require,module,exports){
+},{"./messageMenu.vue":31,"./messagesList.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25901,7 +26006,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-525ac247", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":30,"./messagesList.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],34:[function(require,module,exports){
+},{"./messageMenu.vue":31,"./messagesList.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25986,7 +26091,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-591775a2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":30,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],35:[function(require,module,exports){
+},{"./messageMenu.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26060,7 +26165,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0a8cb6f0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./messageMenu.vue":30,"./messagesList.vue":31,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],36:[function(require,module,exports){
+},{"./messageMenu.vue":31,"./messagesList.vue":32,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26161,7 +26266,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-014537a2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../messages/messageMenu.vue":30,"./notificationList.vue":37,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],37:[function(require,module,exports){
+},{"../messages/messageMenu.vue":31,"./notificationList.vue":38,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26200,7 +26305,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-62572ade", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],38:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],39:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26301,7 +26406,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-715065be", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../messages/messageMenu.vue":30,"./notificationList.vue":37,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],39:[function(require,module,exports){
+},{"../messages/messageMenu.vue":31,"./notificationList.vue":38,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],40:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26397,7 +26502,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-498ed0d9", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":40,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],40:[function(require,module,exports){
+},{"./orderStructure.vue":41,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],41:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26428,7 +26533,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6346bef3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":14,"vue":9,"vue-hot-reload-api":3}],41:[function(require,module,exports){
+},{"../btns/status.vue":14,"vue":9,"vue-hot-reload-api":3}],42:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26523,7 +26628,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-02947018", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./orderStructure.vue":40,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],42:[function(require,module,exports){
+},{"./orderStructure.vue":41,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],43:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26651,7 +26756,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7d0803b0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/status.vue":14,"../comments/allComments.vue":17,"./usersidebar.vue":43,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],43:[function(require,module,exports){
+},{"../btns/status.vue":14,"../comments/allComments.vue":17,"./usersidebar.vue":44,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],44:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26672,7 +26777,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e04f941a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],44:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],45:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26782,7 +26887,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2c474a82", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../users/SingleServices.vue":51,"./sidebar.vue":45,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],45:[function(require,module,exports){
+},{"../users/SingleServices.vue":52,"./sidebar.vue":46,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],46:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26803,7 +26908,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-a307b056", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],46:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],47:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26829,7 +26934,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f6be1f0a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],47:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],48:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -26907,7 +27012,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-18e6274c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],48:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27005,7 +27110,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d514e3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":46,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],49:[function(require,module,exports){
+},{"./SingleServices.vue":47,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],50:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27121,7 +27226,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-20da661a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":51,"./SingleServices.vue":46,"./sidebar.vue":50,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],50:[function(require,module,exports){
+},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"../users/SingleServices.vue":52,"./SingleServices.vue":47,"./sidebar.vue":51,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}],51:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27142,7 +27247,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-70de5e97", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":9,"vue-hot-reload-api":3}],51:[function(require,module,exports){
+},{"vue":9,"vue-hot-reload-api":3}],52:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27191,7 +27296,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-49350e8e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"vue":9,"vue-hot-reload-api":3}],52:[function(require,module,exports){
+},{"../btns/buy.vue":11,"../btns/fav.vue":12,"../btns/rating.vue":13,"vue":9,"vue-hot-reload-api":3}],53:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -27291,6 +27396,6 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b1be308", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./SingleServices.vue":51,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
+},{"./SingleServices.vue":52,"vue":9,"vue-hot-reload-api":3,"vue-strap/dist/vue-strap.min":7}]},{},[10]);
 
 //# sourceMappingURL=app.js.map

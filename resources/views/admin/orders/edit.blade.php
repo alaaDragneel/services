@@ -1,4 +1,4 @@
-    @extends('admin.layouts.master')
+@extends('admin.layouts.master')
 @section('content')
 
     <div class="page-content">
@@ -194,7 +194,7 @@
                                                             </div>
                                                             <time class="comment-date pull-right" datetime="{{ $comment->created_at }}">
                                                                 <i class="fa fa-clock-o"></i>
-                                                                {{ $comment->created_at->format('Y/m/d') }}
+                                                                {{ $comment->created_at->diffForHumans() }}
                                                             </time>
                                                             <div class="clearfix"></div>
                                                         </header>

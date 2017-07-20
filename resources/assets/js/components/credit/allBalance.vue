@@ -15,9 +15,9 @@
                         </div>
                     </h2>
                     <div class="row">
-                        <div class="col-lg-3 col-xs-6">
+                        <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
-                            <div class="small-box bg-blue">
+                            <div class="small-box bg-green">
                                 <div class="inner">
                                     <h3>${{ parseInt(userProfits) + parseInt(userCharge) - parseInt(userPays) }}</h3>
 
@@ -30,9 +30,9 @@
                             </div>
                         </div>
                         <!-- ./col -->
-                        <div class="col-lg-3 col-xs-6">
+                        <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
-                            <div class="small-box bg-red">
+                            <div class="small-box bg-yellow">
                                 <div class="inner">
                                     <h3>${{ userCharge }}</h3>
 
@@ -45,9 +45,9 @@
                             </div>
                         </div>
                         <!-- ./col -->
-                        <div class="col-lg-3 col-xs-6">
+                        <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
-                            <div class="small-box bg-yellow">
+                            <div class="small-box bg-red">
                                 <div class="inner">
                                     <h3>${{ userPays }}</h3>
 
@@ -60,9 +60,9 @@
                             </div>
                         </div>
                         <!-- ./col -->
-                        <div class="col-lg-3 col-xs-6">
+                        <div class="col-lg-4 col-xs-6">
                             <!-- small box -->
-                            <div class="small-box bg-green">
+                            <div class="small-box bg-blue">
                                 <div class="inner">
                                     <h3>${{ userProfits }}</h3>
 
@@ -75,11 +75,41 @@
                             </div>
                         </div>
                         <!-- ./col -->
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-inverse">
+                                <div class="inner">
+                                    <h3>${{ userWaitingProfits }}</h3>
+
+                                    <p>Waiting Profits</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <a v-link="{path: '/AllWaitingProfit'}" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-4 col-xs-6">
+                            <!-- small box -->
+                            <div class="small-box bg-aqua">
+                                <div class="inner">
+                                    <h3>${{ parseInt(userProfits) + parseInt(userWaitingProfits) }}</h3>
+
+                                    <p>Total Profits</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fa fa-credit-card-alt"></i>
+                                </div>
+                                <a @click.prevent href="#" class="small-box-footer"> No More Info <i class="fa fa-info-circle"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
                     </div>
                     <div class="row">
                         <div class="form-group">
                             <label for="getProfit">Get Profite</label>
-                            <input type="text" class="form-control" id="getProfit" placeholder="Write your Profite To et It" v-model="profit">
+                            <input type="text" class="form-control" id="getProfit" placeholder="Write your Profite To Get It" v-model="profit">
                         </div>
                         <div class="alert alert-danger">
                             <b>Note: </b>
@@ -90,7 +120,7 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <button @click="getProfit" type="button" name="button" class="btn btn-success"><i class="fa fa-money"></i> Get Profit</button>
+                            <button @click.prevent="getProfit" :disabled="disabled" type="button" name="button" class="btn btn-success"><i class="fa fa-money"></i> Get Profit</button>
                         </div>
                     </div>
                 </span>
@@ -114,7 +144,9 @@
                 userCharge: 0,
                 userPays: 0,
                 userProfits: 0,
+                userWaitingProfits: 0,
                 profit: 0,
+                disabled: false,
 
             }
         },
@@ -129,10 +161,12 @@
                 this.userCharge = res.body['userCharge'] == null ? 0 : res.body['userCharge'];
                 this.userPays = res.body['userPays'] == null ? 0 : res.body['userPays'];
                 this.userProfits = res.body['userProfits'] == null ? 0 : res.body['userProfits'];
-                this.profit = this.userProfits;
-	            this.$refs.spinner.hide();
+                this.userWaitingProfits = res.body['userWaitingProfits'] == null ? 0 : parseInt(res.body['userWaitingProfits']);
+                this.profit = parseInt(this.userProfits);
+                this.$refs.spinner.hide();
                 this.isLoading = true;
           	}, function (res) {
+                this.$refs.spinner.hide();
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
           	});
           },
@@ -145,7 +179,8 @@
                   this.isLoading = true;
                   if (res.body['success']) {
                       alertify.success(res.body['success']);
-                      this.userProfits -= this.profit;
+                      this.userProfits -= parseInt(this.profit);
+                      this.userWaitingProfits += parseInt(this.profit);
                       this.profit = this.userProfits;
                   } else if (res.body == 'saving error') {
                       alertify.error('Error During Save the profit Operation Contact With The Adminstrator');
@@ -153,6 +188,10 @@
                       alertify.error('Error You Have Enogth Profit');
                   }
               }, function (res) {
+                  this.$refs.spinner.hide();
+                  for (var key in res.body) {
+                      alertify.error(res.body[key][0]);
+                  }
                   alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
               });
           },
@@ -167,6 +206,15 @@
                     this.$router.go({
                         path: '/loginError'
                     });
+                }
+            }
+        },
+        computed: {
+            disabled: function () {
+                if (this.profit == '' ) {
+                    return true;
+                } else {
+                    return false;
                 }
             }
         }

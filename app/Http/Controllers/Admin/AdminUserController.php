@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
 
 use App\User;
@@ -12,6 +13,8 @@ use App\User;
 use App\Pay;
 
 use App\Buy;
+
+use App\Profit;
 
 use File;
 
@@ -46,12 +49,22 @@ class AdminUserController extends Controller
 
         $orderOwnerPays = Buy::where('user_id', $user->id)->where('finish', '!=', 2)->sum('buy_price');
 
+        $userWaitingProfits = Profit::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('status', 0);
+        })->sum('profit_price');
+
         $orderOwnerProfits = Buy::where('recive_id', $user->id)->where('finish', 1)->sum('buy_price');
 
-        return view('admin.users.edit', compact('user', 'orderOwnerCharge', 'orderOwnerPays', 'orderOwnerProfits'));
+        $profitDone = Profit::where('user_id', $user->id)->sum('profit_price');
+
+        $orderOwnerProfits = $orderOwnerProfits - $profitDone;
+
+
+        return view('admin.users.edit', compact('user', 'orderOwnerCharge', 'orderOwnerPays', 'orderOwnerProfits', 'userWaitingProfits'));
     }
 
-    public function updateUser($id, Request $request)
+    public function updateUser($id, UpdateUserRequest $request)
     {
         $user = User::findOrFail($id);
         $user->name = $request->name;

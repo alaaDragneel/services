@@ -26,9 +26,9 @@
                         </div>
                         <div class="content-box-large box-with-header">
                             <!-- Small boxes (Stat box) -->
-                            <div class="col-lg-3 col-md-3 col-xs-6">
+                            <div class="col-lg-4 col-xs-6">
                                 <!-- small box -->
-                                <div class="small-box bg-blue">
+                                <div class="small-box bg-green">
                                     <div class="inner">
                                         @php $ballanceOrderOwner = ($orderOwnerProfits + $orderOwnerCharge) -  $orderOwnerPays; @endphp
                                         <h3>$ {{ $ballanceOrderOwner > 0 ? $ballanceOrderOwner : 0 }}</h3>
@@ -38,28 +38,28 @@
                                     <div class="icon">
                                         <i class="small fa fa-money"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="#" class="small-box-footer">No More Info <i class="fa fa-info-circle"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->
-                            <div class="col-lg-3 col-md-3 col-xs-6">
+                            <div class="col-lg-4 col-xs-6">
                                 <!-- small box -->
-                                <div class="small-box bg-green">
+                                <div class="small-box bg-yellow">
                                     <div class="inner">
                                         <h3>$ {{ $orderOwnerCharge > 0 ? $orderOwnerCharge : 0 }}</h3>
 
                                         <p>Charges</p>
                                     </div>
                                     <div class="icon">
-                                        <i class="small fa fa-gear fa-spin"></i>
+                                        <i class="small fa fa-btn fa-gear fa-spin"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="#" class="small-box-footer">No More Info <i class="fa fa-info-circle"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->
-                            <div class="col-lg-3 col-md-3 col-xs-6">
+                            <div class="col-lg-4 col-xs-6">
                                 <!-- small box -->
-                                <div class="small-box bg-yellow">
+                                <div class="small-box bg-red">
                                     <div class="inner">
                                         <h3>$ {{ $orderOwnerPays > 0 ? $orderOwnerPays : 0 }}</h3>
 
@@ -68,13 +68,13 @@
                                     <div class="icon">
                                         <i class="small fa fa-minus-circle"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="#" class="small-box-footer">No More Info <i class="fa fa-info-circle"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->
-                            <div class="col-lg-3 col-md-3 col-xs-6">
+                            <div class="col-lg-4 col-xs-6">
                                 <!-- small box -->
-                                <div class="small-box bg-red">
+                                <div class="small-box bg-blue">
                                     <div class="inner">
                                         <h3>$ {{ $orderOwnerProfits > 0 ? $orderOwnerProfits : 0 }}</h3>
 
@@ -83,7 +83,37 @@
                                     <div class="icon">
                                         <i class="small fa fa-briefcase"></i>
                                     </div>
-                                    <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                                    <a href="#" class="small-box-footer">No More Info <i class="fa fa-info-circle"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-4 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-inverse">
+                                    <div class="inner">
+                                        <h3>${{ $userWaitingProfits > 0 ? $userWaitingProfits : 0 }}</h3>
+
+                                        <p>Waiting Profits</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="small fa fa-clock-o"></i>
+                                    </div>
+                                    <a href="{{ route('user.waiting.profits', ['id' => $user->id]) }}" class="small-box-footer"> More Info <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-4 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3>${{ $orderOwnerProfits + $userWaitingProfits }}</h3>
+
+                                        <p>Total Profits</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="small fa fa-credit-card-alt"></i>
+                                    </div>
+                                    <a href="{{ route('user.all.profits', ['id' => $user->id]) }}" class="small-box-footer"> More Info <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                             <!-- ./col -->
@@ -102,7 +132,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-4 col-sm-12">
                         <div class="content-box-header bg-yellow">
                             <div class="panel-title">User Request orders ({{ count($user->getMyServiceOrder) }})</div>
@@ -147,7 +176,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-4 col-sm-12">
                         <div class="content-box-header bg-red">
                             <div class="panel-title">User Own orders ({{ count($user->ordersIMade) }})</div>
@@ -218,15 +246,15 @@
                                     {!! Form::model($user, ['route' => ['update.user',  $user->id], 'method' => 'post', 'files' => 'true' ]) !!}
                                     <div class="form-group">
                                       <label for="name"></label>
-                                      <input type="text" class="form-control" id="name" name="name" placeholder="user name" reqiured value="{{ $user->name }}">
+                                      <input type="text" class="form-control" id="name" name="name" placeholder="user name" required value="{{ $user->name }}">
                                     </div>
                                     <div class="form-group">
                                       <label for="email"></label>
-                                      <input type="email" class="form-control" id="email" name="email" placeholder="user email" reqiured value="{{ $user->email }}">
+                                      <input type="email" class="form-control" id="email" name="email" placeholder="user email" required value="{{ $user->email }}">
                                     </div>
                                     <div class="form-group">
                                       <label for="password"></label>
-                                      <input type="password" class="form-control" id="password" name="password" placeholder="user password" reqiured>
+                                      <input type="password" class="form-control" id="password" name="password" placeholder="user password">
                                     </div>
                                     <div class="form-group">
                                         <label for="admin">User Status</label>

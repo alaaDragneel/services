@@ -81,6 +81,8 @@
 	            this.$refs.spinner.hide();
                 this.isLoading = true;
           	}, function (res) {
+    this.$refs.spinner.hide();
+
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
           	});
           },

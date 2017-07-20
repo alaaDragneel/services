@@ -2318,21 +2318,25 @@ th {
 .bg-aqua,
 .bg-blue,
 .bg-green,
+.bg-inverse,
 .btn-danger,
 .btn-warning,
 .btn-info,
 .btn-primary,
 .btn-success,
+.btn-inverse,
 .alert-success,
 .alert-danger,
 .alert-error,
 .alert-warning,
 .alert-info,
+.alert-inverse,
 .label-danger,
 .label-info,
 .label-warning,
 .label-primary,
 .label-success,
+.label-inverse
 .modal-primary .modal-body,
 .modal-primary .modal-header,
 .modal-primary .modal-footer,
@@ -2390,6 +2394,12 @@ th {
 .label-success,
 .modal-success .modal-body {
   background-color: #00a65a !important;
+}
+.bg-inverse,
+.btn-inverse,
+.alert-inverse,
+.label-inverse {
+    background-color: #8e44ad !important;
 }
 
 /* Rating Styles */

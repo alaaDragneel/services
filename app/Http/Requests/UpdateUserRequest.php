@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class AddServicesRequest extends Request
+class UpdateUserRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,9 @@ class AddServicesRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|min:10|max:225',
-            'description' => 'required|min:100|max:2000',
-            'cat_id' => 'required|integer',
-            'price' => 'required|integer',
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'admin' => 'required|integer',
             'image' => 'image|mimes:jpg,jpeg,png|dimensions:min_width=300,min_height=300,max_width=1000,max_height=1000',
         ];
     }

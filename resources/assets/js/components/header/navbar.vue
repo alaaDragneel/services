@@ -106,6 +106,7 @@
                                     <li><a v-link="{path: '/AllCharge'}"><i class="fa fa-btn fa-gear fa-spin"></i> Charge</a></li>
                                     <li><a v-link="{path: '/AllPayment'}"><i class="fa fa-btn fa-minus-circle"></i> Payment</a></li>
                                     <li><a v-link="{path: '/AllProfit'}"><i class="fa fa-btn fa-briefcase"></i> Profit</a></li>
+                                    <li><a v-link="{path: '/AllWaitingProfit'}"><i class="fa fa-btn fa-clock-o"></i> Waiting Profit</a></li>
                                     <li><a v-link="{path: '/AllBalance'}"><i class="fa fa-btn fa-money"></i> Balance</a></li>
                                 </ul>
                             </li>
@@ -192,11 +193,12 @@
                             <!-- User Section -->
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">alaaDragneel</span> <span class="caret"></span>
+                                    <i class="fa fa-user"></i> <span class="hidden-lg hidden-md">{{ user.name }}</span> <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="logout"><i class="fa fa-btn fa-edit"></i> My Information</a></li>
-                                    <li><a href="logout"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
+                                    <li v-if="user.admin == 1"><a href="/admin/dashboard"><i class="fa fa-btn fa-dashboard"></i> Back-End</a></li>
+                                    <li><a href="/logout"><i class="fa fa-btn fa-sign-out"></i> Logout</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -230,7 +232,8 @@ export default {
             allNotify:  [],
             notifyLoading: false,
             categories: [],
-            Auth: {check: true, guest: false}
+            Auth: {check: true, guest: false},
+            user: []
         }
     },
     ready: function () {
@@ -259,6 +262,7 @@ export default {
                     this.PurchaseOrders = res.body['ordersCount'];
                     this.unReadMessages = res.body['messagesCount'];
                     this.categories = res.body['categories'];
+                    this.user = res.body['user'];
                 }
                 this.$refs.spinner.hide();
             }, function (res) {

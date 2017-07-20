@@ -63,6 +63,25 @@ class UsersController extends Controller
         return Response::json(['user' => $user, 'profits' => $profits, 'sumPrice' => $sumPrice], 200);
     }
 
+    public function GetAllWitingProfitOperation()
+    {
+        $user = Auth::user();
+
+        $waitingProfits = Profit::where('user_id', $user->id)->orderBy('id', 'DESC')->get();
+
+        $sumWitingPrice = Profit::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('status', 0);
+        })->sum('profit_price');
+
+        $sumDonePrice = Profit::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('status', 1);
+        })->sum('profit_price');
+
+        return Response::json(['user' => $user, 'waitingProfits' => $waitingProfits, 'waitingSum' => $sumWitingPrice, 'doneSum' => $sumDonePrice], 200);
+    }
+
     public function GetAllBalanceOperation()
     {
         /*
@@ -72,6 +91,8 @@ class UsersController extends Controller
         | Charge Operations
         | Payment Operations
         | Profit Operations
+        | Waiting Profit Operations
+        |
         */
 
         $user = Auth::user();
@@ -114,11 +135,30 @@ class UsersController extends Controller
             $q->where('finish', 1);
         })->sum('buy_price');
 
+        /*
+        |-----------------------------------------
+        | Operations
+        |-----------------------------------------
+        | Waiting Profits Operations
+        | NOTE Only Calculate The Profits to check out
+        |
+        */
+
+        $userWaitingProfits = Profit::where(function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+            $q->where('status', 0);
+        })->sum('profit_price');
+
+        $profitDone = Profit::where('user_id', $user->id)->sum('profit_price');
+
+        $p = $userProfits - $profitDone;
+
         $array = [
             'user' => $user,
             'userCharge' => $userCharge,
             'userPays' => $userPays,
-            'userProfits' => $userProfits,
+            'userProfits' => $p,
+            'userWaitingProfits' => $userWaitingProfits,
         ];
 
         return Response::json($array, 200);
@@ -127,6 +167,9 @@ class UsersController extends Controller
 
     public function GetProfit(Request $request)
     {
+        $this->validate($request, [
+            'profit' => 'required|integer'
+        ]);
         $profit = intval($request->profit);
         $user = Auth::user();
 

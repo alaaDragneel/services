@@ -126,6 +126,8 @@
 
 
                 }, function (res) {
+    this.$refs.spinner.hide();
+
 
                     alertify.error('There are Some Erros Try Again later');
                 });

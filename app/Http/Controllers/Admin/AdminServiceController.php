@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Http\Requests\AddServicesRequest;
+use App\Http\Requests\UpdateServiceRequest;
 
 use App\Http\Controllers\Controller;
 
@@ -103,6 +103,9 @@ class AdminServiceController extends Controller
 
     public function filter_by_search(Request $request)
     {
+        $this->validate($request, [
+            'search' => 'required'
+        ]);
         $search = strip_tags($request->search);
         $services = Service::where('name', 'LIKE' , "$search%")->paginate(env('LIMIT_SERVICES'), ['id', 'name', 'image'], 'Service_List');
         $cat = Category::orderBy('name', 'ASC')->get(['id', 'name']);
@@ -154,7 +157,7 @@ class AdminServiceController extends Controller
         return App::abort(404);
     }
 
-    public function updateService($id, AddServicesRequest $request)
+    public function updateService($id, UpdateServiceRequest $request)
     {
         $prices = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         if (in_array($request->price, $prices)) {
@@ -167,8 +170,10 @@ class AdminServiceController extends Controller
                 File::delete($services->image);
                 $services->image = $this->uploadImage($request->file('image'));
             }
-            $addService = $services->update();
-            return redirect()->back()->with('success', 'services Updated successfully');
+            if ($services->update()) {
+                return redirect()->back()->with('success', 'services Updated successfully');
+            }
+            return redirect()->back()->with('error', 'error during Update service');
         }
 
     }

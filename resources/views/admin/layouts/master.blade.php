@@ -55,5 +55,13 @@ function urlHome(root = 1)
         alertify.error(msg);
     </script>
 @endif
+@if (count($errors) > 0)
+    <script type="text/javascript">
+        @foreach ($errors->all() as $error)
+            alertify.error('{{ $error }}');
+        @endforeach
+    </script>
+@endif
+
 </body>
 </html>

@@ -51,6 +51,7 @@ var addCredit = require('./components/credit/add.vue');
 var ShowAllCharge = require('./components/credit/allCharge.vue');
 var ShowAllPayment = require('./components/credit/allPayment.vue');
 var ShowAllProfit = require('./components/credit/allProfit.vue');
+var ShowAllWaitingProfit = require('./components/credit/allWaitingProfits.vue');
 var ShowAllBalance = require('./components/credit/allBalance.vue');
 var ShowAllNotification = require('./components/notification/allNotifications.vue');
 var ShowAllUnReadNotification = require('./components/notification/unReadNotifications.vue');
@@ -139,6 +140,9 @@ route.map({
     },
     '/AllProfit': {
         component: ShowAllProfit
+    },
+    '/AllWaitingProfit': {
+        component: ShowAllWaitingProfit
     },
     '/AllBalance': {
         component: ShowAllBalance

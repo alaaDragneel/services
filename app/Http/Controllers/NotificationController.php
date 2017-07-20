@@ -76,7 +76,8 @@ class NotificationController extends Controller
                 'favoritesCount' => $favoritesCount,
                 'ordersCount' => $ordersCount,
                 'categories' => $categories,
-                'messagesCount' => $messagesCount
+                'messagesCount' => $messagesCount,
+                'user' => $user
             ]);
         }
         return Response::json([

@@ -186,6 +186,10 @@ class AdminOrderController extends Controller
 
     public function filter_by_search(Request $request)
     {
+        $this->validate($request, [
+            'search' => 'required'
+        ]);
+
         $search = strip_tags($request->search);
         $orders = Order::where('id', "$search")->with('getMyOrders', 'getUserAddService', 'services')->orderBy('id', 'DESC')->paginate(env('LIMIT_SERVICES'));
         return view('admin.orders.orders', compact('orders'));

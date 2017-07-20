@@ -22,7 +22,7 @@
                     <div class="col-md-10">
                         <div class="content-box-large">
                             <div class="col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
-                                <form action="{{ route('filter.search.services') }}" method="get">
+                                <form action="{{ route('filter.search.services') }}" method="post">
                                     {{ csrf_field() }}
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>

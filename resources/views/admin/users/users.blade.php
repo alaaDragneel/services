@@ -32,7 +32,7 @@
                             </div>
                             <hr>
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <form action="{{ route('filter.search.users') }}" method="get">
+                                <form action="{{ route('filter.search.users') }}" method="post">
                                     {{ csrf_field() }}
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>

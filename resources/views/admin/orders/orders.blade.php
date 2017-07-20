@@ -35,7 +35,7 @@
                             </div>
                             <hr>
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <form action="{{ route('filter.search.orders') }}" method="get">
+                                <form action="{{ route('filter.search.orders') }}" method="post">
                                     {{ csrf_field() }}
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -93,7 +93,7 @@
                                                         <span class="label label-success">Finished</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $order->created_at->format('Y/m/d') }}</td>
+                                                <td>{{ $order->created_at->diffForHumans() }}</td>
                                                 <td>
                                                     <a href="{{ route('edit.orders', ['id' => $order->id]) }}" class="btn btn-info btn-block btn-xs">
                                                         <i class="fa fa-edit"></i> Edit

@@ -13,7 +13,7 @@
                 <li class="{{ Request::is('admin/services/waiting') ? 'current' : '' }}">
                     <a href="{{ route('waiting.services') }}">
                         <i class="fa fa-clock-o"></i> Waiting Services
-                        <span class="badge">{{ \App\Service::where('status', 0)->count() }}</span>
+                        <span class="label label-inverse">{{ waitingServicesCount() }}</span>
                     </a>
                 </li>
             </ul>
@@ -35,7 +35,53 @@
             </a>
             <!-- Sub menu -->
             <ul>
-                <li class="{{ Request::is('admin/users') ? 'current' : '' }}"><a href="{{ route('index.users') }}"><i class="fa fa-users"></i> All Userss</a></li>
+                <li class="{{ Request::is('admin/users') ? 'current' : '' }}"><a href="{{ route('index.users') }}"><i class="fa fa-users"></i> All Users</a></li>
+            </ul>
+        </li>
+        <li class="submenu {{ Request::is('admin/profits*') ? 'open' : '' }}">
+            <a href="#">
+                <i class="glyphicon glyphicon-usd"></i> profits
+                <span class="caret pull-right"></span>
+            </a>
+            <!-- Sub menu -->
+            <ul>
+                <li class="{{ Request::is('admin/profits') ? 'current' : '' }}"><a href="{{ route('index.profits') }}"><i class="fa fa-money"></i> All profits</a></li>
+                <li class="{{ Request::is('admin/profits/today') ? 'current' : '' }}">
+                    <a href="{{ route('today.profits') }}">
+                        <i class="fa fa-arrow-circle-down"></i> Today Profits <br> ({{ getTimeToday('Date Only') }})
+                        <span class="label label-primary">
+                            {{ getTimeTodaCount() }}
+                        </span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('admin/profits/today') ? 'current' : '' }}">
+                    <a href="{{ route('today.profits', ['status' => 'waiting']) }}">
+                        <i class="fa fa-pause"></i> Today Waiting Profits <br> ({{ getTimeToday('Date Only') }})
+                        <span class="label label-danger">
+                            {{ getTimeTodaCount() }}
+                        </span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('admin/profits/today') ? 'current' : '' }}">
+                    <a href="{{ route('today.profits', ['status' => 'done']) }}">
+                        <i class="fa fa-check-circle"></i> Today Done Profits <br> ({{ getTimeToday('Date Only') }})
+                        <span class="label label-info">
+                            {{ getTimeTodaCount() }}
+                        </span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('admin/profits/waiting') ? 'current' : '' }}">
+                    <a href="{{ route('waiting.profits') }}">
+                        <i class="fa fa-clock-o"></i> Waiting Profits
+                        <span class="label label-inverse">{{ waitingProfitCount() }}</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('admin/profits/done') ? 'current' : '' }}">
+                    <a href="{{ route('done.profits') }}">
+                        <i class="fa fa-credit-card-alt"></i> Done Profits
+                        <span class="label label-success">{{ doneProfitCount() }}</span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

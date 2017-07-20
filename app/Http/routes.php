@@ -139,6 +139,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/GetAllPaymentOperation', 'UsersController@GetAllPaymentOperation');
     // Show All Profits Operations
     Route::get('/GetAllProfitOperation', 'UsersController@GetAllProfitOperation');
+    // Show All Waiting Profits Operations
+    Route::get('/GetAllWitingProfitOperation', 'UsersController@GetAllWitingProfitOperation');
     // Show All Balance Operations
     Route::get('/GetAllBalanceOperation', 'UsersController@GetAllBalanceOperation');
     // Get The Profit
@@ -273,7 +275,7 @@ Route::group(['middleware' => 'admin'], function() {
                 'as' => 'filter.category.services'
             ]);
 
-            Route::get('/services/search', [
+            Route::post('/services/search', [
                 'uses' => 'AdminServiceController@filter_by_search',
                 'as' => 'filter.search.services'
             ]);
@@ -322,7 +324,7 @@ Route::group(['middleware' => 'admin'], function() {
                 'as' => 'filter.users'
             ]);
 
-            Route::get('/users/search', [
+            Route::post('/users/search', [
                 'uses' => 'AdminUserController@filter_by_search',
                 'as' => 'filter.search.users'
             ]);
@@ -372,7 +374,7 @@ Route::group(['middleware' => 'admin'], function() {
                 'as' => 'filter.orders'
             ]);
 
-            Route::get('/orders/search', [
+            Route::post('/orders/search', [
                 'uses' => 'AdminOrderController@filter_by_search',
                 'as' => 'filter.search.orders'
             ]);
@@ -442,7 +444,66 @@ Route::group(['middleware' => 'admin'], function() {
             |
             */
 
-            // NOTE:
+            Route::get('/profits', [
+                'uses' => 'AdminProfitController@index',
+                'as' => 'index.profits'
+            ]);
+
+            Route::get('/profits/user/{id}/waiting', [
+                'uses' => 'AdminProfitController@waitingUserProfit',
+                'as' => 'user.waiting.profits'
+            ]);
+
+            Route::get('/profits/user/{id}/all', [
+                'uses' => 'AdminProfitController@allUserProfit',
+                'as' => 'user.all.profits'
+            ]);
+
+            Route::get('/profits/today/{status?}', [
+                'uses' => 'AdminProfitController@todayProfit',
+                'as' => 'today.profits'
+            ]);
+
+            Route::get('/profits/waiting', [
+                'uses' => 'AdminProfitController@waitingProfit',
+                'as' => 'waiting.profits'
+            ]);
+
+            Route::get('/profits/done', [
+                'uses' => 'AdminProfitController@doneProfit',
+                'as' => 'done.profits'
+            ]);
+
+            Route::get('/profits/filter_by/{status}', [
+                'uses' => 'AdminProfitController@filter_by',
+                'as' => 'filter.profits'
+            ]);
+
+            Route::post('/profits/search', [
+                'uses' => 'AdminProfitController@filter_by_search',
+                'as' => 'filter.search.profits'
+            ]);
+
+            Route::post('/profits/search/date', [
+                'uses' => 'AdminProfitController@filter_by_search_date',
+                'as' => 'filter.search.date.profits'
+            ]);
+
+
+            Route::get('/profits/delete/{id}', [
+                'uses' => 'AdminProfitController@deleteProfit',
+                'as' => 'delete.profits'
+            ]);
+
+            Route::get('/profits/edit/{id}', [
+                'uses' => 'AdminProfitController@editProfit',
+                'as' => 'edit.profits'
+            ]);
+
+            Route::post('/profits/update/{id}', [
+                'uses' => 'AdminProfitController@updateProfit',
+                'as' => 'update.profits'
+            ]);
 
             /*
             |--------------------------------------------------------------------------
