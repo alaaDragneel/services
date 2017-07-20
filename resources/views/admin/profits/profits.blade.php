@@ -90,12 +90,14 @@
                                                 <td>{{ $profit->created_at->diffForHumans() }}</td>
                                                 <td>{{ getTimeAfterDayes($profit->created_at, 'date') . ' (' . getTimeAfterDayes($profit->created_at, 'moment') . ')' }}</td>
                                                 <td>
-                                                    <a href="{{ route('edit.profits', ['id' => $profit->id]) }}" class="btn btn-info btn-block btn-xs">
-                                                        <i class="fa fa-edit"></i> Edit
-                                                    </a>
-                                                    <a href="{{ route('delete.profits', ['id' => $profit->id]) }}" class="btn btn-danger btn-block btn-xs">
-                                                        <i class="fa fa-trash"></i> Delete
-                                                    </a>
+                                                    @if ($profit->status == 0)
+                                                        <a href="{{ route('admin.send.profits', ['id' => $profit->id]) }}" class="btn btn-inverse btn-block btn-xs">
+                                                                <i class="fa fa-send"></i> Send Profits
+                                                        </a>
+                                                    @elseif ($profit->status == 1)
+                                                        <span class="label label-success">Sent</span>
+                                                    @endif
+
                                                 </td>
                                             </tr>
                                         @empty

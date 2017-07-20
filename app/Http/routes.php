@@ -46,6 +46,7 @@ Route::group(['middleware' => 'auth'], function() {
     // Add Service
     Route::post('/Services', 'ServicesController@store');
     // My Services
+    Route::get('/Services/getCategory', 'ServicesController@getCategory');
     Route::get('/getMyServices/{length?}', 'ServicesController@getMyServices');
 
     /*
@@ -155,6 +156,13 @@ Route::group(['middleware' => 'auth'], function() {
 
     // Add To Credit
     Route::post('/AddCredit', 'PayController@AddCredit');
+    Route::get('/successCharge', 'PayController@successCharge');
+    Route::get('/errorCharge', 'PayController@errorCharge');
+    Route::get('admin/profits/admin/send/{id}', [
+        'uses' => 'PayController@adminSendProfit',
+        'as' => 'admin.send.profits',
+        'middleware' => 'admin'
+    ]);
 
     /*
     |--------------------------------------------------------------------------

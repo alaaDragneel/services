@@ -17,6 +17,7 @@ class CreatePaysTable extends Migration
             // User Relations
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('payer_id');
             $table->string('pay_id');
             $table->string('payment_method');
             $table->string('state');

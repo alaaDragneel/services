@@ -14,8 +14,8 @@ return [
     */
 
     'Account' => [
-        'ClientId' => 'Ac025TxJ6DvFXnD6BQ1YocsCYZDrJ7XC-idKOQIJyGToovy92y0S27fKfIplODwlHHg5hmnlgnfD6nGB',
-        'ClientSecret' => 'EKHWAy3AERWAdpcsFT59M9Hq2Fr1ovQGv-Fw85-nRLgWTy2K_52z0fjyBnA2ujbDxfU7tBsEUjjIQSSk'
+        'ClientId' => 'ASN_Vwv8e5bXoQ8Fm12FvnY42RA34VkF6CbF1KL-VIxEr1ZZg5r6UQUoLn6HMWF2U7kzDm_n-bdpUHOC',
+        'ClientSecret' => 'EN0IBgEam8eyeYl5QrfFIFxOOLE8ZrIY6P3mZNEmQKQc5R9fN_r7dVhalsIjrUvsQ_PboQYph0QRtElX'
     ],
 
     /*

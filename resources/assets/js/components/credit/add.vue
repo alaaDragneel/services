@@ -20,7 +20,9 @@
                                     <h3 class="panel-title"><i class="fa fa-plus"></i> Add Credit</h3>
                                 </div>
                                 <div class="panel-body">
-                                    <form>
+                                    <form action="/AddCredit" method="post">
+                                        <input type='hidden' name="_token" v-model="_token">
+
                                         <div class="form-group">
                                             <label for="price">Credite</label>
                                             <select class="form-control" id="price" name="price" v-model="price">
@@ -41,7 +43,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <button type="button" class="btn btn-primary" v-bind:disabled="disable" @click="AddCredit">
+                                            <button type="submit" class="btn btn-primary" v-bind:disabled="disable">
                                                 <i class="fa fa-plus"></i> Add Credit
                                             </button>
                                         </div>
@@ -73,6 +75,7 @@
                 err: false,
                 message: '',
                 disable: true,
+                _token: '',
             }
         },
         ready: function () {
@@ -83,15 +86,15 @@
           GetAuthUser: function () {
           	this.$http.get('/GetAuthUser').then(function (res) {
                 this.user = res.body;
+                this._token = $('#_token').attr('value');
 	            this.$refs.spinner.hide();
                 this.isLoading = true;
           	}, function (res) {
-    this.$refs.spinner.hide();
-
+                this.$refs.spinner.hide();
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
           	});
           },
-          AddCredit: function () {
+         /* AddCredit: function () {
             this.$refs.spinner.show();
             this.disable = true;
             var formData = new FormData();
@@ -104,11 +107,11 @@
                     path: '/AllCharge'
                 });
           	}, function (res) {
-    this.$refs.spinner.hide();
+                this.$refs.spinner.hide();
 
                 alertify.error('Some Thing Goes Wrong Check YOur Internet Or Contact With Adminstrator');
           	});
-          }
+        }*/
         },
         route: {
             canReuse: false // Force reload data

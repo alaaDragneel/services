@@ -13,6 +13,10 @@ use App;
 
 use App\Profit;
 
+use App\Pay;
+
+use App\User;
+
 class AdminProfitController extends Controller
 {
     public function __construct()

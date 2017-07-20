@@ -34,6 +34,11 @@ use Event;
 
 class ServicesController extends Controller
 {
+
+    public function getCategory()
+    {
+        return Cat::get(['id', 'name']);
+    }
     /**
      * Store a newly created resource in storage.
      *

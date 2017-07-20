@@ -1,7 +1,7 @@
 <div class="sidebar content-box" style="display: block;">
     <ul class="nav">
         <!-- Main menu -->
-        <li class="{{ Request::is('admin/dashboard') ? 'current' : '' }}"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+        <li class="{{ Request::is('admin/dashboard') ? 'current' : '' }}"><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="submenu {{ Request::is('admin/services*') ? 'open' : '' }}">
             <a href="#">
                 <i class="glyphicon glyphicon-list"></i> Services

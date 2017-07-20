@@ -205,12 +205,6 @@
                     </div>
                 <!--NOTE @endif -->
             </ul>
-            <form class="navbar-form navbar-left">
-                <input type="text" class="form-control" placeholder="Search...">
-                <button type="button" class="btn btn-primary">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
         </div><!-- /.nav-collapse -->
     </nav>
     <!-- Nav Bar -->

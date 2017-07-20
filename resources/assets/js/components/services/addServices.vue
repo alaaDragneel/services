@@ -26,7 +26,7 @@
                                     <div class="form-group">
                                         <label for="category_id">Service Category</label>
                                         <select class="form-control" id="category_id" name="category_id" v-model="category_id">
-                                            <option value="1">Category 1</option>
+                                            <option v-for="cat in category" track-by="$index" value="{{ cat.id }}">{{ cat.name }}</option>
                                         </select>
                                     </div>
 
@@ -65,6 +65,7 @@
             </div>
         </div>
     </div>
+    <spinner v-ref:spinner size="lg" fixed text="Loading...."></spinner>
 </template>
 
 <script>
@@ -74,11 +75,27 @@
                 name: '',
                 description: '',
                 category_id: '',
+                category: [],
                 price: '',
                 messages: []
             }
         },
+        ready: function () {
+            this.$refs.spinner.show();
+            this.GetCategory();
+        },
         methods: {
+            GetCategory: function () {
+                this.$http.get('/Services/getCategory').then(function(successResponse) {
+                    this.$refs.spinner.hide();
+                    this.category = successResponse.body;
+                    console.log(this.category);
+                }, function (res) {
+                    this.$refs.spinner.hide();
+                    alertify.error(res.body);
+                });
+
+            },
             AddThisService: function(e) {
                 e.preventDefault();
                 var formData = new FormData();
@@ -90,7 +107,9 @@
                 this.sendData(formData);
             },
             sendData: function (formData) {
+                this.$refs.spinner.show();
                 this.$http.post('/Services', formData).then(function(successResponse) {
+                    this.$refs.spinner.hide();
                     this.name = '';
                     this.description = '';
                     this.category_id = '';
@@ -107,6 +126,7 @@
                         }, 1500);
                     }
                 }, function (errorResponse) {
+                    this.$refs.spinner.hide();
                     for (var key in errorResponse.body) {
                         alertify.error(errorResponse.body[key][0]);
                     }

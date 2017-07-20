@@ -22,6 +22,8 @@ use App\Pay;
 
 use App\Buy;
 
+use App\Profit;
+
 use App\Vote;
 
 use App\Events\CreateNotification as CreateNotify;
@@ -71,6 +73,11 @@ class OrdersController extends Controller
                         $q->where('user_id', $user->id);
                         $q->where('finish', '!=', 2);
                     })->sum('buy_price');
+
+                    $realProfit = Buy::where(function ($q) use ($user) {
+                        $q->where('recive_id', $user->id);
+                        $q->where('finish', 1);
+                    })->sum('buy_price');
                     /*
                     | -------------------------------------------------
                     | Check If the Money Of The User Can Buy the Order
@@ -78,8 +85,9 @@ class OrdersController extends Controller
                     |
                     */
                     $pay = Pay::where('user_id', $user->id)->sum('price');
-
-                    $ifUserHaveMoney = $pay - $buyCheck;
+                    $profit = Profit::where('user_id', $user->id)->sum('profit_price');
+                    //charge + real profit[ربح] - buy orders + profits[سجب]
+                    $ifUserHaveMoney = ($pay + $realProfit) - ($buyCheck + $profit);
                     if ($ifUserHaveMoney >= $service->price) {
 
                         /*

@@ -129,8 +129,8 @@ class UsersController extends Controller
         | NOTE Only Calculate The Payed [Finished] Orders [1 => Finished]
         |
         */
-
-        $userProfits = Buy::where(function ($q) use ($user) {
+        // عمليات السحب
+        $profitDone = Buy::where(function ($q) use ($user) {
             $q->where('recive_id', $user->id);
             $q->where('finish', 1);
         })->sum('buy_price');
@@ -148,16 +148,16 @@ class UsersController extends Controller
             $q->where('user_id', $user->id);
             $q->where('status', 0);
         })->sum('profit_price');
-
-        $profitDone = Profit::where('user_id', $user->id)->sum('profit_price');
-
-        $p = $userProfits - $profitDone;
-
+        // المكسب الكلي
+         $userProfits = Profit::where('user_id', $user->id)->sum('profit_price');
+         $p = $userProfits - $profitDone;
         $array = [
             'user' => $user,
             'userCharge' => $userCharge,
             'userPays' => $userPays,
-            'userProfits' => $p,
+            'userProfits' => $userProfits,
+            'realProfits' => $profitDone,
+            'totalProfits' => $p,
             'userWaitingProfits' => $userWaitingProfits,
         ];
 
@@ -189,8 +189,10 @@ class UsersController extends Controller
         $profitDone = Profit::where('user_id', $user->id)->sum('profit_price');
         $p = $userProfits - $profitDone; // الفرق بين اللي معاه و اللي عايز يسحبه علي اساس انه ممكن يكون طلب اكتر من مره
         if ($p >= $profit && $p != 0) {
+            $payProfit = $profit / 5;
             $getProfit = new Profit();
-            $getProfit->profit_price = $profit;
+            $getProfit->profit_price = $profit - $payProfit;
+            $getProfit->website_profit =  $payProfit;
             $getProfit->user_id = $user->id;
             if ($getProfit->save()) {
                 return response()->json(['success' => 'Success: You Get Out '. intval($profit) .' Profit']);

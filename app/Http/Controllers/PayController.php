@@ -7,11 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App;
-
 use Auth;
+use Redirect;
 
 use App\Pay;
+use App\Profit;
+use App\User;
+use App\Buy;
 
+// For Charge
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\Amount;
@@ -19,6 +23,13 @@ use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
+
+// For Payout
+use PayPal\Api\Payout;
+use PayPal\Api\PayoutSenderBatchHeader;
+use PayPal\Api\PayoutItem;
+use PayPal\Api\Currency;
+
 class PayController extends Controller
 {
     private $_apiContext;
@@ -47,23 +58,27 @@ class PayController extends Controller
 
     public function AddCredit (Request $request)
     {
-        /*
-        NOTE Remember TO Make Project in Paypal Develpoers And take ClientId && ClientSecret
-        Epsoid 121 && 122 && 123
-        */
+        $this->validate($request, [
+            'price' => 'required|integer'
+        ]);
         $price = intval($request->price);
 
         /*
         | ----------------------------------------------------------------------
         | Set The Paypal Context
         | ----------------------------------------------------------------------
+        |
         */
+
         $this->contextPaypal();
+
         /*
         | ----------------------------------------------------------------------
         | Set Paypal Payments
         | ----------------------------------------------------------------------
+        |
         */
+
         // set Payer
         $payer = new Payer();
         // set payment Method
@@ -81,7 +96,8 @@ class PayController extends Controller
         // TO Redirect
         $redirectUrls = new RedirectUrls();
         // set setReturnUrl [success] && set setCancelUrl[Fail]
-        $redirectUrls->setReturnUrl($baseUrl)->setCancelUrl($baseUrl);
+        $redirectUrls->setReturnUrl($baseUrl . '/successCharge?success=true')
+                    ->setCancelUrl($baseUrl . '/errorCharge?success=false');
         // make New Payment
         $payment = new Payment();
         // config the info TO Make the new Payment
@@ -105,23 +121,19 @@ class PayController extends Controller
 
             $payment->create($this->_apiContext);
 
-            /*
-            | ----------------------------------------------------------------------
-            | Save Payments To DB
-            | ----------------------------------------------------------------------
-            */
+            $redirect = null;
 
-            $pay = new Pay();
-            $pay->pay_id = $payment->id;
-            $pay->user_id = Auth::user()->id;
-            $pay->payment_method = $payment->payer->payment_method;
-            $pay->state = $payment->state;
-            $pay->price = $price;
-            if ($pay->save()) {
-                return 'done';
-            } else {
-                App::abort(403);
+            foreach ($payment->getLinks() as $link) {
+                if ($link->getRel() == 'approval_url') {
+                    $redirect = $link->getHref();
+                }
             }
+
+            if ($redirect != null) {
+                return Redirect::away($redirect);
+            }
+            return redirect('/')->with('error', 'Error Happend Try Again Again');
+
         } catch (Exception $e) {
             App::abort(403);
         }
@@ -131,5 +143,103 @@ class PayController extends Controller
     {
         $pay = Payment::get($id, $this->_apiContext);
         return $pay;
+    }
+
+    public function successCharge(Request $request)
+    {
+        if ($request->success == true && $request->paymentId && $request->token && $request->PayerID) {
+            $this->contextPaypal();
+            /*
+            | ----------------------------------------------------------------------
+            | Save Payments To DB
+            | ----------------------------------------------------------------------
+            |
+            */
+            $payment = $this->GetPaymentInfoById($request->paymentId);
+
+            if ($payment->state == 'created') {
+                $pay = new Pay();
+                $pay->user_id = Auth::user()->id;
+                $pay->payer_id = $request->PayerID;
+                $pay->pay_id = $payment->id;
+                $pay->payment_method = $payment->payer->payment_method;
+                $pay->state = $payment->state;
+                $pay->price = $payment->transactions[0]->amount->total;
+                if ($pay->save()) {
+                    return redirect('/#!/AllCharge')->with('success', 'Your Charge Has Been Successfully');
+                } else {
+                    return redirect('/')->with('error', 'Your Charge Does\'nt Been Successfully');
+                }
+            }
+
+        } else {
+            return redirect('/')->with('error', 'Error Happend Try Again Again');
+        }
+
+    }
+
+    public function errorCharge(Request $request)
+    {
+        return redirect('/#!/AddCredit')->with('error', 'Your Charge Does\'nt Been Successfully');
+    }
+
+    public function adminSendProfit($id)
+    {
+        $profit = Profit::findOrFail($id);
+        if ($profit) {
+            $user = User::findOrFail($profit->user_id);
+            if ($user) {
+
+                $this->contextPaypal();
+
+                $payouts = new Payout();
+                $senderBatchHeader = new PayoutSenderBatchHeader();
+                $senderBatchHeader->setSenderBatchId(uniqid())
+                ->setEmailSubject("Alaa Dragneel Send Profit");
+                $senderItem = new PayoutItem();
+                $senderItem->setRecipientType('Email')
+                ->setNote('Alaa Dragneel Send Profit')
+                ->setReceiver($user->email)
+                ->setSenderItemId("2014031400023")
+                ->setAmount(new Currency('{
+                    "value":"'. $profit->profit_price .'",
+                    "currency":"USD"
+                }'));
+                $payouts->setSenderBatchHeader($senderBatchHeader)
+                ->addItem($senderItem);
+
+                $request = clone $payouts;
+
+                try {
+                    $output = $payouts->createSynchronous($this->_apiContext);
+                } catch (Exception $ex) {
+                    return redirect()->back()->with('error', 'Error In The Payout Code Error #1000');
+                }
+
+                $payoutItemId = $output->getItems()[0]->getPayoutItemId();
+
+                try {
+                    $output = PayoutItem::get($payoutItemId, $this->_apiContext);
+
+                    if ($output->transaction_status == "SUCCESS") {
+                        $profit->status = 1;
+                        $profit->pay_id = $output->payout_item_id;
+
+                        if ($profit->update()) {
+                            return redirect()->back()->with('success', 'The Payout Success');
+                        }
+                        return redirect()->back()->with('error', 'Error In The Payout Code Error #1001');
+                    }
+
+                } catch (Exception $ex) {
+                    return redirect()->back()->with('error', 'Error In The Payout Code Error #1002');
+                }
+
+            }
+
+            return redirect()->back()->with('error', 'User Does\'not Exists');
+        }
+        return redirect()->back()->with('error', 'Profit Does\'not Exists');
+
     }
 }

@@ -19,7 +19,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3>${{ parseInt(userProfits) + parseInt(userCharge) - parseInt(userPays) }}</h3>
+                                    <h3>${{ (parseInt(userCharge) + parseInt(realProfits)) - (parseInt(userPays) + parseInt(userProfits)) }}</h3>
 
                                     <p>Balance</p>
                                 </div>
@@ -34,7 +34,7 @@
                             <!-- small box -->
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3>${{ userCharge }}</h3>
+                                    <h3>${{ parseInt(userCharge) }}</h3>
 
                                     <p>Charges</p>
                                 </div>
@@ -49,7 +49,7 @@
                             <!-- small box -->
                             <div class="small-box bg-red">
                                 <div class="inner">
-                                    <h3>${{ userPays }}</h3>
+                                    <h3>${{ parseInt(userPays) }}</h3>
 
                                     <p>Payments</p>
                                 </div>
@@ -64,7 +64,7 @@
                             <!-- small box -->
                             <div class="small-box bg-blue">
                                 <div class="inner">
-                                    <h3>${{ userProfits }}</h3>
+                                    <h3>${{ parseInt(totalProfits) }}</h3>
 
                                     <p>Profits</p>
                                 </div>
@@ -79,7 +79,7 @@
                             <!-- small box -->
                             <div class="small-box bg-inverse">
                                 <div class="inner">
-                                    <h3>${{ userWaitingProfits }}</h3>
+                                    <h3>${{ parseInt(userWaitingProfits) }}</h3>
 
                                     <p>Waiting Profits</p>
                                 </div>
@@ -94,7 +94,7 @@
                             <!-- small box -->
                             <div class="small-box bg-aqua">
                                 <div class="inner">
-                                    <h3>${{ parseInt(userProfits) + parseInt(userWaitingProfits) }}</h3>
+                                    <h3>${{ parseInt(totalProfits) + parseInt(userWaitingProfits) }}</h3>
 
                                     <p>Total Profits</p>
                                 </div>
@@ -144,6 +144,8 @@
                 userCharge: 0,
                 userPays: 0,
                 userProfits: 0,
+                realProfits: 0,
+                totalProfits: 0,
                 userWaitingProfits: 0,
                 profit: 0,
                 disabled: false,
@@ -161,8 +163,9 @@
                 this.userCharge = res.body['userCharge'] == null ? 0 : res.body['userCharge'];
                 this.userPays = res.body['userPays'] == null ? 0 : res.body['userPays'];
                 this.userProfits = res.body['userProfits'] == null ? 0 : res.body['userProfits'];
+                this.realProfits = res.body['realProfits'] == null ? 0 : res.body['realProfits'];
                 this.userWaitingProfits = res.body['userWaitingProfits'] == null ? 0 : parseInt(res.body['userWaitingProfits']);
-                this.profit = parseInt(this.userProfits);
+                this.profit = parseInt(this.realProfits);
                 this.$refs.spinner.hide();
                 this.isLoading = true;
           	}, function (res) {
@@ -179,9 +182,10 @@
                   this.isLoading = true;
                   if (res.body['success']) {
                       alertify.success(res.body['success']);
-                      this.userProfits -= parseInt(this.profit);
+                      this.realProfits -= parseInt(this.profit);
                       this.userWaitingProfits += parseInt(this.profit);
-                      this.profit = this.userProfits;
+                      this.profit = this.realProfits;
+                      this.totalProfits = this.totalProfits;
                   } else if (res.body == 'saving error') {
                       alertify.error('Error During Save the profit Operation Contact With The Adminstrator');
                   } else if (res.body == 'profit error') {
