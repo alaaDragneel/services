@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App;
 use Auth;
 use Redirect;
+use Session;
 
 use App\Pay;
 use App\Profit;
@@ -23,6 +24,9 @@ use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction;
+use PayPal\Api\PaymentExecution;
+use PayPal\Api\ExecutePayment;
+use PayPal\Api\Details;
 
 // For Payout
 use PayPal\Api\Payout;
@@ -120,7 +124,6 @@ class PayController extends Controller
             */
 
             $payment->create($this->_apiContext);
-
             $redirect = null;
 
             foreach ($payment->getLinks() as $link) {
@@ -130,8 +133,10 @@ class PayController extends Controller
             }
 
             if ($redirect != null) {
+                Session::put('price', $price);
                 return Redirect::away($redirect);
             }
+
             return redirect('/')->with('error', 'Error Happend Try Again Again');
 
         } catch (Exception $e) {
@@ -147,34 +152,72 @@ class PayController extends Controller
 
     public function successCharge(Request $request)
     {
-        if ($request->success == true && $request->paymentId && $request->token && $request->PayerID) {
+        if (
+            $request->success == true && $request->success != '' &&
+            isset($request->paymentId) && $request->paymentId != '' &&
+            isset($request->token) && $request->token != '' &&
+            isset($request->PayerID) && $request->PayerID != ''
+        )
+        {
+
             $this->contextPaypal();
             /*
             | ----------------------------------------------------------------------
-            | Save Payments To DB
+            | Save Payments To DB && take the money from the user && add it to the website
             | ----------------------------------------------------------------------
             |
             */
-            $payment = $this->GetPaymentInfoById($request->paymentId);
 
-            if ($payment->state == 'created') {
-                $pay = new Pay();
-                $pay->user_id = Auth::user()->id;
-                $pay->payer_id = $request->PayerID;
-                $pay->pay_id = $payment->id;
-                $pay->payment_method = $payment->payer->payment_method;
-                $pay->state = $payment->state;
-                $pay->price = $payment->transactions[0]->amount->total;
-                if ($pay->save()) {
-                    return redirect('/#!/AllCharge')->with('success', 'Your Charge Has Been Successfully');
-                } else {
-                    return redirect('/')->with('error', 'Your Charge Does\'nt Been Successfully');
+            $price = Session::get('price');
+            Session::forget('price');
+
+            $paymentId = $request->paymentId;
+            $payment = $this->GetPaymentInfoById($paymentId);
+
+            $execution = new PaymentExecution();
+            $execution->setPayerId($request->PayerID);
+
+            $transaction = new Transaction();
+            $amount = new Amount();
+            $details = new Details();
+            $details->setShipping(0)
+            ->setTax(0)
+            ->setSubtotal($price);
+
+            $amount->setCurrency('USD');
+
+            $amount->setTotal($price);
+
+            $amount->setDetails($details);
+
+            $transaction->setAmount($amount);
+
+            try {
+                $result = $payment->execute($execution, $this->_apiContext);
+
+                if ($result->state == 'approved') {
+                    $pay = new Pay();
+                    $pay->user_id = Auth::user()->id;
+                    $pay->payer_id = $request->PayerID;
+                    $pay->pay_id = $result->id;
+                    $pay->payment_method = $result->payer->payment_method;
+                    $pay->state = $result->state;
+                    $pay->price = $result->transactions[0]->amount->total;
+                    if ($pay->save()) {
+                        return redirect('/#!/AllCharge')->with('success', 'Your Charge Has Been Successfully');
+                    } else {
+                        return redirect('/')->with('error', 'Your Charge Does\'nt Been Successfully');
+                    }
                 }
-            }
 
+
+            } catch (Exception $ex) {
+                return redirect('/#!/AddCredit')->with('error', 'Your Charge Have Been Faild Error Code 2001');
+            }
         } else {
             return redirect('/')->with('error', 'Error Happend Try Again Again');
         }
+        return redirect('/')->with('error', 'Error Happend Try Again Again');
 
     }
 
